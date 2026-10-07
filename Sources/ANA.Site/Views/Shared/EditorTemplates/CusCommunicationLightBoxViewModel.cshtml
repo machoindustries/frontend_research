@@ -1,0 +1,33 @@
+﻿@model ANA.Site.Models.ViewModels.CusCommunicationLightBoxViewModel
+
+<div data-lightbox-src="cusedit">
+    <h3 data-lightbox-heading></h3>
+    <div data-error-text style="color:#cf4520;" id="error-text"></div>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.CommLocationCode, new {data_account_personaldetails_location_type=""})
+        
+        <label for="@Html.IdFor(m => m.CountryCode)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Cus/Form/Label/Country")</span>
+            @Html.DropDownListFor(m => m.CountryCode, (List<SelectListItem>)ViewBag.CountryList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/Cus/Form/Label/Country"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_account_personaldetails_country = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.PhoneAreaCode)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Cus/Form/Label/PhoneAreaCode")</span>
+            @Html.TextBoxFor(m => m.PhoneAreaCode, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Cus/Form/Label/PhoneAreaCode"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_account_personaldetails_phone_area_code = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.PhoneAreaCode)"></div>
+        
+        <label for="@Html.IdFor(m => m.PhoneNumber)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Cus/Form/Label/PhoneNumber")</span>
+            @Html.TextBoxFor(m => m.PhoneNumber, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Cus/Form/Label/PhoneNumber"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_account_personaldetails_phone_number = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.PhoneNumber)"></div>
+        
+        <label for="@Html.IdFor(m => m.PhoneExtension)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Cus/Form/Label/PhoneExtension")</span>
+            @Html.TextBoxFor(m => m.PhoneExtension, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Cus/Form/Label/PhoneExtension"), data_formfield_text = "", data_validate = "", data_account_personaldetails_phone_extension = "" })
+        </label>
+        
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/Cus/Form/Label/Submit")" data-submit-personaldetails>
+    </form>
+</div>

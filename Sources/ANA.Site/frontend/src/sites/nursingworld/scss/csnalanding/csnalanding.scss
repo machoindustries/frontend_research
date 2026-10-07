@@ -1,0 +1,276 @@
+﻿/* =============================================================================
+   csna-landing.css
+   CSNA Leadership Portal — Landing page styles
+   Place at: ANA.Site/Static/css/csna-landing.css
+   ============================================================================= */
+
+/* ── Reset / scope ── */
+.csna-page *,
+.csna-page *::before,
+.csna-page *::after {
+    box-sizing: border-box;
+}
+
+/* ── Page wrapper ── */
+.csna-page {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #ffffff;
+    border-top: 3px solid #1B4B45;
+    min-height: calc(100vh - 88px); /* 88px = topbar + navbar height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header ── */
+.csna-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 2rem;
+    border-bottom: 1px solid #e8e8e8;
+    background: #ffffff;
+}
+
+.csna-header__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.csna-flame {
+    width: 20px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.csna-header__org {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1B4B45;
+}
+
+/* User pill */
+.csna-user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #E1F5EE;
+    border-radius: 99px;
+    padding: 5px 14px;
+}
+
+.csna-user-pill__dot {
+    width: 8px;
+    height: 8px;
+    background: #0F6E56;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.csna-user-pill__name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #085041;
+    white-space: nowrap;
+}
+
+/* ── Body ── */
+.csna-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1.5rem 2.5rem;
+}
+
+.csna-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    color: #0F6E56;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.csna-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.csna-subtitle {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+/* ── Tiles ── */
+.csna-tiles {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.csna-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 220px;
+    padding: 2rem 1.25rem 1.5rem;
+    border: 1.5px solid #1B4B45;
+    border-radius: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.12s ease;
+    color: inherit;
+}
+
+    .csna-tile:hover {
+        background: #1B4B45;
+        transform: translateY(-3px);
+        text-decoration: none;
+    }
+
+    .csna-tile:active {
+        transform: scale(0.98);
+    }
+
+/* Tile icon */
+.csna-tile__icon {
+    width: 52px;
+    height: 52px;
+    background: #E1F5EE;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s ease;
+    flex-shrink: 0;
+}
+
+    .csna-tile__icon svg {
+        width: 26px;
+        height: 26px;
+        color: #0F6E56;
+        transition: color 0.18s ease;
+    }
+
+.csna-tile:hover .csna-tile__icon {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+    .csna-tile:hover .csna-tile__icon svg {
+        color: #ffffff;
+    }
+
+/* Tile text */
+.csna-tile__title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a1a1a;
+    transition: color 0.18s ease;
+}
+
+.csna-tile__desc {
+    font-size: 12px;
+    color: #666666;
+    line-height: 1.5;
+    text-align: center;
+    transition: color 0.18s ease;
+}
+
+.csna-tile__arrow {
+    font-size: 16px;
+    color: #0F6E56;
+    margin-top: 4px;
+    transition: color 0.18s ease;
+}
+
+.csna-tile:hover .csna-tile__title {
+    color: #ffffff;
+}
+
+.csna-tile:hover .csna-tile__desc {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.csna-tile:hover .csna-tile__arrow {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Date line */
+.csna-date {
+    font-size: 12px;
+    color: #aaaaaa;
+}
+
+/* ── Footer ── */
+.csna-footer {
+    border-top: 1px solid #e8e8e8;
+    padding: 1.25rem 2rem;
+    background: #ffffff;
+}
+
+.csna-footer__gdpr {
+    font-size: 11px;
+    color: #888888;
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+    .csna-footer__gdpr a {
+        color: #0F6E56;
+        text-decoration: underline;
+    }
+
+        .csna-footer__gdpr a:hover {
+            color: #085041;
+        }
+
+.csna-footer__links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+    .csna-footer__links a,
+    .csna-footer__links span {
+        font-size: 11px;
+        color: #aaaaaa;
+        text-decoration: none;
+    }
+
+        .csna-footer__links a:hover {
+            color: #0F6E56;
+        }
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+    .csna-header {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .csna-tiles {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .csna-tile {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .csna-title {
+        font-size: 22px;
+    }
+}

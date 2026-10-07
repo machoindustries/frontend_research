@@ -1,0 +1,126 @@
+﻿@model ANA.Site.HNHN.Models.ViewModels.IPageViewModel<ANA.Site.HNHN.Models.Pages.BasePageData>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="theme-color" content="#6AAEE6">
+    @* Added after release. Needs to be built and deployed. *@
+    <meta name="description" content="@Model.CurrentPage.MetaDescription" />
+    <meta name="keywords" content="@Model.CurrentPage.MetaKeywords" />
+    <meta property="article:published_time" content="@Model.CurrentPage.StartPublish.Value.ToString("s")" />
+    <title>
+        @EPiServer.Web.SiteDefinition.Current.Name | @Model.CurrentPage.Name
+    </title>
+    <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7899334/6764352/css/fonts.css" />
+    <link rel="stylesheet" href="/hnhn_old/stylesheets/bs-custom.css">
+    <link rel="stylesheet" href="/hnhn_old/stylesheets/style.css">
+    <link rel="icon" sizes="32x32" href="~/assets/img/HNHN/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <!-- Google Tag Manager -->
+    <noscript>
+        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59WT7W"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <script>
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-59WT7W');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Facebook Pixel Code DevOps 4251-->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '3216790298351877');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=3216790298351877&ev=PageView&noscript=1" />
+    </noscript>
+
+    <script src="https://up.pixel.ad/assets/up.js?um=1"></script>
+    <script type="text/javascript">
+        cntrUpTag.track('cntrData', '5dfda33230a418de');
+    </script>
+
+    <script type="text/javascript">
+        adroll_adv_id = "CXXP6GAFCJDSZBGKWIHJLK";
+        adroll_pix_id = "TVTPCMBSLVBWZHIIQZ3522";
+
+        (function () {
+            var _onload = function () {
+                if (document.readyState && !/loaded|complete/.test(document.readyState)) { setTimeout(_onload, 10); return }
+                if (!window.__adroll_loaded) { __adroll_loaded = true; setTimeout(_onload, 50); return }
+                var scr = document.createElement("script");
+                var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+                scr.setAttribute('async', 'true');
+                scr.type = "text/javascript";
+                scr.src = host + "/j/roundtrip.js";
+                ((document.getElementsByTagName('head') || [null])[0] ||
+                    document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+            };
+            if (window.addEventListener) { window.addEventListener('load', _onload, false); }
+            else { window.attachEvent('onload', _onload) }
+        }());
+    </script>
+<!-- End Facebook Pixel Code -->
+
+    @{
+        await Html.RenderPartialAsync("_Header", Model);
+    }
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    @{
+        await Html.RenderPartialAsync("_Footer", Model);
+    }
+
+    <script src="/hnhn_old/javascripts/vendor/modernizr-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blazy/1.5.2/blazy.min.js"></script>
+    <script src="/hnhn_old/javascripts/shared.js"></script>
+    <script src="/hnhn_old/javascripts/vendor/wow.min.js"></script>
+    <script src="/hnhn_old/javascripts/app.js"></script>
+    <script src="/hnhn_old/ClientResources/shell/moduleTest.js"></script>
+
+    <script type='text/javascript' language="javascript">
+
+    $(document).ready(function () {
+        var url = @Model.Settings.SearchActionUrl;
+        $("#searchforminput").keypress(function (event) {
+            if (event.keyCode === 13) {
+                //$('#searchform').attr('action', url + '?q=\'' + $('#searchforminput').val() + '\'');
+                window.location.href = url + '?q=' + $('#searchforminput').val() + '';
+            }
+        });
+    });
+
+    </script>
+</body>
+</html>

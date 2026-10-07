@@ -1,0 +1,35 @@
+﻿@model ANA.Site.Models.ViewModels.AccountPersonalDetailsViewModel
+
+@{
+    var userName = string.Empty;
+
+    if (Model.UserProfile != null)
+    {
+        userName = $"{Model.UserProfile.LabelName}";
+    }
+}
+
+<div class="c-account__section" data-require="./src/views/account-personaldetails-view">
+    <h2 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h2>
+    @if (Model.UserProfile != null) { 
+        <div class="grid grid--full">
+            <div class="grid__item three-eighths">
+                <p class="c-account__text c-account__text--no-margin">@userName</p>
+            </div>
+            <div class="grid__item four-eighths">
+                <p class="c-account__text c-account__text--no-margin">@Model.UserProfile.Email</p>
+            </div>
+        </div>
+
+        <div class="grid grid--full" data-account-personaldetails-list>     
+        </div>
+        
+        <div class="grid grid--full">
+            <div class="grid__item">
+                <div class="e-lightbox-source">
+                    @Html.EditorFor(m=>m.LightBox)
+                </div>
+            </div>
+        </div>
+    }
+</div>

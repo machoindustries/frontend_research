@@ -1,0 +1,311 @@
+.course-registration {
+  padding: 0;
+
+  .close-button {
+    top: .8rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border-width: 1px;
+    border-color: $font-light-blue;
+
+    span {
+      font-size: 3.25rem;
+      margin-left: -.3rem;
+      line-height: 0;
+      color: $font-light-blue;
+
+      margin-left: 0;
+      font-size: 2.25rem;
+    }
+
+    &:hover {
+      border-color: $font-dark-blue;
+      //background: #dddddd;
+
+      span {
+        color: $font-dark-blue;
+      }
+    }
+  }
+
+  .course-registration_header {
+    .hero-text-container {
+      margin: 2rem auto !important;
+      max-width: none;
+      width: 80%;
+      padding-right: 5%;
+
+      .text-1 {
+        font-family: 'MontserratRegular';
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        margin-bottom: .25rem;
+
+        .ana-logo-t {
+          font-family: 'MontserratSemiBold';
+          margin-right: .125rem;
+          letter-spacing: rem-calc(1.5);
+
+          &:after {
+            content: '';
+            padding: 1.125rem;
+            background-image: url('/logos/favicon.ico');
+            background-size: 2.25rem;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+        }
+
+        .enterprise-logo-t {
+          font-family: 'MontserratRegular';
+          font-size: 1.5rem;
+          font-weight: 700;
+          letter-spacing: rem-calc(2);
+          margin-left: 0;
+        }
+      }
+
+      .text-2 {
+        font-family: 'MontserratSemiBold';
+        font-weight: 800;
+        font-size: 1.75rem;
+        line-height: 2.25rem;
+        text-transform: uppercase;
+        letter-spacing: .4125rem;
+        margin: 1.5rem auto 0.5rem;
+
+        @media screen and (min-width: 865px) {
+          font-size: 2.875rem;
+          line-height: 3.675rem;
+        }
+      }
+
+      .heartbeat {
+        width: rem-calc(570);
+        height: auto;
+        margin-top: -.75rem;
+        margin-left: auto;
+        margin-right: auto;
+        padding-right: rem-calc(5);
+
+        max-width: 90%;
+        width: auto;
+
+        @media screen and (min-width: 461px) {
+          width: 25rem;
+          max-width: 100%;
+        }
+
+        @media screen and (min-width: 865px) {
+          width: 36rem;
+          max-width: 100%;
+        }
+      }
+    }
+
+    p {
+      padding: 0;
+
+      @media screen and (min-width: 481px) {
+        padding: 0 3rem;
+      }
+    }
+  }
+
+
+  &_header {
+    text-align: center;
+  }
+
+  &_form {
+    h2 {
+      text-align: center;
+      color: $font-light-blue;
+      font-family: 'MontserratSemiBold';
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      color: $font-light-blue;
+      font-size: 1.25rem;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-top: 4rem;
+      padding-top: .5rem;
+      text-transform: uppercase;
+
+      border-top: #ce4421 solid 5px;
+      border-image: linear-gradient(to right, #cd4422 0%, #009bde 100%);
+      border-image-slice: 1;
+    }
+
+    fieldset {
+      margin: 0 auto !important;
+
+      @media screen and (min-width: $medium)  {
+        max-width: $medium !important;
+      }
+
+      .hs-form-field{
+        margin-bottom: 1rem;
+      }
+
+      .hs-form-required{
+        display: none;
+      }
+
+      .hs-error-msgs{
+        margin-bottom: 0;
+      }
+
+      // select, input[type="text"], input[type="email"], input[type="tel"], textarea{
+      //   padding: .5rem;
+      //   border-radius: .25rem;
+      //   border: solid 1px;
+      //   width: 100% !important;
+      //   margin-bottom: 1rem;
+      //   min-height: 2.5rem;
+      //   resize: vertical;
+
+      //   ::placeholder{
+      //     color: black;
+      //   }
+      // }
+
+      li{
+        list-style: none;
+      }
+    }
+    .form-columns-2 .hs-form-field:nth-child(odd) {
+      .input {
+        margin: 0 0 0 0;
+
+        @media screen and (min-width: 481px) {
+          margin: 0 1rem 0 0;
+        }
+      }
+    }
+
+    .form-columns-2 .hs-form-field:nth-child(even) {
+      label,
+      .input {
+        margin: 0 0 0 0;
+
+        @media screen and (min-width: 481px) {
+          margin: 0 0 0 1rem;
+        }
+      }
+    }
+
+    .actions{
+      width: fit-content;
+      margin: 2.5rem auto 0;
+      color: white;
+      transform: skew(-14deg);
+      border-radius: rem-calc(11) rem-calc(4) rem-calc(14) rem-calc(2);
+      filter: drop-shadow(8px 8px 6px #cccccc);
+      background-image: linear-gradient(to right, $orange-button-outter, $orange-button-inner, $orange-button-inner, $orange-button-outter2);
+
+      &:hover {
+        background-image: linear-gradient(to right, $orange-button-outter2, $orange-button-outter, $orange-button-outter, $orange-secondary);
+        -webkit-transition: background-image 0.5s ease-in-out;
+        transition: background-image 0.5s ease-in-out;
+      }
+
+      .hs-button.primary.large  {
+        // &:before {
+        //   content: "";
+        //   display: inline-block;
+        //   margin-right: 0.6rem;
+        //   width: 0;
+        //   height: 0;
+        //   border-top: 0.25rem solid transparent;
+        //   border-left: 0.5rem solid white;
+        //   border-bottom: 0.25rem solid transparent;
+        //   margin-right: -4rem;
+        //   margin-left: 2.5rem;
+        //   transform: skew(14deg);
+        // }
+
+        padding: 1rem 6rem;
+        color: white;
+        font-family: 'MontserratSemiBold';
+        font-size: rem-calc(13);
+        font-weight: 700;
+        visibility: visible;
+        position: relative;
+        background: transparent;
+        color: white;
+        border: transparent;
+        text-transform: uppercase;
+
+        // &:after {
+        //   visibility: visible;
+        //   content: "Register Now";
+        //   z-index: 3;
+        //   font-family: 'MontserratSemiBold';
+        //   width: max-content;
+        //   padding-left: 1.35rem;
+        //   text-transform: uppercase;
+        //   position: absolute;
+        //   top: 50%;
+        //   left: 50%;
+        //   transform: translate(-50%, -50%) skew(14deg);
+        //   color: white;
+        // }
+      }
+
+      // &:before {
+      //   // font-family: 'Font Awesome 5 Free';
+      //   // font-size: rem-calc(11);
+      //   // content: '\f04b';
+      //   // display: inline-block;
+      //   // font-weight: 900;
+      //   // margin-right: .6rem;
+      //   // transition: transform 300ms ease-in-out;
+      //   // position: absolute;
+      //   // top: 50%;
+      //   // left: 50%;
+      //   // transform: translate(-50%, -50%) skew(14deg);
+      //   // margin-left: -4.75rem;
+      //   content: "";
+      //   display: inline-block;
+      //   margin-right: 0.6rem;
+      //   width: 0;
+      //   height: 0;
+      //   border-top: 0.25rem solid transparent;
+      //   border-left: 0.5rem solid white;
+      //   border-bottom: 0.25rem solid transparent;
+      //   margin-right: -4rem;
+      //   margin-left: 2.5rem;
+      //   transform: skew(14deg);
+      // }
+
+      // &:after {
+      //   visibility: visible;
+      //   content: "Register Now";
+      //   z-index: 3;
+      //   font-family: 'MontserratSemiBold';
+      //   width: max-content;
+      //   padding-left: 1.35rem;
+      //   text-transform: uppercase;
+      //   position: absolute;
+      //   top: 50%;
+      //   left: 50%;
+      //   transform: translate(-50%, -50%) skew(14deg);
+      // }
+    }
+  }
+
+  .hs-form-687e3dee-0c8c-4818-898e-2192e3deb7e2_15dc68e2-ae4b-4238-9fd1-afbf58301e60 fieldset.form-columns-1 .input {
+    margin-right: 0;
+
+    @media screen and (min-width: 481px) {
+      marginright: 8px;
+    }
+  }
+}

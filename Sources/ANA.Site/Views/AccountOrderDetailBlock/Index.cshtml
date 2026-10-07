@@ -1,0 +1,186 @@
+﻿@model ANA.Site.Models.ViewModels.OrderDetailViewModel
+@if (Model.Order != null)
+{
+    <div class="grid">
+        <div class="grid__item one-whole">
+            <div class="block block--full grid grid--full">
+                <div class="grid__item">
+                    <a class=" c-account__return-link" href="@Model.OrderHistoryUrl">&lt; @Html.Translate("/MyAccount/Order/BackToOrderHistory")</a>
+                    <h2>@Model.Order.OrderNumber</h2>
+                    @if (Model.Order.OrderStatus != "Cancel")
+                    {
+                        <p class="c-account__title">@Html.Translate("/MyAccount/Order/OrderStatus"): @Model.Order.OrderStatus</p>
+                    }
+                    else
+                    {
+                        <p class="c-account__title">@Html.Translate("/MyAccount/Order/OrderStatus") @Model.Order.OrderStatus | <a href="#">@Html.Translate("/MyAccount/Order/Cancel")</a></p>
+                    }
+                </div>
+            </div>
+            <div class="block block--full">
+                <div class="c-order-detail__row grid ">
+                    <div class="grid__item one-whole medium--one-half">
+                        <div class="c-order-detail__block">
+                            <div class="c-order-summary is--enabled">
+                                <h4 class="c-order-summary__heading">@Html.Translate("/MyAccount/Order/Summary")</h4>
+                                <dl class="c-order-summary__content">
+                                    <div class="c-order-summary__section">
+                                        <div class="c-order-summary__row grid">
+                                            <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/MyAccount/Order/Items")</dt>
+                                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">@Model.TotalItems.ToString()</dd>
+                                        </div>
+                                        <div class="c-order-summary__row grid">
+                                            <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/MyAccount/Order/Tax")</dt>
+                                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">@Model.TotalTax.ToString()</dd>
+                                        </div>
+                                        @if (Model.TotalDiscount.HasValue)
+                                        {
+                                            <div class="c-order-summary__row grid">
+                                                <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">
+                                                    @Html.Translate("/MyAccount/Order/Discount")
+                                                </dt>
+                                                <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">-@Model.TotalDiscount.Value.ToString()</dd>
+                                            </div>
+                                        }
+                                        <div class="c-order-summary__row grid">
+                                            <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/MyAccount/Order/Shipping")</dt>
+                                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">@Model.TotalShipping.ToString()</dd>
+                                        </div>
+                                    </div>
+                                    @foreach (var donation in Model.Donations)
+                                    {
+                                        <div class="c-order-summary__section">
+                                            <div class="c-order-summary__row grid">
+                                                <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">
+                                                    @donation.DisplayName
+                                                    <span class="c-order-summary__item--discount">@Html.Translate(donation.DisplayName.Contains("ANA-PAC") ? "/CartCheckout/Labels/DonationNotTaxDeductible" : "/CartCheckout/Labels/DonationTaxDeductible")</span>
+                                                </dt>
+                                                <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">@donation.Amount.ToString()</dd>
+                                            </div>
+                                        </div>
+                                    }
+                                </dl>
+                                <span class="c-order-summary__total">@Html.Translate("/MyAccount/Order/Total"): @Model.Total.ToString()</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole push--medium--one-eighth medium--three-eighths">
+                        <div class="c-order-detail__block">
+                            @if (Model.Order.PaymentInfo != null && Model.IsRecipient == false)
+                            {
+                                <div class="c-order-detail__payment">
+                                    <h4 class="c-order-detail__heading">@Html.Translate("/MyAccount/Order/PaymentDetails")</h4>
+                                    <p class="c-order-detail__address">@Model.Order.PaymentInfo.ReceiptTypeDescr @Model.Order.PaymentInfo.PartialCardNumber</p>
+                                </div>
+                            }
+                            @if (Model.Order.Addresses.BillAddress != null && Model.IsRecipient == false)
+                            {
+                                <div class="c-address">
+                                    <h4 class="c-address__heading">@Html.Translate("/MyAccount/Order/BillingAddress")</h4>
+                                    <ul class="c-address__address">
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.Name</li>
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.Address1</li>
+                                        @if (!string.IsNullOrEmpty(Model.Order.Addresses.BillAddress.Address2))
+                                        {
+                                            <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.Address2</li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.Order.Addresses.BillAddress.Address3))
+                                        {
+                                            <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.Address3</li>
+                                        }
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.City</li>
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.State</li>
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.ZipCode</li>
+                                        <li class="c-address__address-item">@Model.Order.Addresses.BillAddress.Phone1</li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.LineItems != null && Model.LineItems.Any())
+                    {
+                        <div class="grid__item one-whole medium--one-half">
+                            <div class="c-order-detail__block c-order-summary__section">
+                                <h4 class="c-order-summary__heading">Shipping Details</h4>
+                            </div>
+                            <div class="c-order-detail__block c-order-summary__section">
+
+                                <div class="c-order-summary__row grid">
+                                    <dt class="c-order-summary__item grid__item one-half"><strong>Item Description</strong></dt>
+                                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half"><strong>Tracking Number</strong></dd>
+                                </div>
+                                @foreach (var item in Model.LineItems)
+                                {
+                                    <div class="c-order-summary__row grid">
+                                        <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@item.DisplayName</dt>
+                                        <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half"><span class="c-subnav__icon icon icon--icon-external-link">@Html.Raw(item.TrackingNo)</span></dd>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    }
+                    @if (Model.Order.Addresses.ShipAddress != null)
+                    {
+                    <div class="grid__item one-whole push--medium--one-eighth medium--three-eighths">
+                        <div class="c-order-detail__block">
+                            <div class="c-address">
+                                <h4 class="c-address__heading">@Html.Translate("/MyAccount/Order/ShippingAddress")</h4>
+                                <ul class="c-address__address">
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.Name</li>
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.Address1</li>
+                                    @if (!string.IsNullOrEmpty(Model.Order.Addresses.ShipAddress.Address2))
+                                    {
+                                        <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.Address2</li>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Order.Addresses.ShipAddress.Address3))
+                                    {
+                                        <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.Address3</li>
+                                    }
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.City</li>
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.State</li>
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.ZipCode</li>
+                                    <li class="c-address__address-item">@Model.Order.Addresses.ShipAddress.Phone1</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="c-order-detail__block">
+                            @Html.PropertyFor(x => x.ShippingDetails)
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model.LineItems != null && Model.LineItems.Any())
+{
+    <div class="block block--full grid grid--full">
+        <div class="grid__item one-whole">
+            <h4 class="c-order-detail__heading">@Model.LineItemCountText</h4>
+            <div class="c-order-detail">
+                <ul class="c-order-detail__items">
+                    <li class="grid grid--full c-order-detail__items-header">
+                        <div class="grid__item one-whole medium--five-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/MyAccount/Order/Item")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--three-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/MyAccount/Order/ItemPrice")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/MyAccount/Order/Quantity")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/MyAccount/Order/ItemTotal")</div>
+                        </div>
+                    </li>
+                    @foreach (var item in Model.LineItems)
+                    {
+                        @Html.DisplayFor(m => item)
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,51 @@
+﻿@using ANA_HNHN.Models.Blocks.Local
+@using ANA_HNHN.Models.Enums
+@using ANA_HNHN.Services.Country
+@model IList<FormFieldBlock>
+
+@if (Model != null && Model.Any())
+{
+	foreach (var item in Model)
+	{
+		switch (item.Type)
+		{
+			case FieldType.Text:
+				<input type="text" name="@item.Name" required="@item.Required" placeholder="@item.Label" />
+				break;
+			case FieldType.Email:
+				<input type="email" name="@item.Name" required="@item.Required" placeholder="@item.Label" />
+				break;
+			case FieldType.Phone:
+				<input type="tel" name="@item.Name" required="@item.Required" placeholder="@item.Label" />
+				break;
+			case FieldType.Checkbox:
+				<input type="checkbox" id="@item.Name" name="@item.Name" required="@item.Required" placeholder="@item.Label" />
+				<label for="@item.Name">@item.Label</label>
+				break;
+			case FieldType.Password:
+				<input type="password" name="@item.Name" required="@item.Required" placeholder="@item.Label" />
+				break;
+			case FieldType.Submit:
+				<input type="submit" name="@item.Name" value="@item.Label" placeholder="@item.Label" />
+				break;
+			case FieldType.CountriesDropDown:
+				<select name="@item.Name" placeholder="@item.Label">
+					<option value="">@item.Label</option>
+					@foreach (var keyValue in CountriesService.GetAllCountries())
+					{
+						<option value="@keyValue.Key">@keyValue.Value</option>
+					}
+				</select>
+				break;
+			case FieldType.UsStatesDropDown:
+				<select name="@item.Name" placeholder="@item.Label">
+					<option value="">@item.Label</option>
+					@foreach (var keyValue in CountriesService.GetAllUsStates())
+					{
+						<option value="@keyValue.Key">@keyValue.Value</option>
+					}
+				</select>
+				break;
+		}
+	}
+}

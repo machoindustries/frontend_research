@@ -1,0 +1,16 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.LinkListBlock
+
+<li class="c-footer__nav-item grid__item one-whole large--one-quarter">
+    <div class="e-link-list">
+        @if (!string.IsNullOrEmpty(Model.Heading))
+        {
+            <a href="@Model.HeadingLink?.GetFriendlyUrl()" class="c-footer__link-list-heading" data-footer-nav-link="" data-gtm-event-label="@Model.Heading">@Model.Heading</a>
+            @Html.PropertyFor(p => p.Links, "LinkItemCollection")
+        }
+        else
+        {
+            @Html.PropertyFor(p => p.Links, "LinkItemCollectionLarge")
+        }
+    </div>
+</li>

@@ -1,0 +1,34 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCPartnersBlock
+
+<div class="partners @Model.GetCssClass()">
+    <div class="hr"></div>
+
+    <div class="title cell small-12 text-center mt-1 margin-x-auto h6 b700 upper color-font-orange spacing-large">
+        @Html.PropertyFor(i => i.Heading)
+    </div>
+
+    @if (Model.Partners.HasContent())
+    {
+        var logos = Model.Partners.FilteredItems.Select(i => i.LoadContent()).OfType<LogoBlock>();
+        <div class="grid-x grid-padding-x justify-center mb-1">
+            @foreach (var logo in logos)
+            {
+                <div class="partner cell small-6 medium-4 large-2 text-center mb-1 mt-1">
+                    @if (logo.LogoLink != null)
+                    {
+                        <a href="@logo.LogoLink.GetFriendlyUrl()">
+                            @Html.PropertyFor(i => logo.Logo)
+                        </a>
+                    }
+                    else
+                    {
+                        @Html.PropertyFor(i => logo.Logo)
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

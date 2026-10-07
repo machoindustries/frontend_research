@@ -1,0 +1,29 @@
+---
+data:
+  -
+    hasBackgroundColor: false
+    isFullBleed: true
+    isInverted: true
+    blocks:
+      -
+        firstNum: "6000000"
+        firstNumEffect: "OneTimeAnimation"
+        secondNum: false
+        firstText: false
+        secondText: "healthcare professionals"
+        thirdText: false
+      -
+        firstNum: "64"
+        firstNumEffect: "CountUpConstantly"
+        secondNum: false
+        secondNumEffect: "OneTimeAnimation"
+        firstText: false
+        secondText: "health departments"
+
+      -
+        firstNum: false
+        secondNum: "50"
+        secondNumEffect: "CountDownConstantly"
+        firstText: "across all"
+        secondText: false
+        thirdText: "United States"

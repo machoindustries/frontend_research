@@ -1,0 +1,32 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@model List<ANA.Site.Models.ViewModels.Ojin.OJINAdvertisementViewModel>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    var i = 0;
+    
+    foreach (var ad in Model)
+    {
+        
+        if (i == 0)
+        {
+            <div class="ojin-advBlock pb-md-5">
+                <a href="@ad.Url">
+                    <img src="@ad.ImageLink" class="lazyload" />
+                </a>
+            </div> 
+        }
+        else
+        {
+            <div class="ojin-advBlock">
+                <a href="@ad.Url">
+                    <img src="@ad.ImageLink" class="lazyload" />
+                </a>
+            </div> 
+        }
+        i= i+1;
+      }
+  }

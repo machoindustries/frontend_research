@@ -1,0 +1,29 @@
+---
+get-class: ""
+get-style: ""
+test: "HEREHEREHEHRE"
+list:
+  -
+    imgsrc: "./assets/img/iconic0.png"
+    imgalt: "iconic text block 1"
+    text: "Core Training to address immediate workforce infection control training needs, delivered via short and accessible training videos."
+  -
+    imgsrc: "./assets/img/iconic1.png"
+    imgalt: "iconic text block 2"
+    text: "Practical Tools to support everyone working in a health care facility as they implement infection control protocols and procedures throughout their workday."
+  -
+    imgsrc: "./assets/img/iconic2.png"
+    imgalt: "iconic text block 3"
+    text: "Partner Engagement to share information across all health care settings through trusted partners and channels, ensuring that training content and tools are delivered to health care professionals who need them."
+  -
+    imgsrc: "./assets/img/iconic3.png"
+    imgalt: "iconic text block 4"
+    text: "Mentorship to connect infection control experts with their local health care community so that they may become an ongoing resource."
+  -
+    imgsrc: "./assets/img/iconic4.png"
+    imgalt: "iconic text block 5"
+    text: "Public Health Technical Capacity Building to leverage the public health workforce to facilitate knowledge and tool sharing between public health departments and their local clinical communities."
+  -
+    imgsrc: "./assets/img/iconic5.png"
+    imgalt: "iconic text block 6"
+    text: "Innovation to deepen knowledge to better inform infection control recommendations, and to develop innovative platforms and content to provide infection control training to a diverse range of adult learners."

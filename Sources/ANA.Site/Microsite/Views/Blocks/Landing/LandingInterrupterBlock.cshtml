@@ -1,0 +1,71 @@
+﻿@using ANA.Site.Business.Helpers
+@using ANA.Site.Microsite.Models.Blocks.Landing
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.Business.Extensions
+@using Geta.Optimizely.Extensions
+
+@model LandingInterrupterBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-interruptor @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="grid-x grid-margin-x ana-interruptor--inner">
+            @if (Model.Image != null && Model.InterrupterStructure == InterrupterStructure.ImageLeft)
+            {
+                <div class="cell small-12 medium-4 ana-interruptor--image">
+                    @Html.PropertyFor(i => i.Image)
+                </div>
+            }
+        <div class="cell small-12 medium-auto ana-interruptor--content-block">
+            @if (Model.Icon != null || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-interruptor--icon">
+                    @Html.PropertyFor(m => m.Icon)
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Heading) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-interruptor--heading">
+                    @Html.PropertyFor(m => m.Heading)
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.SubHeading) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-interruptor--subHeading">
+                    @Html.PropertyFor(m => m.SubHeading)
+                </div>
+            }
+            @if (Model.Content != null || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-interruptor--content">
+                    @Html.PropertyFor(m => m.Content)
+                </div>
+            }
+            @if (Model.Button != null || ContentHelper.PageIsInEditMode())
+            {
+                foreach (var link in Model.Button)
+                {
+                    <a href="@link.GetFriendlyUrl()"
+                       class="button ana-interruptor--button"
+                       data-text="@link.Text"
+                       target="@link.Target"
+                       title="@link.Title">
+                        @link.Text
+                    </a>
+                }
+            }
+            @if (Model.Disclaimer != null || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-interruptor--disclaimer">
+                    @Html.PropertyFor(m => m.Disclaimer)
+                </div>
+            }
+        </div>
+            @if (Model.Image != null && Model.InterrupterStructure == InterrupterStructure.ImageRight)
+            {
+                <div class="cell small-12 medium-4 ana-interruptor--image">
+                    @Html.PropertyFor(i => i.Image)
+                </div>
+            }
+        </div>
+    </div>
+</div>

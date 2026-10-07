@@ -1,0 +1,19 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Social.SocialMediaFeedBlock
+
+@if (!string.IsNullOrEmpty(Model.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.Heading)
+    </h2>
+}
+<div class="grid-x social-media-feed">
+    <div class="large-1"></div>
+    <div class="cell large-10" id="curator-feed-default-layout"><a style="display: none;" href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
+    <div class="large-1"></div>
+</div>
+@Html.Raw(Model.Script)

@@ -1,0 +1,43 @@
+﻿@using ANA_HNHN.Models.Blocks
+@model QuestionnaireBlock
+@{
+	var questionBlockId = ((IContent)Model).ContentLink.ID;
+	var answerIndexer = 0;
+}
+
+<div class="questionnaire__step">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="questionnaire__question">
+					<span class="questionnaire__question-number"></span>
+					@Html.PropertyFor(x => x.QuestionText)
+				</div>
+				<div class="questionnaire__answers" id="@questionBlockId" data-answers-number="@Model.MaximumNumberOfAnswers" data-optional-answers="@Model.Optional">
+					@if (Model.Answers != null && Model.Answers.Any())
+						foreach (var answer in Model.Answers)
+						{
+							<div class="questionnaire__answer-block">
+								<input type="hidden" name="answer-@answerIndexer-visitor-group" value="@answer.VisitorGroup" />
+								<input type="hidden" name="answer-@answerIndexer" value="@answerIndexer" />
+								<input type="checkbox" name="questionnaire-@questionBlockId-answer-@answerIndexer" value="@answer.Text" id="questionnaire-@questionBlockId-answer-@answerIndexer" />
+								<label for="questionnaire-@questionBlockId-answer-@answerIndexer">@answer.Text</label>
+							</div>
+							answerIndexer++;
+						}
+					@if (Model.PreviousButtonText != null)
+					{
+						<a href="javascript:void(0)" class="btn btn-secondary questionnaire__button--back me-2" aria-label="Previous Question" @Html.EditAttributes(x => x.PreviousButtonText)>
+							@Html.DisplayFor(x => x.PreviousButtonText)
+						</a>
+					}
+					<a href="javascript:void(0)" class="btn btn-primary d-none questionnaire__button" aria-label="Next Question" @Html.EditAttributes(x => x.ButtonText)>
+						@Html.DisplayFor(x => x.ButtonText)
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	@if (!ContentReference.IsNullOrEmpty(Model.Image))
+	@Html.PropertyFor(x => x.Image)
+</div>

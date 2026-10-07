@@ -1,0 +1,76 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Pages
+@using ANA.Site.Models.ViewModels
+@using EPiServer.Shell
+@using Geta.Optimizely.Extensions;
+
+@model CheckoutViewModel
+
+<div class="c-checkout__section c-checkout__section--vs-none">
+    <div class="c-order-summary" data-require="./src/views/order-summary-view" data-failed-discount-title="@(SettingsHelper.GetSettings().CartPageReference.Get<CartPage>().FailedDiscountHeading ?? "Sorry")" data-failed-discount-text="@(SettingsHelper.GetSettings().CartPageReference.Get<CartPage>().FailedDiscountText ?? "The code you entered can not be redeemed at this time. Please note that shipping discounts can only be entered on the checkout page.")">
+        <h4 class="c-order-summary__heading">
+            @Html.Translate("/CartCheckout/OrderSummary/Heading")
+            <a href="@Model.Layout.SettingsPage.CartPageReference.GetFriendlyUrl()" class="c-order-summary__edit-cart">@Html.Translate("/CartCheckout/OrderSummary/EditCart")</a>
+        </h4>
+        <div class="c-order-summary__content" data-order-summary-content>
+            <div class="c-order-summary__section">
+                <dl class="c-order-summary__row grid">
+                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/CartCheckout/Labels/Items")</dt>
+                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-items="">-</dd>
+                </dl>
+                <dl class="c-order-summary__row grid">
+                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/CartCheckout/Labels/Tax")</dt>
+                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-tax="">-</dd>
+                </dl>
+                <div class="c-order-summary__row">
+                    <dl class="c-order-summary__row-dl grid">
+                        <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/CartCheckout/Labels/AppliedPromotion"):</dt>
+                        <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-coupon-discount="">-</dd>
+                    </dl>
+                    <div data-order-summary-output-coupon-discounts></div>
+                    @if (!string.IsNullOrEmpty(Model.AppliedMarketCodes))
+                    {
+                        <dl class="c-order-summary__row-dl c-order-summary__applied-discount grid">
+                            <dt class="c-order-summary__item--discount grid__item one-half">@Model.AppliedMarketCodes</dt>
+                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">
+                            </dd>
+                        </dl>
+                    }
+                </div>
+                <dl class="c-order-summary__row grid">
+                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/CartCheckout/Labels/Shipping")</dt>
+                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-shipping="">-</dd>
+                </dl>
+                <dl class="c-order-summary__row grid">
+                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">@Html.Translate("/CartCheckout/Labels/ShippingDiscount")</dt>
+                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-shippingdiscount="">-</dd>
+                </dl>                
+                <div class="c-order-summary__row">
+                    <a href="#" class="c-order-summary__add-discount" data-order-summary-discount-add="">
+                        <span>+</span> @Html.Translate("/CartCheckout/Labels/AddDiscountCode")
+                    </a>
+                    <div class="c-order-summary__panel grid grid--full" data-order-summary-add-discount-panel="" aria-expanded="false" style="display: none;">
+                        <div class="grid__item two-thirds">
+                            <label for="discountcode" class="c-order-summary__add-discount-field e-form__label e-form__label--text" data-formfield="">
+                                <span class="e-form__label-text sr-only" data-fake-placeholder="">@Html.Translate("/CartCheckout/Labels/DiscountCode")</span>
+                                <input type="text" name="discountcode" class="e-form__input e-form__input--text" title="discountcode" data-formfield-text="" data-order-summary-add-discount-field="">
+                                <div class="e-form__validation-errors" data-validation-error=""></div>
+                            </label>
+                            <div class="e-form__validation-errors" data-validation-error="" data-validation-for="discountcode"></div>
+                        </div>
+                        <div class="grid__item one-third">
+                            <a href="" class="e-button e-button--anchor e-button--blue c-order-summary__add-discount-apply" data-order-summary-apply-discount-code="">
+                                @Html.Translate("/CartCheckout/Labels/ApplyDiscountCode")
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-order-summary-output-donations></div>
+        </div>
+        <span class="c-order-summary__total">
+            @Html.Translate("/CartCheckout/Labels/Total"): <span data-order-summary-output-total="">-</span>
+        </span>
+    </div>
+</div>

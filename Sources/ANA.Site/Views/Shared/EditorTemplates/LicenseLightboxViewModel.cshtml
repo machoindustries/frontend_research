@@ -1,0 +1,50 @@
+﻿@model ANA.Site.Models.ViewModels.LicenseLightboxViewModel
+
+<div data-lightbox-src="licenseedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.LicenseId, new { data_license_input_id = "" })
+
+        <label for="@Html.IdFor(m => m.Country)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/Country")</span>
+            @Html.DropDownListFor(m => m.Country, (List<SelectListItem>)ViewBag.CountryList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/License/Form/Country"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_license_input_country = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-license-label-state>
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.StateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/License/Form/State"), data_formfield_text = "", data_license_input_state = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-license-label-can-state style="display:none;">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.CanStateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/License/Form/State"), data_formfield_text = "", data_license_input_can_state = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.RnLicenseNumber)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/RN")</span>
+            @Html.TextBoxFor(m => m.RnLicenseNumber, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/License/Form/RN"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_license_input_rn = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.RnLicenseNumber)"></div>
+
+        <label for="@Html.IdFor(m => m.LicenseType)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/Type")</span>
+            <input asp-for="LicenseType" class="e-form__input e-form__input--text" title="@Html.Translate("/MyAccount/License/Form/Type")" data-formfield-text="" data-license-input-type="" value="RN" disabled="disabled" />
+        </label>
+
+        <label for="@Html.IdFor(m => m.BeginDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/LbBeginDate")</span>
+            @Html.TextBoxFor(m => m.BeginDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/MyAccount/License/Form/LbBeginDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/MyAccount/License/Form/LbBeginDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_license_input_begin_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.BeginDate)"></div>
+
+        <label for="@Html.IdFor(m => m.ExpirationDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/License/Form/LbExpirationDate")</span>
+            @Html.TextBoxFor(m => m.ExpirationDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/MyAccount/License/Form/ExpirationDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/MyAccount/License/Form/ExpirationDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_license_input_expiration_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.ExpirationDate)"></div>
+
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/License/Form/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>

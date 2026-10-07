@@ -1,0 +1,131 @@
+﻿@using ANA.Site.Hub.Models.ViewModels
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Pages.ViewModels.HubSearchPageViewModel
+@{
+    Layout = "~/Hub/Views/Shared/Layouts/_HubRoot.cshtml";
+}
+
+<div class="search-results-container @(string.IsNullOrWhiteSpace(Model.SearchText) ? "d-none" : "") search-header" id="searchResultHeader">
+    <h1 class="search-results-title">Search Results</h1>
+    <p class="search-results-count">
+        <span class="search-result-match-count">@Model.TotalMatching</span> 
+        results for “<span class="search-text">@Model.SearchText</span>”
+    </p>
+</div>
+
+<div class="search-block">
+    <form action="/" class="content-form search-form" id="searchForm">
+        <div class="filters-container">
+            <div class="mobile-wrapper" id="filterSettings">
+                <h3 class="filters-mobile-title">Filters</h3>
+                @if (Model.TotalMatching > 0)
+                {
+                    <div class="title-wrapper">
+                        <h3 class="filters-title">Showing</h3>
+                        <p class="items-count" id="itemCount">
+                            <span class="item-page-size">@Model.PageSize</span> of
+                            <span class="item-total-matching">@Model.TotalMatching items</span>
+                        </p>
+                    </div>
+                }
+                @{
+                    RenderSearchFilters(Model.SearchFilters);
+                }
+            </div>
+            <div class="links-wrapper">
+                @{
+                    RenderCategoryLinks();
+                }
+            </div>
+            @Html.PropertyFor(s => @Model.CurrentPage.DynamicAdBlock)
+        </div>
+        <div class="search-items-container">
+            <h4 class="search-title">@Model.CurrentPage.SearchLabel</h4>
+            <div class="search-input-wrapper">
+                <input id="searchInput" class="search-input" placeholder="@Model.CurrentPage.SearchPlaceholder">
+                <label class="search-input-label">
+                    <input type="submit" hidden />
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="1em"
+                         viewBox="0 0 512 512"
+                         fill="currentColor">
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                    </svg>
+                </label>
+            </div>
+            <div class="filter-toggle-wrapper">
+                <a href="/" class="button-primary" id="filterToggle">FILTER</a>
+            </div>
+            @await Html.PartialAsync("~/Hub/Views/Partials/_HubResourceTopicsCard.cshtml", Model)
+        </div>
+    </form>
+</div>
+<input type="hidden" value="@Model.PageId" id="hdnPageId" />
+<input type="hidden" value="@Model.PageSize" id="hdnPageSize" />
+<input type="hidden" value="@Model.Paging.PageNumber" id="hdnPageNumber" />
+
+@functions {
+void RenderSearchFilters(HubSearchFiltersViewModel searchFilters)
+{
+    <div class="filters-wrapper">
+        <h3 class="filters-title">Media Type</h3>
+        <ul class="filters-list" id="filterList">
+            <li class="filters-item">
+                <label class="checkbox-label">
+                    <span id="all"> All </span>(<span>@Model.TotalMatching</span>)
+                <input type="checkbox" name="all" id="" hidden="" class="sr-only">
+                <span class="option-label" for="optionEvent"></span>
+                </label>
+            </li>
+            @foreach (var categoryFilter in searchFilters.FilterSets)
+            {
+                foreach (var filter in categoryFilter.Filters)
+                {
+                    if (filter.Count <= 0 || string.IsNullOrWhiteSpace(filter.Label)) { continue; }
+                    var filterIsSelected = filter.IsSelected ? "checked" : "";
+                    var filterCount = string.IsNullOrWhiteSpace(Model.SearchText) ? filter.Count.ToString() : Model.Resources.Count(p => p.MediaType == filter.Label).ToString();
+                    if (!string.IsNullOrWhiteSpace(Model.SearchText) && int.Parse(filterCount) == 0) { continue; }
+                    <li class="filters-item">
+                        <label class="checkbox-label" for="@filter.LabelId">
+                            <span id="@filter.Label.ToLower()">@filter.Label</span> (<span>@filterCount</span>)
+                            <input type="checkbox" id="@filter.LabelId" name="@filter.Label" class="sr-only @(filter.IsSelected ? "checked" : "")" @filterIsSelected hidden>
+                            <label class="option-label" for="@filter.LabelId"></label>
+                        </label>
+                    </li>
+                }
+            }
+        </ul>
+
+    </div>
+    <div class="apply-wrapper">
+        <a href="/" class="button-primary" id="applyFilter">APPLY</a>
+    </div>
+    <div class="close-filter" id="closeFilter">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             height="1em"
+             viewBox="0 0 384 512"
+             fill="currentColor">
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+        </svg>
+    </div>
+}
+
+void RenderCategoryLinks()
+{
+    if (Model.ButtonBlocks != null && Model.ButtonBlocks.Count > 0)
+    {
+        foreach (var button in Model.ButtonBlocks)
+        {
+            <a href="@Url.ContentUrl(button.ButtonUrl)" class="link">
+                <span>@button.Text</span>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     height="1em"
+                     viewBox="0 0 320 512"
+                     fill="currentColor">
+                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg>
+            </a>
+        }
+    }
+}
+}

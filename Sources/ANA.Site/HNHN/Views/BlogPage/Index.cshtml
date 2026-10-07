@@ -1,0 +1,70 @@
+@using ANA_HNHN.Helpers
+@using ANA_HNHN.Models.ViewModels
+@using EPiServer.ServiceLocation
+@using ANA_HNHN.Models.Media
+@using ANA_HNHN.Extensions
+@using ANA_HNHN.Models.Pages
+@using Geta.Optimizely.Categories
+@model BlogPageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<BlogPageViewModel>
+@{
+    var background = Model.CurrentPage.BackgroundColor;
+    if (background == "blue")
+    {
+        background = "light-blue";
+    }
+}
+@Html.FullRefreshPropertiesMetaData([nameof(Model.CurrentPage.MainImage), nameof(Model.CurrentPage.Icon)])
+
+<article class="blog-article section--squiggle bg-@background">
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-10 text-center">
+                <div class="blog-article__breadcrumbs">
+                    @if (Model.Categories != null && Model.Categories.Any())
+                    {
+                        @foreach (var item in Model.Categories)
+                        {
+                            <a href="@Html.Raw(Model.Layout.SearchActionUrl)?f=@item.Key">@item.Value</a>
+                        }
+                    }
+                </div>
+                <h1 class="blog-article__heading">
+                    @Html.PropertyFor(x => x.CurrentPage.Title)
+                </h1>
+                @if (!string.IsNullOrEmpty(Model.CurrentPage.Author) || PageHelper.IsInEditMode())
+                {
+                    <div class="blog-article__byline">
+                        @Html.PropertyFor(x => x.CurrentPage.Author)
+                    </div>
+                }
+                <div class="blog-article__date">
+                    @(Model.CurrentPage.PublicationDate?.ToString("M/dd/yyyy h:mm tt"))
+                </div>
+            </div>
+        </div>
+        <div class="row blog-article__image-wrap">
+            <div class="col-12 p-0" @Html.EditAttributes(x => x.CurrentPage.MainImage)>
+                @if (ContentReference.IsNullOrEmpty(Model.CurrentPage.MainImage))
+                {
+                    <div class="img-placeholder" data-aos="fade-in" data-aos-once="true"></div>
+                }
+                else
+                {
+                    <img class="blog-article__image" src="@Model.MainImageUrl" alt="@Model.MainImageAltText" data-aos="fade-in" data-aos-once="true" />
+                }
+            </div>
+        </div>
+        <div class="row blog-article__content">
+            <div class="col-12 blog-article__icon" @Html.EditAttributes(x => x.CurrentPage.Icon)>
+                @if (!ContentReference.IsNullOrEmpty(Model.CurrentPage.Icon))
+                {
+                    <img src="@Model.IconImageUrl" alt="@Model.IconImageAltText" data-aos="fade-up" data-aos-once="true">
+                }
+            </div>
+            <div class="col-12 blog-article__text">
+                @Html.PropertyFor(x => x.CurrentPage.MainContent)
+            </div>
+        </div>
+    </div>
+</article>

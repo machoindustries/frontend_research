@@ -1,0 +1,12 @@
+{
+  "selectors": [
+    ".mce-content-body",
+    "ol>li:before",
+    "strong",
+    "td p",
+    "ul>li:before"
+  ],
+  "atRules": [],
+  "fontFaces": [],
+  "keyframes": []
+}

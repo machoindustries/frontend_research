@@ -1,0 +1,305 @@
+﻿@using ANA.Site.Models.ViewModels
+@using ANA.Site.Models.ViewModels.Search
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.Blocks
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Find
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Helpers
+@model SearchPageViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+@if (Model == null || Model.CurrentPage == null)
+{
+    return;
+}
+
+<main class="main cf" id="content">
+    <div class="search-results-heading grid-constraint b-vst--medium b-vsb--xsmall">
+        <div class="grid grid--center">
+            <div class="grid__item one-whole">
+                <h1 class="c-container-block__heading">
+                    <span>@Model.CurrentPage.Heading</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="c-search-results grid grid--full">
+        <form action="" class="c-search-results__controls e-form grid__item one-whole" method="post" data-require="./src/views/search-filters-view">
+            <div class="c-search-results__controls-wrap">
+
+
+                <div class="c-search-results__subheading">
+                    @if (Model.HasSearchText)
+                    {
+                        <span data-num-search-results>@Model.TotalResults.ToString("N0")</span> @Html.Translate("/Search/ResultFor") <span data-search-term>&ldquo;@Model.SearchText&rdquo;</span>
+                    }
+                </div>
+
+                <div class="grid">
+                    <div class="grid__item one-whole large--two-thirds">
+
+                        <div class="e-search-box" data-require="./src/views/search-box-view">
+                            <input class="e-search-box__input" data-search-input="" id="header-search-input" name="q" type="text" value="@Model.SearchText" />
+                            <button type="submit" class="e-search-box__btn-search" onclick="form.submit();">
+                                <span class="e-search-box__btn-search-text">Search</span>
+                            </button>
+                        </div>
+                        @if (Model.HasDidYouMean)
+                        {
+                            <article class="c-search-results__did-you-mean">
+                                <h2 class="heading">
+                                    <span class="label">@Html.Translate("/Search/DidYouMean/Label")</span>
+                                    <a href="@Model.DidYouMeanUrl" class="link">@Model.DidYouMean</a>
+                                </h2>
+                            </article>
+                        }
+
+                        <div class="c-search-results__filter-bar">
+                            <div class="results-number">@Model.TotalResults Results</div>
+                            <button type="button" class="filter-button" data-mfp-src="#SearchFilters" data-filters-button>Filters</button>
+                        </div>
+
+                        <div class="c-search-filters mfp-hide" id="SearchFilters">
+                            <header>
+                                <h2>Filters</h2>
+                                <button type="button" class="close mfp-close">
+                                    <span class="sr-only">Close</span>
+                                </button>
+                            </header>
+
+                            @if (Model.HasCategoryFilters)
+                            {
+                                <div class="c-search-results__categories">
+                                    <ul class="filter-list" data-search-filters>
+                                        @foreach (var categoryFilter in Model.CategoryFilters)
+                                        {
+
+                                            <li>
+                                                <label for="rdoSearchFilter-@categoryFilter.FilterType">
+                                                    <input class="sr-only @(categoryFilter.Selected == true ? "checked" : "")" type="checkbox" name="filter" value="@categoryFilter.FilterType" id="rdoSearchFilter-@categoryFilter.FilterType"
+                                                           onchange="form.submit();">
+                                                    <span class="label">@categoryFilter.FilterType <span class="e-tag e-tag--blue">@categoryFilter.FacetCount</span></span>
+                                                </label>
+                                            </li>
+                                        }
+
+                                        @if (Model.HasMoreCategoryFilters)
+                                        {
+                                            <li class="overflow dropdown-hover" data-require="./src/components/dropdown-component">
+                                                <button type="button" class="overflow-select" data-dropdown-select>More</button>
+                                                <ul class="overflow-options" data-dropdown-options>
+                                                    @foreach (var moreCategoryFilter in Model.MoreCategoryFilters)
+                                                    {
+                                                        <li>
+                                                            <label for="rdoSearchFilter-@moreCategoryFilter.FilterType">
+                                                                <input class="sr-only  @(moreCategoryFilter.Selected == true ? "checked" : "")" type="checkbox" name="filter" value="@moreCategoryFilter.FilterType" id="rdoSearchFilter-@moreCategoryFilter.FilterType" onchange="form.submit();">
+                                                                <span class="label">@moreCategoryFilter.FilterType <span class="e-tag e-tag--blue">@moreCategoryFilter.FacetCount</span></span>
+                                                            </label>
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.Filter))
+                            {
+                                <footer>
+                                    <label for="rdoSearchFilter-clear">
+                                        <input type="checkbox" class="sr-only" name="filter" value="" id="rdoSearchFilter-clear" data-search-clear onchange="form.submit();" />
+                                        <span class="label clear">Clear Filter</span>
+                                    </label>
+                                </footer>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="grid">
+            <div class="grid__item one-whole large--two-thirds">
+                <div class="c-search-results__showing">
+                    @if (Model.HasResults)
+                    {
+                        if (Model.TotalResults == 1)
+                        {
+                            <p>Showing 1 result for &ldquo;@Model.SearchText&rdquo;</p>
+                        }
+                        else if (Model.TotalResults > Model.CurrentPage.PageSize)
+                        {
+                            <p>Showing @Model.LowerAmountOfResultsOnPage.ToString("N0") - @Model.UpperAmountOfResultsOnPage.ToString("N0") of @Model.TotalResults.ToString("N0") results for &ldquo;@Model.SearchText&rdquo;</p>
+                        }
+                        else
+                        {
+                            <p>Showing @Model.TotalResults.ToString("N0") results for &ldquo;@Model.SearchText&rdquo;</p>
+                        }
+                    }
+                </div>
+
+                @if (Model.HasMoreThanTwoSearchResults && Model.IsPageOne && !Model.HasFilter)
+                {
+                    //Only for use on the first page if a filter has not been selected. This is to show top products after two search results
+
+                    <ul class="c-search-results__list">
+
+                        @for (var i = 0; i < 2; i++)
+                        {
+                            <li class="c-search-results__item">
+                                <article class="e-search-result ">
+                                    <h2 class="e-search-result__heading">
+                                        <a href="@Model.Results[i].Url" class="e-search-result__link">@Html.Raw(Model.Results[i].Heading)</a>
+                                    </h2>
+                                    @Html.PropertyFor(x => Model.Results[i].IntroText, new { EditContainerClass = "e-search-result__copy" })
+                                </article>
+                            </li>
+                        }
+                    </ul>
+
+                    if (Model.HasTopProductResults)
+                    {
+                        // Show the products after two searches when filter is active
+                        <div class="c-search-results__featured-products">
+                            <h2>Products</h2>
+
+                            <div class="c-container-block" data-require="./src/views/container-block-view" data-carousel-mobile="true" data-carousel-desktop="false" data-carousel-slide-items-small="2" data-carousel-slide-items-medium="3" data-carousel-slide-items-large="4">
+
+                                <ul class="list c-container-block__content">
+
+                                    @foreach (var product in Model.TopProductResults)
+                                    {
+                                        <li class="c-container-block__slide" data-containerblock-carousel-slide>
+                                            <a href="@product.Url" class="e-product-card e-product-card--@product.CardColor">
+                                                <div class="card-label">@product.CategoryType</div>
+                                                <div class="card-title">@Html.Raw(product.Heading)</div>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+
+                    <ul class="c-search-results__list">
+
+                        @for (var i = 2; i < Model.Results.Count; i++)
+                        {
+                            // Show remaining searches
+                            <li class="c-search-results__item">
+                                <article class="e-search-result ">
+                                    <h2 class="e-search-result__heading">
+                                        <a href="@Model.Results[i].Url" class="e-search-result__link">@Html.Raw(Model.Results[i].Heading)</a>
+                                    </h2>
+                                    @Html.PropertyFor(x => Model.Results[i].IntroText, new { EditContainerClass = "e-search-result__copy" })
+                                </article>
+                            </li>
+                        }
+                    </ul>
+
+                }
+                else if (Model.IsPageOne && !Model.HasFilter)
+                {
+                    <ul class="c-search-results__list">
+
+                        @for (var i = 0; i < Model.Results.Count; i++)
+                        {
+                            <li class="c-search-results__item">
+                                <article class="e-search-result ">
+                                    <h2 class="e-search-result__heading">
+                                        <a href="@Model.Results[i].Url" class="e-search-result__link">@Html.Raw(Model.Results[i].Heading)</a>
+                                    </h2>
+                                    @Html.PropertyFor(x => Model.Results[i].IntroText, new { EditContainerClass = "e-search-result__copy" })
+                                </article>
+                            </li>
+                        }
+                    </ul>
+
+                    if (Model.HasTopProductResults)
+                    {
+                        // Show the products after two searches when filter is active
+                        <div class="c-search-results__featured-products">
+                            <h2>Products</h2>
+
+                            <div class="c-container-block" data-require="./src/views/container-block-view" data-carousel-mobile="true" data-carousel-desktop="false" data-carousel-slide-items-small="2" data-carousel-slide-items-medium="3" data-carousel-slide-items-large="4">
+
+                                <ul class="list c-container-block__content">
+
+                                    @foreach (var product in Model.TopProductResults)
+                                    {
+                                        <li class="c-container-block__slide" data-containerblock-carousel-slide>
+                                            <a href="@product.Url" class="e-product-card e-product-card--@product.CategoryType">
+                                                <div class="card-label">@product.CategoryType</div>
+                                                <div class="card-title">@product.IntroText</div>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+
+                }
+
+                else if (Model.HasResults)
+                {
+                    <ul class="c-search-results__list">
+
+                        @foreach (var result in Model.Results)
+                        {
+                            <li class="c-search-results__item">
+                                <article class="e-search-result ">
+                                    <h2 class="e-search-result__heading">
+                                        <a href="@result.Url" class="e-search-result__link">@Html.Raw(result.Heading)</a>
+                                    </h2>
+                                    @Html.PropertyFor(x => result.IntroText, new { EditContainerClass = "e-search-result__copy" })
+                                </article>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (Model.HasResults)
+                {
+                    await Html.RenderPartialAsync("~/Views/SearchPage/Pagination.cshtml", Model.Paging);
+                }
+
+            </div>
+            @if (Model.HasRelatedSearches)
+            {
+                <div class="c-search-results__related-searches grid__item large--one-third">
+                    <h3>Related Searches</h3>
+
+                    <ul class="list">
+                        @foreach (var relatedSearch in Model.RelatedSearches)
+                        {
+                            <li><a href="@relatedSearch.RelatedResultUrl" class="link">@relatedSearch.Title</a></li>
+                        }
+                    </ul>
+                </div>
+            }
+
+
+        </div>
+        @if (!Model.HasResults)
+        {
+            <div class="b-vst--medium b-vsb--medium">
+                @if (Model.HasSearchText)
+                {
+                    Html.RenderContentData(new EditorialBlock { Content = Model.CurrentPage.NoResultsHtml }, false);
+                }
+                else
+                {
+                    Html.RenderContentData(new EditorialBlock { Content = Model.CurrentPage.NoSearchHtml }, false);
+                }
+            </div>
+        }
+    </div>
+</main>

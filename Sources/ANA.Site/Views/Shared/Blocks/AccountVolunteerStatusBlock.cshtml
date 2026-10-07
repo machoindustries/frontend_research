@@ -1,0 +1,38 @@
+﻿@using ANA.Site.Business.Extensions
+@model ANA.Site.Models.Blocks.AccountVolunteerStatusBlock
+
+@{
+	var items = Model.Roles != null ? Model.Roles.ToList().InBatchesOf(4) : null;
+}
+
+<div class="c-account__section">
+	<h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+	<div class="grid grid--full">
+		<div class="grid__item one-whole small--six-eighths">
+			@if (items != null)
+			{
+				<form class="e-form grid grid--full">
+					@foreach(var batch in items){
+					
+						<fieldset class="e-form__fieldset grid__item one-whole small--one-half">
+							@foreach (var role in batch)
+							{
+								<label class="e-form__label e-form__label--checkbox" for="sg-checkbox-board-member" name="sg-checkbox-group" data-formfield="" style="display: block;">
+									<span class="e-form__label-text">@role</span>
+									<input type="checkbox" class="e-form__input e-form__input--checkbox" id="sg-checkbox-board-member" name="sg-checkbox-group">
+									<span class="e-form__fake-checkbox"></span>
+								</label>
+							}
+						</fieldset>
+					}
+				</form>
+			}
+		</div>
+
+		<div class="grid__item one-whole small--two-eighths">
+				<button class="e-button e-button--button e-button--blue e-button c-account__cta" data-tracked-cta>
+					UPDATE
+				</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,46 @@
+﻿@*@model ANA.Site.Models.ViewModels.PagingViewModel*@
+@model ANA.Site.Models.ViewModels.Search.SearchPagingViewModel
+
+    <nav class="e-pagination@(string.IsNullOrWhiteSpace(Model.AdditionalCssClass) ? "" : " " + Model.AdditionalCssClass)">
+
+        @if (Model.PageNumber > 1 && Model.PageNumber <= Model.TotalPages && Model.TotalPages > 1)
+        {
+            <a href="@Model.PreviousPageUrl" class="e-pagination__dir e-pagination__dir--prev">
+                @Html.Translate("/Shared/Pagination/Previous")
+            </a>
+        }
+        else if(Model.TotalPages > 1)
+        {
+            <span class="e-pagination__dir e-pagination__dir--disabled e-pagination__dir--prev">@Html.Translate("/Shared/Pagination/Previous")</span>
+        }
+
+        @foreach (var pageUrl in Model.PageUrlsToRender)
+        {
+            if (pageUrl.Key == Model.PageNumber)
+            {
+                <span class="e-pagination__list-item e-pagination__list-item--active">@pageUrl.Key</span>
+            }
+            else if (pageUrl.Key > Model.PageNumber + 3)
+            {
+                <a href="@pageUrl.Value" class="e-pagination__list-item mobile-hide">@pageUrl.Key</a>
+            }
+            else
+            {
+                <a href="@pageUrl.Value" class="e-pagination__list-item">@pageUrl.Key</a>
+            }
+        }
+
+        @if (Model.PageNumber < Model.TotalPages && Model.TotalPages > 1)
+        {
+            <a href="@Model.NextPageUrl" class="e-pagination__dir e-pagination__dir--next">
+                @Html.Translate("/Shared/Pagination/Next")
+            </a>
+        }
+        else if(Model.TotalPages > 1)
+        {
+        <span class="e-pagination__dir e-pagination__dir--disabled e-pagination__dir--next">
+            @Html.Translate("/Shared/Pagination/Next")
+        </span>
+        }
+
+    </nav>

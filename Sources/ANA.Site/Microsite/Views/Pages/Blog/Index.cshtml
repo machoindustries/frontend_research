@@ -1,0 +1,64 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.DefaultMicrositePageViewModel<BlogPage>
+@{
+    Layout = "~/Microsite/Views/Shared/Layouts/_Root.cshtml";
+    var coverImage = Model.CurrentPage.CoverImage ?? Model.Layout.DefaultCoverImage;
+    var coverImageData = coverImage != null ? coverImage.Get<ImageFile>() : null;
+}
+
+<div class="blog-page grid-x">
+    @if (coverImageData != null)
+    {
+        <img class="blog-page__banner-image" src="@coverImage.GetFriendlyUrl()" alt="@coverImageData.AltText" />
+    }
+    @if (Model.Layout.PreviousUrl != null)
+    {
+        <a href="@Model.Layout.PreviousUrl.ToString()" class="cell previous-page small-12">
+            <img alt="Previous" class="previous-page__image" src="@(Model.Layout.AssetPrefix)img/arrow-back.svg">
+            <span class="previous-page__text">Previous Page</span>
+        </a>
+    }
+    <div class="cell small-12 medium-4 content-area__left">
+        @if (!Model.CurrentPage.HideSiteWideBlogSidebarArea && Model.Layout.SettingsPage != null)
+        {
+            @Html.PropertyFor(i => i.Layout.SettingsPage.BlogSiteWideSidebarArea, new { HasContainer = false, HasItemContainer = false })
+        }
+        @Html.PropertyFor(i => i.CurrentPage.SideArea, new { HasContainer = false, HasItemContainer = false })
+    </div>
+    <div class="cell small-12 medium-8 content-area__right">
+        <div class="post">
+            <h2 class="post__title">@Html.PropertyFor(m => m.CurrentPage.Heading)</h2>
+            <p class="post__lead-in">@Html.PropertyFor(m => m.CurrentPage.Description)</p>
+            <div class="post__social-block grid-x">
+                <span class="post__author cell small-12 medium-8">
+                    @if (!string.IsNullOrEmpty(Model.CurrentPage.Author))
+                    {
+                        @:BY @Html.PropertyFor(m => m.CurrentPage.Author)
+                    }
+                </span>
+
+                <div class="cell small-12 medium-4 post__social-media addthis_inline_share_toolbox_rq5p"></div>
+
+                <div class="post__content-well">
+                    @Html.PropertyFor(m => m.CurrentPage.MainContent)
+                </div>
+            </div>
+            @if (Model.CurrentPage.EmbededVideo != null)
+            {
+                var video = Model.CurrentPage.EmbededVideo.Get<EmbededVideoBlock>();
+                <div class="video-post grid-x">
+                    <iframe class="cell small-12" src="@video.EmbededUrl"></iframe>
+                </div>
+            }
+        </div>
+    </div>
+    @if (!Model.CurrentPage.HideSiteWideBlogMainArea && Model.Layout.SettingsPage != null)
+    {
+        @Html.PropertyFor(i => i.Layout.SettingsPage.BlogSiteWideMainArea, new { HasContainer = false, HasItemContainer = false })
+    }
+    @Html.PropertyFor(i => i.CurrentPage.ContentArea, new { HasContainer = false, HasItemContainer = false })
+</div>

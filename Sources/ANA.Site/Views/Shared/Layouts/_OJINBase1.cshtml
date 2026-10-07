@@ -1,0 +1,102 @@
+﻿@using ANA.Site.Business.Helpers
+@using EPiServer.Globalization
+@using ANA.Site.Models.OJIN.Pages
+@using ANA.Site.Business.Interfaces
+@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.OJIN.OJINInterfaces.IOJINCommonProperties>
+
+@{
+    var currentCulture = ContentLanguage.PreferredCulture;
+}
+
+<!DOCTYPE html>
+
+<html lang="@currentCulture.Name">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+    <meta name="description" content="@Model.CurrentPage.MetaDescription" />
+    <meta name="keywords" content="@Model.CurrentPage.MetaKeywords" />
+    <meta name="robots" content="@Model.CurrentPage.MetaRobots" />
+    <title>@(Model.CurrentPage.MetaTitle + " | " + Model.Layout.SiteName )</title>
+    @*As per FE team*@
+    @*<link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/Ojin/css/ojin.css" type="text/css" />
+    @*As per FE team*@
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.GlobalHeadScripts))
+    {
+        @Html.Raw(Model.Layout.GlobalHeadScripts)
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.HeadScripts))
+    {
+        @Html.Raw(Model.CurrentPage.HeadScripts)
+    }
+</head>
+
+<body>
+    @if (!Model.Layout.IsHeaderHidden)
+    {
+        await Html.RenderPartialAsync("OJINHeader", Model);
+    }
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.FullRefreshPropertiesMetaData()
+    @{
+        var custServiceLinks = Model.CurrentPage as ICustomerServiceLinks;
+
+        if ((Model.Layout.IsBreadcrumbVisible && Model.Layout.Breadcrumbs.Count() >= 2) || (custServiceLinks != null && custServiceLinks.ShowCustomerServiceLinks))
+        {
+            <div @*class="grid"*@>
+
+                @{
+                    var showBreadcrumb = Model.Layout.IsBreadcrumbVisible && Model.Layout.Breadcrumbs.Count() >= 2;
+                    //var custServiceGridClasses = showBreadcrumb ? "grid__item one-whole medium--one-half" : "grid__item one-whole";
+                }
+
+                @if (showBreadcrumb)
+                {
+                    <div class="grid__item one-whole medium--one-half">
+                        @{await Html.RenderPartialAsync("OJINBreadcrumbs", Model);}
+                    </div>
+                }
+
+                @if (custServiceLinks != null && custServiceLinks.ShowCustomerServiceLinks)
+                {
+                    @*<div class="@custServiceGridClasses">
+                            @{await Html.RenderPartialAsync("CustomerServiceLinks", custServiceLinks);}
+                        </div>*@
+                }
+            </div>
+        }
+    }
+    <main class="pt-5 mt-4">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+    @if (!Model.Layout.IsFooterHidden)
+    {
+        await Html.RenderPartialAsync("OJINFooter", Model);
+    }
+
+    @RenderSection("BodyEnd", required: false)
+
+    @*As per FE team*@
+    @* jQuery is served locally from /bundles/jquery (jquery.min.js, 3.7.1).
+       This previously loaded 3.2.1 from cdnjs, which is affected by
+       CVE-2020-11022 / CVE-2020-11023 (fixed in 3.5.0) and carried no
+       SRI integrity hash. Bootstrap 4.6 below supports jQuery 3.x. *@
+    <script src="/bundles/jquery"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/plugins/unveilhooks/ls.unveilhooks.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/plugins/bgset/ls.bgset.min.js"></script>
+    <script src="/assets/Ojin/js/ojin.js"></script>
+    @*As per FE team*@
+</body>
+</html>

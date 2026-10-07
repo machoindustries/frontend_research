@@ -1,0 +1,1 @@
+import"../components/base-component.js";import{t as o}from"../../chunks/account-continuing-education-awards-item-view-BfUr4oUl.js";export{o as default};

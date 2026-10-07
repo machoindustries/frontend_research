@@ -1,0 +1,53 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.PageViewModel<ANA.Site.Models.Pages.StandardPage>
+
+@{
+    var subnav = Model.CurrentPage.GetSubNav();
+}
+
+<nav class="c-subnav" data-require="./src/views/sub-nav-view">
+    <a href="#" class="c-subnav__open" data-show-subnav>Pages in this section</a>
+    <div class="c-subnav__wrap" data-subnav-wrap>
+        <h2 class="c-subnav__heading">
+            <a class="c-subnav__heading-link" href="@subnav.PageRef.GetFriendlyUrl()" target="@subnav.Target">@subnav.Title</a>
+        </h2>
+        @{
+            RenderNavChildren(subnav, 1);
+        }
+    </div>
+</nav>
+
+@functions {
+void RenderNavChildren(SubNavItem navItem, int level)
+{
+    if (navItem.SubNavItems != null && navItem.SubNavItems.Any())
+    {
+        <ul class="c-subnav__list @("c-subnav__list--lv" + level)">
+            @foreach (var subItem in navItem.SubNavItems)
+            {
+                var cssClass = $"c-subnav__item c-subnav__item--lv{level}";
+                var linkClass = $"c-subnav__link{(subItem.IsCurrentPage ? " c-subnav__link--current" : "")}{(subItem.IsAncestor ? " c-subnav__link--ancestor" : "")}";
+                <li class="@cssClass">
+                    <a href="@subItem.PageRef.GetFriendlyUrl()" class="@linkClass" target="@subItem.Target">
+                        @if ((subItem.Target ?? string.Empty) == "_blank" && level == 1)
+                        {
+                            <span class="c-subnav__icon icon icon--icon-external-link"><span class="sr-only">Opens in a new window</span></span>
+                        }
+                         @subItem.Title
+                        @if (!string.IsNullOrEmpty(subItem.SubTitle) && level == 1)
+                        {
+                            <span class="c-subnav__item-subtitle">(@subItem.SubTitle)</span>
+                        }
+                    </a>
+                        @{
+                            RenderNavChildren(subItem, level + 1);
+                        }
+                </li>
+            }
+        </ul>
+    }
+}
+}

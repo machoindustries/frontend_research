@@ -1,0 +1,32 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubCategoryResourcesCardContainerBlockViewModel
+
+<div class="slider-block-container @Model.Alignment @Model.ContainerClass">
+    <div class="slider-block">
+        <div class="title-container">
+            <h3 class="title animate-text">@Model.CurrentBlock.Title</h3>
+            <p class="text">@Model.Description</p>
+            <a href="@Url.ContentUrl(Model.CurrentBlock.ButtonLinkUrl)" class="button-primary">@Model.CurrentBlock.ButtonText
+                @if (Model.IsExternal)
+                {
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1em"
+                        viewBox="0 0 512 512"
+                        fill="currentColor"
+                    >
+                        <path
+                            d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"
+                        />
+                    </svg>
+                }
+            </a>
+        </div>
+        <div class="slider-block-items">
+            <div class="c-container-block__content">
+                @Html.PropertyFor(m => m.CurrentBlock.ResourceContentArea)
+            </div>
+            <div class="indicators-wrapper"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+.three-across-card-padded {
+    padding: 2rem .25rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+    
+    @media (min-width: $medium) {
+        padding: 2rem;
+        justify-content: start;
+    }
+
+    @media (min-width: $large) {
+        padding: 2rem 5rem 3rem 5rem;
+    }
+
+    &.blue-background-orange-hover {
+        background-color: #13619C;
+        color: $white;
+
+        .card-img-overlay {
+            background-color: #FAAA51;
+            opacity: 0;
+        }
+    }
+
+    &.gold-background-blue-hover {
+        background-color: #FAAA51;
+
+        .card-img-overlay {
+            background-color: #13619C;
+            opacity: 0;
+        }
+    }
+}

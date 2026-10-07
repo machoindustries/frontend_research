@@ -1,0 +1,138 @@
+﻿@using ANA_HNHN.Models.Media
+@using Brightfind.Helper
+@using EPiServer.ServiceLocation
+@model ANA_HNHN.Models.Blocks.ClickableImageCollectionBlock
+@{
+    var selectedView = Model.View;
+    var background = Model.BackgroundColor;
+    if (background == "lightBlue")
+    {
+        background = "light-blue";
+    }
+    if (background == "mediumBlue")
+    {
+        background = "blue";
+    }
+}
+
+@if (@selectedView == "HeadingTop")
+{
+    <section class="bg-@background">
+        <div class="container">
+            @if (Model.Heading != null)
+            {
+                <div class="text-center mb-5">
+                    <h2>@Model.Heading</h2>
+                </div>
+            }
+            <div class="row d-flex align-items-center image-block">
+                <div class="col-lg">
+                    <div class="row d-flex justify-content-center gx-lg-5">
+                        @if (Model.Collection != null)
+                        {
+                            @foreach (var item in Model.Collection.Items)
+                            {
+                                if (item != null)
+                                {
+                                    var contentItem = item.LoadContent();
+                                    var imageBlock = contentItem as ANA_HNHN.Models.Blocks.ClickableImageBlock;
+                                    var image = MediaHelper.GetUrl(imageBlock.Image);
+                                    var altTxt = MediaHelper.GetImageAltText(imageBlock?.Image);
+
+                                    <div class="col-12 col-md-6 col-lg mb-5 mb-lg-0 image-block__col">
+                                        <div class="image-block__item">
+                                            <img loading="lazy" class="image-block__image" src="@image" alt="@altTxt">
+                                            @if (imageBlock.Button != null && imageBlock.Button.ButtonText != null && imageBlock.Button.ButtonLink != null)
+                                            {
+                                                <h4 class="mt-4 text-center">@imageBlock.Button.ButtonText</h4>
+                                                <a class="absolute-link" target="@imageBlock.Button.ButtonTarget" href="@Url.ContentUrl(imageBlock.Button.ButtonLink)" aria-label="@imageBlock.Button.ButtonText Link"></a>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else if (@selectedView == "HeadingLeft" || @selectedView == "NoHeading")
+{
+    <section class="bg-@background">
+        <div class="container">
+            <div class="row d-flex align-items-center image-icons">
+                @if(Model.Heading != null)
+                {
+                    <div class="col text-center mb-4 mb-lg-0 text-lg-start image-icons__heading--left">
+                        <h2>@Model.Heading</h2>
+                    </div>
+                }
+                <div class="col-lg">
+                    <div class="row gx-lg-5">
+                        @if (Model.Collection != null)
+                        {
+                            @foreach (var item in Model.Collection.Items)
+                            {
+                                if (item != null)
+                                {
+                                    var contentItem = item.LoadContent();
+                                    var imageBlock = contentItem as ANA_HNHN.Models.Blocks.ClickableImageBlock;
+                                    var image = MediaHelper.GetUrl(imageBlock.Image);
+                                    var altTxt = MediaHelper.GetImageAltText(imageBlock?.Image);
+
+                                    <div class="col-6 col-md d-flex flex-column image-icons__item">
+                                        <img loading="lazy" class="w-100" src="@image" alt="@altTxt">
+                                        @if (imageBlock.Button != null && imageBlock.Button.ButtonText != null && imageBlock.Button.ButtonLink != null)
+                                        {
+                                            <h5>@imageBlock.Button.ButtonText</h5>
+                                            <a class="absolute-link" target="@imageBlock.Button.ButtonTarget" href="@Url.ContentUrl(imageBlock.Button.ButtonLink)" aria-label="@imageBlock.Button.ButtonText Link"></a>
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else if (@selectedView == "Logos")
+{
+    <section class="bg-@background section--sm-gap">
+        <div class="container">
+            <div class="row d-flex align-items-center justify-content-center logo-block">
+                @if (Model.Collection != null)
+                {
+                    @foreach (var item in Model.Collection.Items)
+                    {
+                        if (item != null)
+                        {
+                            var contentItem = item.LoadContent();
+                            var imageBlock = contentItem as ANA_HNHN.Models.Blocks.ClickableImageBlock;
+                            var image = MediaHelper.GetUrl(imageBlock.Image);
+                            var altTxt = MediaHelper.GetImageAltText(imageBlock?.Image);
+
+                            <div class="col-12 col-md mb-5 mb-lg-0 logo-block__col">
+                                <div class="logo-block__item">
+                                    @if (imageBlock.Button != null && imageBlock.Button.ButtonText != null && imageBlock.Button.ButtonLink != null)
+                                    {
+                                        <a target="@imageBlock.Button.ButtonTarget" href="@Url.ContentUrl(imageBlock.Button.ButtonLink)">
+                                            <img loading="lazy" class="logo-block__image" src="@image" alt="@altTxt">
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <img loading="lazy" class="logo-block__image" src="@image" alt="@altTxt">
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </section>
+}

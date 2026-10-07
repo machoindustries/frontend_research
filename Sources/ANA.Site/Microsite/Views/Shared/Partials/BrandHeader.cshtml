@@ -1,0 +1,174 @@
+﻿@using System.Configuration
+@using System.Web
+@using ANA.Site.Settings
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Microsite.Extensions
+@using ANA.Site.Microsite.Models.Pages
+@using ANA.Site.Microsite.Models.Pages.Home
+@using ANA.Site.Models.Media
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Business.State
+@using ANA.Site.Models.Blocks
+@using EPiServer.Shell.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.IMicrositePageViewModel<MicrositePageData>
+@inject IAppSettings _appSettings
+
+
+@{
+    var logo = Model.CurrentPage is HomePage ? null : Model.Layout.WhiteLogo;
+    var logoImage = logo == null ? null : logo.Get<ImageFile>();
+    var primaryNavBlocks = Model.Layout.HeaderPrimaryNavigation.GetContentItems<LinkListBlock>();
+    var catButtons = Model.Layout.HeaderRightUtilityCTAButton.GetContentItems<ButtonBlock>();
+}
+
+<div class="ana-site-header-wrapper">
+    <div class="main small-12 cell">
+        <a href="#main-content" class="show-on-focus" data-module-core="skip-nav">Skip to Content</a>
+        <h1 class="hide" aria-hidden="true">@Model.CurrentPage.Heading</h1>
+    </div>
+    <header class="ana-site-header grid-x header" role="banner" data-module-core="sticky-nav">
+        <div class="ana-site-header-utility cell small-12">
+            @foreach (var link in Model.Layout.HeaderLeftUtilityNavigation)
+            {
+                if (link != null)
+                {
+                    <a class="ana-site-header-utility__link" href="@link.GetFriendlyUrl()" target="@link.Target" title="@link.Title">
+                        <span>@link.Text</span>
+                    </a>
+                }
+            }
+
+            <div class="ana-site-header-utility__tool-group">
+                <a class="ana-site-header-utility__cart" href="@Model.Layout.CartPage.GetSafeFriendlyUrl()" title="@Model.Layout.CartItemCount" data-gtm-event-label="@Html.Translate("/header/cart")">
+                    <span class="ana-site-header-utility__item-count">@Model.Layout.CartItemCount</span>
+                    <img alt="cart" src="@(Model.Layout.AssetPrefix)img/shopping_cart-white.svg" />
+                </a>
+
+                <div class="ana-site-header-utility__link-group">
+                    @if (Model.Layout.AccountPage != null && User.Identity.IsAuthenticated)
+                    {
+                        <a class="ana-site-header-utility__link"
+                           href="@Model.Layout.AccountPage.GetSafeFriendlyUrl()"
+                           title="@Html.Translate("/header/myaccount")">
+                            <span>@Html.Translate("/header/myaccount")</span>
+                        </a>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="ana-site-header-utility__link"
+                           href="@($"{_appSettings.LogoutUrl}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true,true) + "?act=logout")}")"
+                           title="@Html.Translate("/header/logout") (@UserState.CurrentProfile.Email)">
+                            <span>@Html.Translate("/header/logout")</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="ana-site-header-utility__link"
+                           href="@($"{_appSettings.SSOUrl}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true,true))}")"
+                           title="@Html.Translate("/header/login")" data-header-tools-cta>
+                            <span>@Html.Translate("/header/login")</span>
+                        </a>
+                    }
+                </div>
+                <div class="ana-site-header-utility__button-group">
+                    @foreach (var button in catButtons)
+                    {
+                        <a class="ana-site-header-utility__button" href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame" title="@button.Text">
+                            <span>@button.Text</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-wrapper small-12 cell">
+            <nav class="main-nav" role="navigation" aria-label="Main Navigation">
+                <h2 class="hide" aria-hidden="true">Main Navigation</h2>
+                <div class="mobile-head">
+                    @if (logoImage != null)
+                    {
+                        <a class="header__link" href="@Model.Layout.HomePage.GetFriendlyUrl()">
+                            <img class="header__logo" src="@logoImage.ContentLink.GetFriendlyUrl()" alt="@logoImage.AltText">
+                        </a>
+                    }
+                    <button class="menu-icon" type="button" data-open="offCanvas"><span class="visuallyhidden">Open Mobile Menu</span></button>
+                </div>
+
+                <ul class="non-mobile-menu" data-module-dynamic="dropdown-menu">
+                    <li>
+                        @if (logoImage != null)
+                        {
+                            <a class="header__link" href="@Model.Layout.HomePage.GetFriendlyUrl()">
+                                <img class="header__logo" src="@logoImage.ContentLink.GetFriendlyUrl()" alt="@logoImage.AltText">
+                            </a>
+                        }
+                    </li>
+                    @foreach (var linkBlock in primaryNavBlocks)
+                    {
+                        if (linkBlock.Links != null && linkBlock.Links.Any())
+                        {
+
+                            <li class="has-submenu">
+                                <a href="@linkBlock.HeadingLink.GetSafeFriendlyUrl()" target="@linkBlock.TargetFrame" aria-haspopup="true" aria-expanded="false">@linkBlock.Heading</a>
+                                <button aria-expanded="false"><span class="visuallyhidden submenu__button-text">show submenu</span></button>
+                                <ul>
+                                    @foreach (var sublink in linkBlock.Links)
+                                    {
+                                        <li>
+                                            @Html.PropertyFor(i => sublink)
+                                        </li>
+
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@linkBlock.HeadingLink.GetSafeFriendlyUrl()" target="@linkBlock.TargetFrame">@linkBlock.Heading</a>
+                            </li>
+                        }
+                    }
+                    <li data-module-core="search-icon" class="sliding-search-input">
+                        <label class="hide">
+                            <input />
+                            <div>SEARCH</div>
+                        </label>
+                        <!-- <span class="svg-sprite -search-icon"><svg role="img" aria-label="search box icon"><use xlink:href="#search-icon"></use></svg></span>  -->
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="off-canvas position-left" id="offCanvas" data-off-canvas data-transition="overlap">
+            <nav role="navigation" aria-label="Mobile Navigation">
+                <button class="close-button" aria-label="Close menu" type="button" data-close>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <ul class="mobile-menu">
+                    <li>
+                        <a href="@Model.Layout.HomePage.GetFriendlyUrl()">Home</a>
+                    </li>
+                    @foreach (var linkBlock in primaryNavBlocks)
+                    {
+                        <li>
+                            <a href="@linkBlock.HeadingLink.GetSafeFriendlyUrl()" target="@linkBlock.TargetFrame">@linkBlock.Heading</a>
+                            @if (linkBlock.Links != null && linkBlock.Links.Any())
+                            {
+                                <ul>
+                                    @foreach (var sublink in linkBlock.Links)
+                                    {
+                                        <li>
+                                            @Html.PropertyFor(i => sublink)
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </header>
+</div>

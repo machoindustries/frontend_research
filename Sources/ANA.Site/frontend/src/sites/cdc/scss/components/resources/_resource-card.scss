@@ -1,0 +1,158 @@
+// .result-card{
+//     max-width: 26rem;
+
+//     .link-wrapper{
+//         text-decoration: none;
+
+//         &:hover * .resource-title{
+//             text-decoration: underline;
+//         }
+
+//         &:hover * .resource-img-overlay{
+//             background-color: $media-content-social-card-link-background;
+//             opacity: .5;
+//         }
+
+//         .resource-img-wrapper{
+//             background-color: $media-content-social-card-background; 
+//             padding: 10px;
+//             padding-bottom: 0px;
+        
+//             .resource-img-container{
+//                 width: 100%;
+//                 height: 0;
+//                 padding-top: 70%;
+//                 position: relative;
+            
+//                 .resource-img{
+//                     width: 100%;
+//                     height: 100%;
+//                     object-fit: cover;
+//                     position: absolute;
+//                     top: 0
+//                 }  
+
+//                 .resource-img-overlay{
+//                     width: 100%;
+//                     height: 100%;
+//                     object-fit: cover;
+//                     position: absolute;
+//                     top: 0;
+//                     z-index: 5;
+//                 }
+//             }
+//             .resource-icon-container{
+//                 position: absolute;
+//                 bottom: 0;
+//                 width: 40px;
+//                 height: 40px;
+//                 opacity: 75%;
+//                 z-index: 5;
+//                 background-color: $media-content-social-card-link-background;
+//                 cursor: pointer;
+//                 padding: 10px;
+//                 border: none;
+        
+//                 .resource-link-icon{
+//                     width: 100%;
+//                     height: 100%;
+//                 }
+//             }
+//         }
+        
+//         .resource-content{
+//             background-color: $media-content-social-card-background;
+//             padding: 0.75rem;
+//             width: 100%;
+//             padding-bottom: 1.5rem;
+//             height: 165px;
+        
+//             .resource-title{
+//                 color: $media-content-social-card-font;
+//                 font-weight: 600;
+//                 font-size: 1rem;
+//                 line-height: 1.25rem;
+//                 margin-top: 0rem;
+//             }
+        
+//             .resource-description-wrapper{
+//                 max-height: 110px;
+//                 -webkit-line-clamp: 5;
+//                 overflow: hidden;
+//                 text-overflow: ellipsis; 
+//                 display: -webkit-box !important;
+//                 -webkit-box-orient: vertical;
+//                 white-space: normal;
+                
+        
+//                 .resource-description{
+//                     color: $media-content-social-card-small-text;
+//                     font-size: 0.75rem;
+//                     line-height: 1.0625rem;
+//                 }
+        
+//             }
+        
+//         }
+
+//         .resource-topics{
+//             background-color: $font-dark-blue2;
+//             padding: 0.75rem;
+//             width: 100%;
+//             color: white;
+//             font-size: 12px;
+//             line-height: 20px;
+//             position: relative;
+        
+//             .resource-ANA{
+//                 font-weight: bold;
+//             }
+        
+//             .share-icon{
+//                 position: absolute;
+//                 right: 10px;
+//                 bottom: 10px;
+//                 cursor: pointer;
+//                 padding: .25rem;
+//                 width: 25px;
+//                 height: 25px;
+        
+//                 &:hover .share-icon-path{
+//                     fill: $media-content-social-card-link-background
+//                 }
+                
+//                 .share-icon-path{
+//                     fill: white;
+//                 }
+//             }
+//         }
+
+//     }
+
+// }
+
+
+
+// .white-space{
+//     background-color: white;
+//     padding: 10px;
+// }
+
+// .filter-results{
+//     color: $resources-results;
+//     font-size: 0.875rem;
+//     line-height: 1.75rem;
+//     font-weight: 400; 
+//     margin-left: 2rem;
+// }
+
+// .card-results{
+//     display: flex;
+//     justify-content: center;
+
+//     @media(min-width: 640px){
+//         justify-content: start;
+//     }
+// }
+
+

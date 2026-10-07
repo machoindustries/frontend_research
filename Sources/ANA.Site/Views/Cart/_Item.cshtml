@@ -1,0 +1,294 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Commerce.Variants
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.ViewModels
+@using Geta.Optimizely.Extensions;
+@using EPiServer
+@using EPiServer.Commerce.Catalog.ContentTypes
+
+@model CartItemViewModel
+
+@{
+    var variantContent = Model.Entry as VariationContent;
+    var parentProduct = variantContent?.GetParentProducts()?.FirstOrDefault()?.GetContent() as AnaProductBase;
+    var productCategory = parentProduct?.GetOriginalType().Name.Replace("Product", string.Empty) ?? string.Empty;
+
+    var productFormat = string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(Model.BookFormat))
+    {
+        productFormat = Model.BookFormat;
+    }
+    else
+    {
+        productFormat = productCategory;
+    }
+
+    var productType = "";
+    var learnProduct = parentProduct as LearnBase;
+
+    if (learnProduct != null)
+    {
+        productType = learnProduct.Type;
+
+    }
+    else if (parentProduct is WorkshopProduct)
+    {
+        productType = "Workshop";
+    }
+
+
+    // DT2-138 - ANA entity logo for Membership purchases
+
+    var settings = SettingsHelper.GetSettings();
+
+    // Get logo defined in the CMS, but if null, get fallback file
+    var membershipLogo = settings?.MembershipCartLogo != null ? settings.MembershipCartLogo.GetFriendlyUrl() : "/assets/img/logos/ANA-logo-flame-portrait.png";
+
+    // Get product codes defined in the CMS, but if null, get fallback codes
+    var membershipCodes = settings?.MembershipSpecialProductCodes != null ? settings.MembershipSpecialProductCodes.ToList<string>() : new List<string>() { "LIST-FULL-61218630", "LIST-FULL-61218910", "LIST-FULL-61218913", "LIST-FULL-61205215" };
+
+    // Get code defined in CMS, otherwise use fallback value if null
+    var reactivationCode = !String.IsNullOrWhiteSpace(settings?.ReactivationFeeProductCode) ? settings.ReactivationFeeProductCode : "LIST-STND-50032";
+
+}
+
+<li class="c-order-detail__items-row" data-order-item-row>
+
+    <div class="grid c-order-item" data-require="./src/views/order-item-view"
+         data-product-code="@(Model.Entry is MembershipVariant ? "MBR" : Model.Code)"
+         data-product-item_id="@(parentProduct?.Code ?? string.Empty)"
+         data-product-item_name="@Model.DisplayName"
+         data-product-item_brand="@(parentProduct?.EntityBanner ?? string.Empty)"
+         data-product-item_category="@productCategory"
+         data-product-price="@(Model.DiscountedPrice != null ? Model.DiscountedPrice.ToString() : Model.PlacedPrice.ToString())"
+         data-product-quantity="@Model.Quantity"
+         data-product-item_variant="@Model.Code"
+         data-product-index="@ViewBag.ListIndex.ToString()"
+         data-product-format="@productFormat">
+
+        <div class="grid__item one-whole medium--six-twelfths">
+
+            <div class="c-order-item__content c-order-item__content--figure-title">
+
+                @{
+                    // DT2-138 - ANA entity logo for Membership purchases
+
+                    bool IsMembership = false;
+                    if (Model.Entry != null)
+                    {
+                        // Handle normal memberships
+                        if (Model.Entry is MembershipVariant)
+                        {
+                            IsMembership = true;
+                        }
+                        // Handle special memberships
+                        else
+                        {
+                            if (!string.IsNullOrWhiteSpace(Model.Entry.Code)
+                                && membershipCodes.Contains(Model.Entry.Code))
+                            {
+                                IsMembership = true;
+                            }
+                        }
+                    }
+                }
+
+                <figure class="c-order-item__figure @(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "c-order-item__figure--icon" : string.Empty)"
+                        @*style="@(IsMembership ? "background-color:#fff;" : "")"*@>
+                    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                    {
+                        using (Html.BeginConditionalLink(!string.IsNullOrWhiteSpace(Model.Url), new HtmlString(Model.Url), Model.DisplayName, "c-order-item__link"))
+                        {
+                            <img src="@Model.ImageUrl?width=37&height=55" title="@Model.DisplayName" alt="@Model.DisplayName" class="c-order-item__image" />
+                        }
+                    }
+                    // DT2-138 - ANA entity logo for Membership purchases
+                    else if (IsMembership)
+                    {
+                        // DT2-796 Replace State Only Membership product logo with a non-ana membership logo on Cart page
+                        if (Model.DisplayName.Contains("State Only"))
+                        {
+                            <span class="icon--icon-profile c-order-item__figure-icon"></span>
+                        }
+                        else
+                        {
+                            <img src="@membershipLogo" title="@Model.DisplayName" alt="@Model.DisplayName" class="c-order-item__image" style="max-height: 4.25rem;" />
+                        }
+                    }
+                    else
+                    {
+                        <span class="@(parentProduct?.GetIconClass() ?? "icon--icon-profile") c-order-item__figure-icon"></span>
+                    }
+                    @if (!string.IsNullOrEmpty(parentProduct?.EntityBanner))
+                    {
+                        <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@parentProduct.EntityBanner.ToLower()">
+                            <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                            <span class="c-product-detail__entity-banner-text">@parentProduct.EntityBanner</span>
+                        </div>
+                    }
+                </figure>
+
+                <div class="c-order-item__title">
+                    <span class="c-order-item__product-type">@productType</span>
+                    @using (Html.BeginConditionalLink(!string.IsNullOrWhiteSpace(Model.Url), new HtmlString(Model.Url), Model.DisplayName, "c-order-item__link"))
+                    {
+                         <span class="item-displayname">@Model.DisplayName</span>
+
+                        //custom handling to display description for Certification Verification Letter product in cart, as description is stored in AdditionalProperties in format "Description=xxxx;"
+                        if (Model.DisplayName.Equals("Certification Verification Letter") && Model.AdditionalProperties.Contains("Description"))
+                        {
+                            //dictionary is created by splitting AdditionalProperties string first by ';' to get key-value pairs, then by '=' to separate keys and values, and finally converting to a dictionary for easy access
+                            var dict = Model.AdditionalProperties.Split(';')
+                            .Select(p => p.Split('='))
+                            .ToDictionary(kv => kv[0], kv => kv[1]);
+
+                            string description = dict["Description"];
+
+                            //in case the format of AdditionalProperties string changes and the above method fails to extract description, fallback to regex method to extract description from AdditionalProperties string
+                            if(string.IsNullOrEmpty(description))
+                            {
+                                description = System.Text.RegularExpressions.Regex.Match(Model.AdditionalProperties, @"Description=(.+?);").Groups[1].Value;
+                            }
+                            
+                            //if description is successfully extracted, display it below the product name in cart
+                            if(!string.IsNullOrEmpty(description))
+                            {
+                                <br />                           
+                                <span class="item-description">@description</span>
+                            }
+                        }
+                        
+                         <!--@Model.AdditionalProperties.ToString()-->
+
+                    }
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.BookAuthor))
+                {
+                    <div class="c-order-item__author">@Model.BookAuthor</div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.BookFormat))
+                {
+                    <div class="c-order-item__format">
+                        <div class="c-order-item__format-name">@Model.BookFormat</div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="grid__item one-whole medium--two-twelfths">
+
+            <dl class="c-order-item__content c-order-item__content--item-price">
+                <dt class="c-order-item__row-label">@Html.Translate("/CartCheckout/Labels/PlacedPrice"):</dt>
+                <dd class="c-order-item__pricing" data-order-item-pricing>
+                    @if (Model.OriginalPlacedPrice.HasValue && Model.OriginalPlacedPrice.Value > 0 && (Model.OriginalPlacedPrice.ToString() != Model.PlacedPrice.ToString()))
+                {
+                    <text>
+                        <span class="c-order-item__pricing-price c-order-item__pricing-price--old">@Model.OriginalPlacedPrice.ToString()</span>
+                        <div class="c-order-item__pricing-price c-order-item__pricing-price--new">@Model.PlacedPrice.ToString()</div>
+                   </text>
+                }
+                else
+                {
+                
+                    <span class="c-order-item__pricing-price">@Model.PlacedPrice.ToString()</span>
+             
+                }
+                </dd>
+            </dl>
+
+        </div>
+
+        <div class="grid__item one-whole medium--two-twelfths">
+
+            <dl class="c-order-item__content">
+                <dt class="c-order-item__row-label c-order-item__row-label--quantity">
+                    @Html.Translate("/CartCheckout/Labels/Quantity"):
+                </dt>
+                @if (Model.IsQuantityAdjustable)
+                {
+                    <dd class="c-order-item__quantity">
+                        <div class="e-quantity-selector">
+                            <div class="e-quantity-selector__content">
+                                <label for="@Html.NameFor(m => m.Quantity)" class="e-form__label e-quantity-selector__field">
+                                    @Html.TextBoxFor(m => m.Quantity, new { type = "number", min = "1", @class = "e-form__input e-form__input--text e-quantity-selector__input", @readonly = "readonly", data_quantity_selector_input = "" })
+                                </label>
+                                @if (Model.IsBulkPurchesed)
+                                {
+                                    <a class="e-quantity-selector__nav e-quantity-selector__nav--dec e-quantity-selector__disabled">
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/DecreaseQuantity")</span>
+                                    </a>
+                                    <a class="e-quantity-selector__nav e-quantity-selector__nav--inc e-quantity-selector__disabled">
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/IncreaseQuantity")</span>
+                                    </a>
+                                }
+                                else if (!Model.IsPhysicalBookVariant)
+                                {
+                                    <a href="@Url.Action("UpdateItem", "Cart", new {Model.Code, Quantity = Model.Quantity - 1})" class="e-quantity-selector__nav e-quantity-selector__nav--dec" data-quantity-selector-decrease>
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/DecreaseQuantity")</span>
+                                    </a>
+                                    <a class="e-quantity-selector__nav e-quantity-selector__nav--inc e-quantity-selector__disabled">
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/IncreaseQuantity")</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("UpdateItem", "Cart", new {Model.Code, Quantity = Model.Quantity - 1})" class="e-quantity-selector__nav e-quantity-selector__nav--dec" data-quantity-selector-decrease>
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/DecreaseQuantity")</span>
+                                    </a>
+                                    <a href="@Url.Action("UpdateItem", "Cart", new {Model.Code, Quantity = Model.Quantity + 1})" class="e-quantity-selector__nav e-quantity-selector__nav--inc" data-quantity-selector-increase>
+                                        <span class="e-quantity-selector__nav-text">@Html.Translate("/CartCheckout/Labels/IncreaseQuantity")</span>
+                                    </a>
+                                }
+                            </div>
+                            @Html.ActionLink(Html.Translate("/CartCheckout/Labels/Remove").ToString(), "RemoveItem", new { Model.Code }, new { @class = "e-quantity-selector__remove", data_quantity_selector_remove = "" })
+                        </div>
+                    </dd>
+                }
+                else
+                {
+                    <dd class="c-order-item__quantity">
+                        <div class="e-quantity-selector">
+                            @Model.Quantity
+                            @if (Model.Entry is MembershipVariant)
+                            {
+                                @Html.ActionLink(Html.Translate("/CartCheckout/Labels/Remove").ToString(), "RemoveItem", new { Code = "MBR" }, new { @class = "e-quantity-selector__remove", data_quantity_selector_remove = "" })
+                            }
+                            else if (Model.Code != reactivationCode)
+                            {
+                                @Html.ActionLink(Html.Translate("/CartCheckout/Labels/Remove").ToString(), "RemoveItem", new { Model.Code }, new { @class = "e-quantity-selector__remove", data_quantity_selector_remove = "" })
+                            }
+                        </div>
+                    </dd>
+                }
+            </dl>
+
+        </div>
+
+        <div class="grid__item one-whole medium--two-twelfths">
+            <dl class="c-order-item__content c-order-item__content--right c-order-item__content--item-total">
+                <dt class="c-order-item__row-label">@Html.Translate("/CartCheckout/Labels/PlacedTotal"):</dt>
+                <dd class="c-order-item__pricing" data-item-row-price>
+                    @if (Model.DiscountedPrice.HasValue)                         
+                    {
+                        <text>
+                            <span class="c-order-item__pricing-price c-order-item__pricing-price--old">@Model.RowPrice.ToString()</span>
+                            <div class="c-order-item__pricing-price c-order-item__pricing-price--new">@Model.DiscountedPrice.ToString()</div>
+                            <div class="c-order-item__pricing-price-caveat">@Model.DiscountText</div>
+                        </text>
+                    }
+                    else
+                    {
+                        <div class="c-order-item__pricing-price">@Model.RowPrice.ToString()</div>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+</li>

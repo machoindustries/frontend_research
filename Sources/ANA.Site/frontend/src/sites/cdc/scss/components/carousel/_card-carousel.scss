@@ -1,0 +1,125 @@
+.resource-carousel {
+    display: flex;
+    flex-direction: row;
+    height: 37.125rem !important;
+    //margin-bottom: 4.5rem;
+
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .slick-track {
+        height: 100%;
+    }
+
+    .card-wrapper {
+        display: flex;
+
+        .media-content-social-links {
+
+            @media screen and (min-width: $medium) {
+                max-width: 26rem !important;
+            }
+
+            @media screen and (min-width: $large) {
+                max-width: 26rem !important;
+            }
+        }
+    }
+
+    .slide-arrow {
+        position: absolute;
+        top: 40%;
+        cursor: pointer;
+        padding: 1rem;
+        z-index: 10;
+
+        span::before {
+            border-style: solid;
+            border-color: #CF4520;
+            border-width: 0.25rem 0.25rem 0 0;
+            content: '';
+            display: inline-block;
+            height: .8rem;
+            left: 0.15rem;
+            position: relative;
+            top: 0.15rem;
+            transform: rotate(-45deg);
+            vertical-align: top;
+            width: .8rem;
+        }
+
+        .chevron.right:before {
+            left: 0;
+            transform: rotate(45deg);
+        }
+
+        .chevron.left:before {
+            left: 0.25rem;
+            transform: rotate(-135deg);
+        }
+    }
+
+    .slick-disabled {
+        span::before {
+            border-color: #838383;
+        }
+    }
+
+    .prev-arrow {
+        left: -2rem;
+        width: 0;
+        height: 0;
+
+        @media(min-width: 500px) {
+            left: -1.25rem
+        }
+
+        @media(min-width: 640px) {
+            left: -2.5rem;
+        }
+    }
+
+    .next-arrow {
+        right: -.75rem;
+        width: 0;
+        height: 0;
+
+        @media(min-width: 500px) {
+            right: 0rem
+        }
+
+        @media(min-width: 640px) {
+            right: -1.25rem
+        }
+    }
+
+    .slick-dots {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 2rem 0;
+
+        list-style-type: none;
+
+        li {
+            margin: 0 0.25rem;
+        }
+
+        button {
+            display: block;
+            width: 6px;
+            height: 6px;
+            padding: 0;
+            border: 1px solid $media-content-social-card-font;
+            border-radius: 100%;
+            text-indent: -9999px;
+            background-color: transparent;
+        }
+
+        li.slick-active button {
+            background-color: #CF4520;
+            border: none;
+        }
+    }
+}

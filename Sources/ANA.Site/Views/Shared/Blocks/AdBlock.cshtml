@@ -1,0 +1,26 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+@using Geta.Optimizely.Extensions
+
+@model ANA.Site.Models.Blocks.AdBlock
+@{
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+    var wrapColour = (displayOption.Equals(ANA.Site.Global.DisplayOptions.AdThird) || displayOption.Equals(ANA.Site.Global.DisplayOptions.AdFull)) ? "c-ad-block--grey" : string.Empty;
+}
+<aside class="c-ad-block @wrapColour">
+    <div class="c-ad-block__heading">@Html.Translate("/AdBlock/Advertisement")</div>
+    <div class="c-ad-block__content">
+        @if (Model.BannerImage != null)
+        {
+            var bannerImage = Model.BannerImage.GetContent() as ImageFile;
+            using (Html.BeginConditionalLink(Model.BannerLink != null, new HtmlString(Model.BannerLink != null ? Model.BannerLink.GetFriendlyUrl() : ""), null, null, null, "_blank"))
+            {
+                <img src="@Model.BannerImage.GetFriendlyUrl()" alt="@(bannerImage.AltText ?? bannerImage.CaptionTitle ?? bannerImage.Caption)" class="c-ad-block__image" />
+            }
+        }
+        @Html.Raw(Model.AdHtml)
+    </div>
+</aside>

@@ -1,0 +1,6 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.Blocks.SocialLinkBlock
+
+<li><a href="@Url.ContentUrl(Model.Link)"><img src="@Url.ContentUrl(Model.ImageSource)" alt="@Model.AltText"></a></li>

@@ -1,0 +1,56 @@
+---
+data:
+  -
+    Label: "Topics"
+    Filters:
+      -
+        Label: "Infection Basics"
+        Id: "da70f4c6-9b7d-47f5-8a06-3dac1e6fc5e6"
+      -
+        Label: "PPE"
+        Id: "ca6740d7-6c27-4c6f-bff8-33ee59880283"
+      -
+        Label: "Disaster Preparedness"
+        Id: "4b6e288c-3ac8-4d25-8b0b-bf80aff8975f"
+      -
+        Label: "Vaccination Safety"
+        Id: "c5947ef0-7109-48b3-92ab-fde8e892b649"
+      -
+        Label: "Healthcare Associated Infections"
+        Id: "01224d0e-1700-4d0d-abba-cf0a3d1302b4"
+      -
+        Label: "K-12 Schools"
+        Id: "dbffdf88-c492-4e8b-ba05-015f48ada3e4"
+      -
+        Label: "Long-Term Care"
+        Id: "7a11e383-de62-4b13-8d59-8cca11e13c54"
+  -
+    Label: "Training Type"
+    Filters:
+      -
+        Label: "Facilitator Resources"
+        Id: "dbae83ef-5ff3-41fc-ba36-cd7e4f71858d"
+      -
+        Label: "IPC Training Courses"
+        Id: e57b6ad6-686d-4714-beef-40a378d03c55""
+  -
+    Label: "Source"
+    Filters:
+      -
+        Label: "CDC"
+        Id: "78630ca5-726f-4c14-81b8-0ba11d206a09"
+      -
+        Label: "ANA"
+        Id: "0ab9406d-8514-4a50-841d-fc7aca19ceea"
+  -
+    Label: "CNE Credit"
+    Filters:
+      -
+        Label: "More than 3 hours"
+        Id: "d2e0028b-3ed9-4208-bea6-1c1e0d7d8282"
+      -
+        Label: "1-3 hours"
+        Id: "e43958e5-5333-4dc9-8373-7f8dda884fc3"
+      -
+        Label: "Less than 1 hours"
+        Id: "1ca6fe71-5a7d-470a-9fbb-ee71956919d8"

@@ -1,0 +1,26 @@
+﻿@using ANA.Site.Business.Helpers
+@using ANA.Site.Microsite.Models.Blocks.Landing
+@using ANA.Site.Models.Media
+@using EPiServer.Web.Mvc.Html
+
+@model LandingLogoBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-logo grid-container grid-container-padding @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        @if (!string.IsNullOrEmpty(Model.Heading) || ContentHelper.PageIsInEditMode())
+        {
+            <div class="ana-logo--heading">
+                @Html.PropertyFor(m => m.Heading)
+            </div>
+        }
+        <div class="grid-x grid-margin-x grid-margin-y align-center">
+            @Html.PropertyFor(m => m.Logos, new { HasContainer = false, HasItemContainer = false, CssClass = "cell small-12 medium-6 large-3 ana-logo--partners" })
+        </div>
+        @if (Model.Content != null || ContentHelper.PageIsInEditMode())
+        {
+            <div class="ana-logo--content">
+                @Html.PropertyFor(m => m.Content)
+            </div>
+        }
+        </div>
+    </div>

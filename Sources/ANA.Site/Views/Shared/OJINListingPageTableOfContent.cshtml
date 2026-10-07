@@ -1,0 +1,105 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+ 
+@if (Model != null)
+{
+    var tableofcontent = false;
+    var maxVolume = Model.Layout.OJINSiteSettingsPage.MaxListCount > 0 ? Model.Layout.OJINSiteSettingsPage.MaxListCount : 5;
+<div>
+    <section class="pt-3 pt-md-4 mt-5">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="ojin-volume">
+                    @if (Model.RelatedListingPage.Count > 0)
+                    {
+                        foreach (var volumeexist in Model.RelatedListingPage)
+                        {
+                            if (volumeexist.LPHeading != null)
+                            {
+                                <h2>@volumeexist.LPHeading</h2>
+                                tableofcontent = true;
+                                break;
+                            }
+                            @*<h2>@volumeexist.LPHeading</h2>
+                                break;*@
+                        }
+
+                    }
+
+                    <ul id="myList">
+
+                        @if (Model.RelatedListingPage.Count > 0)
+                        {
+                            var cnt = 0;
+                            foreach (var topiccontentdetails in Model.RelatedListingPage.Where(x => x.LPPageType == "FolderPage"))
+                            {
+                                if (cnt >= 0)
+                                {
+                                    <li class="grid-item" style="display:none;">
+                                        <h3><a @*href="#"*@>@topiccontentdetails.LPName</a></h3>
+
+                                        @foreach (var topiccontentotherdetails in Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPParentID == topiccontentdetails.LPID))
+                                        {
+                                            <div class="ojin-volume__number"><span><a href="@Url.PageUrl(@topiccontentotherdetails.PageUrl)"> @topiccontentotherdetails.LPTitle </a></span> @*@topiccontentotherdetails.LPTitle*@ </div>
+
+                                            foreach (var topiccontentotherdetailsec in Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPParentID == topiccontentotherdetails.LPID))
+                                            {
+                                                <div class="ojin-volume__number"><span><a href="@Url.PageUrl(@topiccontentotherdetailsec.PageUrl)"> @topiccontentotherdetailsec.LPTitle </a></span>  @*@topiccontentotherdetailsec.LPTitle*@</div>
+                                                tableofcontent = true;
+                                            }
+
+                                        }
+
+                                    </li>
+
+                                }
+                                cnt++;
+                            }
+
+
+                        }
+
+                    </ul>
+
+                    <div class="ojin-loadMore" id="loadMore">
+                        <a class="btn btn--more">Load 5 more volumes</a>
+                    </div>
+
+                </div>
+            </div>
+
+            @if (Model.RightRail != null && tableofcontent)
+            {
+                <div class="col-lg-3 ojin-advContainer">
+                    @{ await Html.RenderPartialAsync("Blocks/OJINTopicCategoryListingPageRightRail", Model.RightRail); }
+                </div>
+            }
+
+        </div>
+    </section>
+    <div id="maxdiv" style="display:none;">@maxVolume</div>
+</div>
+}
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<script type="text/javascript">
+    $(document).ready(function () {
+    size_li = $("#myList li").length;
+        x = $("#maxdiv").text();
+        if (Number(x) >= size_li) {
+            $('#loadMore').hide();
+        }
+    $('#myList li:lt('+x+')').show();
+    $('#loadMore').click(function () {
+        x = (Number(x)+5 <= size_li) ? Number(x)+5 : size_li;
+        $('#myList li:lt('+x+')').show();
+        if (Number(x) == size_li){
+            $('#loadMore').hide();
+        }
+    });
+});
+</script>

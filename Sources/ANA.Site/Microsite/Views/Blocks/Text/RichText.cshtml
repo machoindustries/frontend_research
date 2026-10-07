@@ -1,0 +1,21 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Text.RichTextBlock
+
+@if (!string.IsNullOrEmpty(Model.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.Heading)
+    </h2>
+}
+@if (Model.Text != null && !Model.Text.IsEmpty)
+{
+    <div class="grid-x">
+        <div class="post__content-well">
+            @Html.PropertyFor(i => i.Text)
+        </div>
+    </div>
+}

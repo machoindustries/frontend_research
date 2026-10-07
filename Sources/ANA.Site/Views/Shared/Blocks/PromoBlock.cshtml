@@ -1,0 +1,21 @@
+﻿@using ANA.Site.Business.Helpers
+@model ANA.Site.Models.Blocks.PromoBlock
+
+@{
+    var iconModifier = string.IsNullOrEmpty(Model.Icon) ? string.Empty : Model.Icon;
+}
+
+<section class="c-promo-block" data-require="./src/views/promo-block-view">
+    <div class="c-promo-block__item">
+
+        <figure class="c-promo-block__image" style="background-image: url(@Model.Image.GetCroppedImageUrl(1000, 1000));"></figure>
+
+        <div class="c-promo-block__content">
+            <figure class="c-promo-block__portrait">
+                <span class="icon--icon-@iconModifier c-promo-block__portrait-icon"></span>
+            </figure>
+            <h2 class="c-promo-block__title">@Html.PropertyFor(m => m.Heading)</h2>
+            <div class="c-promo-block__copy">@Html.PropertyFor(m => m.Content)</div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Hurricane&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('../css/bootstrap.min.css');
+
+@font-face {
+	font-family: 'Canela Web';
+	src: url('../fonts/Canela-Bold-Web.woff2') format('woff2'),
+		 url('../fonts/Canela-Bold-Web.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+}
+
+:root {
+    --orange-base-light: #FD560D;
+    --orange-base: #CF4520;
+    --cream-base: #F8F6EB;
+    --gray-base-light: #E4E4E4;
+    --disabled: #D1D1D1;
+    --gray-base-dark: #464045;
+    --blue-base-lightest: #E4F4FC;
+    --blue-base-light: #019ADE;
+    --blue-base: #0178AE;
+    --blue-base-dark: #132978;
+    --blue-base-darkest: #083A5B;
+    --green-base: #35D89F;
+    --yellow-base: #FDE670;
+    --pink-base: #FFE6F9;
+    --white-base: #FFFFFF;
+    --text-small: 0.875rem;
+    --text-small-line-height: 1.25rem;
+    --color-transition: color .3s;
+    --transition-speed: .3s;
+    --image-transition: translateY(-.5rem);
+}
+
+#tinymce {
+    font-family: "Work Sans", sans-serif;
+    font-style: normal;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: var(--gray-base-dark);
+}
+
+/* typography */
+
+#tinymce h1, #tinymce h2 {
+    font-family: Spectral;
+    font-style: normal;
+    font-weight: 700;
+}
+
+#tinymce h1 {
+    font-size: 4rem;
+    line-height: 4.5rem;
+    text-transform: none;
+}
+
+#tinymce h1 span {
+    display: block;
+    font-family: "Hurricane", cursive;
+    font-size: 7.5rem;
+    font-style: normal;
+    font-weight: 400;
+}
+
+#tinymce h2 {
+    font-size: 2.8125rem;
+}
+
+#tinymce h3, #tinymce h4, #tinymce h5 {
+    font-style: normal;
+    font-weight: 600;
+}
+
+#tinymce h3 {
+    font-size: 1.75rem;
+}
+
+#tinymce h4 {
+    font-size: 1.25rem;
+}
+
+#tinymce h5 {
+    font-size: var(--text-small);
+    text-transform: uppercase;
+}
+
+#tinymce p.lead {
+    color: var(--blue-base);
+    font-weight: 500;
+    line-height: 1.75;
+}
+
+#tinymce .small {
+    font-size: var(--text-small);
+    line-height: 1.25rem;
+}
+
+#tinymce a {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--orange-base);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: .15rem;
+    text-underline-position: under;
+    transition: var(--color-transition);
+}
+
+#tinymce a:hover {
+    color: var(--orange-base-light);
+    text-decoration-thickness: 2px;
+    text-underline-offset: .15rem;
+}
+
+#tinymce a.alt, #tinymce a.alt--dark, #tinymce a.alt--darkest {
+    text-decoration: none;
+    text-decoration-thickness: 0;
+    text-underline-offset: 0;
+}
+
+#tinymce a.alt {
+    color: var(--blue-base);
+}
+
+#tinymce a.alt--dark {
+    color: var(--blue-base-dark);
+}
+
+#tinymce .alt--darkest {
+    color: var(--blue-base-darkest);
+}
+
+#tinymce a.alt:hover, #tinymce a.alt--dark:hover, #tinymce a.alt--darkest:hover {
+    color: var(--blue-base-light);
+}
+
+#tinymce .absolute-link {
+    display: block;
+    position: absolute;
+    inset: 0;
+}
+
+#tinymce .btn {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.6875rem 1.25rem;
+    border-width: 2px;
+    margin: 0;
+}
+
+#tinymce .btn-primary {
+    color: #FFF;
+    background-color: var(--orange-base);
+    border-color: var(--orange-base);
+}
+
+#tinymce .btn-primary:hover, #tinymce .btn:first-child:active, #tinymce :not(.btn-check)+.btn:active, #tinymce .btn-primary:focus-visible {
+    color: #FFF;
+    background-color: var(--orange-base-light);
+    border-color: var(--orange-base-light);
+}
+
+#tinymce .btn-secondary {
+    color: var(--orange-base);
+    background-color: #FFF;
+    border-color: var(--orange-base);
+}
+
+#tinymce .btn-secondary:hover, #tinymce .btn-secondary:focus-visible {
+    color: var(--orange-base-light);
+    background-color: #FFF;
+    border-color: var(--orange-base-light);
+}
+
+#tinymce .btn-primary.disabled {
+    color: var(--gray-base-dark);
+    background-color: var(--disabled);
+    border-color: var(--disabled);
+}
+
+#tinymce .btn-secondary.disabled {
+    color: var(--gray-base-dark);
+    background-color: transparent;
+    border-color: var(--gray-base-dark);
+}
+
+#tinymce .button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+#tinymce img {
+    max-width: 100%;
+    height: auto;   
+}
+
+#tinymce blockquote {
+    position: relative;
+    font-size: 1.25rem;
+    text-align: center;
+    line-height: 1.75;
+    padding: 4rem 3rem;
+    margin: 3rem 0;
+    background: var(--blue-base-lightest);
+}
+
+#tinymce blockquote p:last-child {
+    margin: 0;
+}
+
+#tinymce blockquote:before, 
+#tinymce blockquote:after {
+    content: '';
+    position: absolute;
+    width: 75px;
+    height: 60px;
+    z-index: 2;
+    background-size: contain;
+}
+
+#tinymce blockquote:before {
+    top: -2rem;
+    left: -1.5rem;
+}
+
+#tinymce blockquote:after {
+    right: -1.5rem;
+    bottom: -2rem;
+}
+
+#tinymce blockquote:before {
+    background: url(../img/vector-quote-left-blue.svg);
+}
+
+#tinymce blockquote:after {
+    background: url(../img/vector-quote-right-blue.svg);
+}
+
+#tinymce blockquote.left, #tinymce .float-left {
+    float: left;
+    width: 50%;
+    margin-right: 3.5rem;
+}
+
+#tinymce blockquote.right, #tinymce .float-right {
+    float: right;
+    width: 50%;
+    margin-left: 3.5rem;
+}

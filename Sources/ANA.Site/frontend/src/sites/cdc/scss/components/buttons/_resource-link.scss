@@ -1,0 +1,16 @@
+.resource-link {
+  display: inline-block;
+  text-transform: uppercase;
+  background-color: #ee5229;
+  color: $white;
+  text-decoration: none;
+  padding: .8rem 2rem .8rem 2rem;
+  margin-top: 1.2rem;
+  @media screen and (max-width: $medium) {
+    width: 100%;
+    padding: .8rem .75rem .8rem .75rem;
+  }
+}
+
+
+

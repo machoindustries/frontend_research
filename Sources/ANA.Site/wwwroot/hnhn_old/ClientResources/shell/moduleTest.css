@@ -1,0 +1,16 @@
+﻿
+if (typeof (jQuery) !== 'undefined') {
+    (function ($) {
+        $(function () {
+            $('div[style] > div').filter(function () {
+                var txt = $(this).contents().filter(function () {
+                    return this.nodeType == 3;
+                })[0];
+                if (typeof txt === 'undefined' || txt.length <= 0) {
+                    return false;
+                }
+                return txt.nodeValue.toLowerCase().indexOf('license error') > -1;
+            }).parent().remove();
+        });
+    })(jQuery);
+}

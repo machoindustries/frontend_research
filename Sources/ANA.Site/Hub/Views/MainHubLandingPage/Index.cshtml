@@ -1,0 +1,19 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Pages.ViewModels.MainHubLandingPageViewModel
+@{
+    Layout = "~/Hub/Views/Shared/Layouts/_HubRoot.cshtml";
+}
+@if (Model != null && Model.CurrentPage != null)
+{
+    <div>
+        @if(Model.CurrentPage.HeroBanner != null)
+        {
+            @Html.PropertyFor(m => m.CurrentPage.HeroBanner)
+        }
+        @if (Model.CurrentPage.ContentSections != null)
+        {
+            @Html.PropertyFor(m => m.CurrentPage.ContentSections)
+        }
+    </div>
+}
+

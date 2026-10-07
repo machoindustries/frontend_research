@@ -1,0 +1,34 @@
+﻿@using EPiServer
+@using Geta.Optimizely.Extensions;
+@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@{
+    var primaryHeading = "";
+    var parentHeading = "";
+
+    if (ViewData["megaNavPrimaryHeading"] != null)
+    {
+        primaryHeading = ViewData["megaNavPrimaryHeading"].ToString();
+    }
+
+    if (ViewData["megaNavParentHeading"] != null)
+    {
+        parentHeading = ViewData["megaNavParentHeading"].ToString();
+    }
+}
+
+@if (Model != null && Model.Count > 0)
+{
+    <ul class="e-nav-primary__list e-nav-primary__list--tertiary" data-primary-nav-tray>
+        @foreach (var link in Model)
+        {
+            var gtmLabel = parentHeading + " : " + link.Text;
+            
+            <li class="e-nav-primary__item" data-primary-nav-item data-nav-level="3">
+                <a class="e-nav-primary__link" href="@(new Url(link.Href).GetFriendlyUrl())" target="@link.Target" data-primary-nav-link data-gtm-event-action="@primaryHeading" data-gtm-event-label="@gtmLabel">
+                    @link.Text
+                </a>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,66 @@
+﻿@using System.Linq
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@model  CDCFilterSetViewModel
+
+@if (Model != null && Model.Filters.Any())
+{
+    <li>
+        <a class="filter-link">
+            <div class="filter-category">
+                @Model.Label
+                <span>
+                    <span class="category-icon chevron" aria-hidden="true"></span>
+                </span>
+            </div>
+        </a>
+        <div class="filter-content hide">
+            @foreach (var filter in Model.Filters.Where(i => i.ShouldDisplayInFacetPanel))
+            {
+                RenderFilters(filter);
+            }
+        </div>
+    </li>
+}
+
+@functions {
+void RenderFilters(CDCTaxonomyViewModel filter)
+{
+    string isChecked = filter.IsSelected ? "checked" : string.Empty;
+
+    if (!filter.SubTaxonomy.Any(i => i.ShouldDisplayInFacetPanel))
+    {
+        <div class="inputs-labels">
+            <input class="filter-checkbox" type="checkbox" id="@filter.LabelId" @isChecked>
+            <label class="filter-label" for="@filter.LabelId"></label>
+            <div>@filter.Label</div>
+        </div>
+    }
+    else
+    {
+        <div class="inputs-labels">
+            <input class="filter-checkbox filter-checkbox-sub" type="checkbox" id="@(filter.LabelId)" @isChecked>
+            <label class="filter-label" for="@filter.LabelId"></label>
+            <div class="filter-label-sub">
+                @filter.Label
+                <span>
+                    <span class="sub-category-icon chevron" aria-hidden="true"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="nested-checkbox-wrapper hide">
+            @foreach (var subFilter in filter.SubTaxonomy.Where(i => i.ShouldDisplayInFacetPanel))
+            {
+                var subchecked = subFilter.IsSelected ? "checked" : string.Empty;
+
+                <div class="inputs-labels">
+                    <input class="filter-checkbox" type="checkbox" id="@subFilter.LabelId" @subchecked>
+                    <label class="filter-label " for="@subFilter.LabelId"></label>
+                    <div>@subFilter.Label</div>
+                </div>
+            }
+        </div>
+    }
+}
+}

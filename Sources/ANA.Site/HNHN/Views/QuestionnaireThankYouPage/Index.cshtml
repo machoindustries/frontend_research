@@ -1,0 +1,29 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@model QuestionnaireThankYouPageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<QuestionnaireThankYouPageViewModel>
+
+<section class="section--questionnaire--thank-you bg-cream pb-2">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+				<div class="questionnaire__progress"></div>
+				<h1 class="text-center">
+					@Html.PropertyFor(x => x.CurrentPage.Heading)
+				</h1>
+				@Html.PropertyFor(x => x.CurrentPage.Subtext)
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	const stepProgress = document.querySelector('.questionnaire__progress');
+	const stepNumber = @Model.NumberOfQuestions;
+
+	for (let i = 0; i < stepNumber; i++) {
+		let stepDot = document.createElement("div");
+		stepDot.classList.add('completed');
+
+		stepProgress.appendChild(stepDot);
+	}
+</script>

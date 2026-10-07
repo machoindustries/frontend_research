@@ -1,0 +1,86 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@if (Model.Layout.CDCHomePage == null) { return; }
+
+@{
+    var navItems = Model.Layout.CDCHomePage.GetChildren<ANA.Site.Models.SitePageData>()
+        .Where(i => !i.HideInPageNavigation);
+    if (navItems == null || !navItems.Any())
+    {
+        return;
+    }
+
+    IContent emailButton = null;
+    if (Model.Layout.CDCHomePage.InternalNavEmailUsButton != null)
+    {
+        emailButton = Model.Layout.CDCHomePage.InternalNavEmailUsButton.GetContent();
+    }
+    IContent signUpButton = null;
+    if (Model.Layout.CDCHomePage.InternalNavSignUpButton != null)
+    {
+        signUpButton = Model.Layout.CDCHomePage.InternalNavSignUpButton.GetContent();
+    }
+}
+
+<div class="internal-nav-container-update cell small-12 grid-x mt-2 mb-1">
+    <div class="title-bar no-js ml-1" data-responsive-toggle="internal-nav-menu">
+        <button class="hamburger menu-icon hide-for-large" type="button" data-toggle="">
+            <span class="sr-only">Open internal navigation</span>
+        </button>
+    </div>
+    <div class="internal-nav-update xlarge-12" id="internal-nav-menu" style="display:none;">
+        <div class="grid-x">
+            <div class="links">
+                @foreach (var navItem in navItems)
+                {
+                    var isCurrent = navItem.ContentGuid == Model.CurrentPage.ContentGuid;
+                    <div>
+                        <a href="@navItem.GetFriendlyUrl()" title="@navItem.Heading" target="@navItem.GetTargetFrame()">
+                            @(string.IsNullOrEmpty(navItem.NavSubTitle) ? navItem.Heading : navItem.NavSubTitle)
+                        </a>
+                    </div>
+                }
+            </div>
+            @if (emailButton != null || signUpButton != null)
+            {
+                <div class="btn-container">
+                    @if (emailButton != null)
+                    {
+                        RenderButton(emailButton);
+                    }
+                    @if (signUpButton != null)
+                    {
+                        RenderButton(signUpButton);
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+void RenderButton(IContent content)
+{
+    if (content is ButtonBlock)
+    {
+        var button = content as ButtonBlock;
+
+        <button class="button-hollow-blue orange-hover" data-url="@button.ButtonUrl.GetFriendlyUrl()" data-target="@button.TargetFrame">
+            <a href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame">
+                @button.Text
+            </a>
+        </button>
+    }
+    if (content is CDCRegisterButtonBlock)
+    {
+        var button = content as CDCRegisterButtonBlock;
+
+        <button class="button-hollow-blue orange-hover" data-open="modal-registration" aria-controls="modal-registration" aria-haspopup="true" tabindex="0">
+            @button.RegisterText
+        </button>
+    }
+}
+}

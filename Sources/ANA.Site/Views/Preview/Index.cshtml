@@ -1,0 +1,30 @@
+﻿@model ANA.Site.Models.ViewModels.PreviewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+<div class="container">
+    @foreach (var area in Model.Areas)
+    {
+        if (area.Supported)
+        {
+            { await Html.RenderPartialAsync("TemplateHint", string.Format(Html.Translate("/preview/heading").ToString(), Model.PreviewContent.Name, area.AreaName)); }
+
+            @*TODO: See where we can put these styles*@
+            <div class="row preview clearfix" style="margin-bottom: 100px;">
+                @Html.DisplayFor(x => area.ContentArea, new { Tag = area.AreaTag })
+            </div>
+        }
+        else
+        {
+            { await Html.RenderPartialAsync("TemplateHint", string.Format(Html.Translate("/preview/norenderer").ToString(), Model.PreviewContent.Name, area.AreaName)); }
+        }
+    }
+
+    @if (!Model.Areas.Any())
+    {
+        { await Html.RenderPartialAsync("TemplateHint", string.Format(Html.Translate("/preview/norendereratall").ToString(), Model.PreviewContent.Name)); }
+    }
+
+</div>

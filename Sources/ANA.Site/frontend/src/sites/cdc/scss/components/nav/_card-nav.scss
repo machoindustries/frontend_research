@@ -1,0 +1,124 @@
+#card-nav {
+  padding-bottom: 1rem;
+
+  .bkgd-color-nav-card {
+    padding-top: 1.5rem;
+    z-index: -1;
+    height: 380px;
+    width: 100%;
+
+    @media screen and (max-width: $large) {
+      height: 280px;
+    }
+  }
+
+  .card__container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin-top: 1.75rem;
+    width: 31.25%;
+  }
+
+  .card__container .img__container {
+    background-image: linear-gradient(
+      to right,
+      rgba(57, 128, 88, .1),
+      $background-green,
+      $background-green,
+      rgba(57, 128, 88, .1)
+    );
+  }
+
+  .card__container:first-child .img__container {
+    background-image: linear-gradient(
+      to right,
+      rgba(204, 72, 20, .1),
+      $background-red,
+      $background-red,
+      rgba(204, 72, 20, .1),
+    );
+  }
+
+  .card__container:last-child .img__container {
+    background-image: linear-gradient(
+      to right,
+      rgba(84, 161, 237, .1),
+      $background-blue,
+      $background-blue,
+      rgba(84, 161, 237, .1),
+    );
+  }
+
+  .img__container {
+    padding: 0 2.25rem 1.5rem 0;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .img-nav-card {
+    display: block;
+    position: relative;
+    padding-top: 100%;
+    width: 100%;
+    overflow: hidden;
+    top: -.75rem;
+
+    img {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+    }
+
+    //background: linear-gradient(left, $background-light-grey, $background-light-grey) no-repeat -4.5rem 0;
+
+    // @media screen and (max-width: $large) {
+    //   height: 250px;
+    // }
+  }
+
+  .nav-card {
+    background-color: #f3f3f3;
+    height: auto;
+    width: 100%;
+    padding: 0 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    h5 {
+      color: #003366;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    p, a {
+      line-height: $intro-line-height;
+      font-size: inherit;
+    }
+    @media screen and (max-width: $medium) {
+      margin-bottom: 1rem;
+    }
+
+  }
+
+}
+
+@media screen and (max-width: $large) {
+  #card-nav {
+    .card__container {
+      width: 100%;
+    }
+
+    .card__container:not(:first-child) {
+      margin-top: 5.5rem;
+    }
+  }
+}

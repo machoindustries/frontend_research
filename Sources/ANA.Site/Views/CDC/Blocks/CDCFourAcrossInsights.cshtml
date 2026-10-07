@@ -1,0 +1,179 @@
+﻿@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.Media
+@using EPiServer
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing
+
+@model CDCFourAcrossInsightsViewModel
+
+@if (Model != null && Model.Cards != null && Model.Cards.Any())
+{
+    <section class="grid-x grid-margin-x grid-margin-y cell small-12 insights @Model.GetCssClass()">
+        @foreach (var card in Model.Cards)
+        {
+            RenderCard(card);
+        }
+    </section>
+}
+
+@functions{
+    private void RenderCard(CDCResourceViewModel cardVM)
+    {
+        var shareButton = new CDCShareButtonViewModel(cardVM);
+
+        string iconSrc = "";
+        if (cardVM.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            iconSrc = "/assets/img/youtube-1.svg";
+        }
+        else if (cardVM.ResourceType == ResourceLinkType.Download)
+        {
+            iconSrc = "/assets/img/download-icon.svg";
+        }
+        else if (cardVM.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            iconSrc = "/assets/img/external-link.svg";
+        }
+
+        <div class="cell small-12 align-center medium-6 large-3 grid-x">
+            <article class="image-social-links grid-x small-12">
+                <div class="container cell small-12 grid-x">
+                    RenderImage(cardVM)
+                    @if (cardVM.ResourceType == ResourceLinkType.EmbeddedContent)
+                    {
+                        if (!string.IsNullOrEmpty(cardVM.AssetUrl))
+                        {
+                            <a class="asset-icon"
+                               onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());"
+                               data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(cardVM.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                                <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="asset-icon" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                                <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+                            </a>
+                        }
+                    }
+                    else if (cardVM.ResourceType == ResourceLinkType.Download)
+                    {
+                        <a href="@cardVM.AssetUrl" target="_blank" download class="asset-icon" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                            <img src="@iconSrc" alt="download icon">
+                        </a>
+                    }
+                    else if (cardVM.ResourceType == ResourceLinkType.ExternalLink)
+                    {
+                        <a href="@cardVM.AssetUrl" target="_blank" class="asset-icon" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                            <img src="@iconSrc" alt="download icon">
+                        </a>
+                    }
+                    else
+                    {
+                        <!-- No Icon for Internal Links -->
+                    }
+                    <div class="title-container">
+                        RenderHeading(cardVM)
+                        await @Html.PartialAsync("~/Views/CDC/Partials/_CDCShareButton.cshtml", shareButton)
+                        <div class="reveal" id="share-resource-@cardVM.ContentLinkID" data-reveal>
+                            <div class="addthis_inline_share_toolbox_qrdc"></div>
+                            <button class="close-button" data-close aria-label="Close modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    }
+
+    private void RenderHeading(CDCResourceViewModel cardVM)
+    {
+        if (cardVM.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(cardVM.AssetUrl))
+            {
+                <a data-open="resource-modal"
+                   onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());"
+                   data-embeded-content="@WebUtility.UrlEncode(cardVM.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                    <div class="title">@cardVM.Heading</div>
+                </a>
+            }
+            else
+            {
+                <a onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                    <div class="title">@cardVM.Heading</div>
+                </a>
+            }
+        }
+        else if (cardVM.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@cardVM.AssetUrl" target="_blank" download onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                <div class="title">@cardVM.Heading</div>
+            </a>
+        }
+        else if (cardVM.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@cardVM.AssetUrl" target="_blank" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                <div class="title">@cardVM.Heading</div>
+            </a>
+        }
+        else
+        {
+            <a href="@cardVM.AssetUrl" target="@cardVM.TargetFrame" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                <div class="title">@cardVM.Heading</div>
+            </a>
+        }
+    }
+
+    private void RenderImage(CDCResourceViewModel cardVM)
+    {
+        var cardImage = !ContentReference.IsNullOrEmpty(cardVM.Image)
+            ? ServiceLocator.Current.GetInstance<IContentLoader>().Get<MediaData>(cardVM.Image)
+            : null;
+
+        if (cardImage is ImageFile)
+        {
+            var image = (ImageFile)cardImage;
+
+            if (cardVM.ResourceType == ResourceLinkType.EmbeddedContent)
+            {
+                if (!string.IsNullOrEmpty(cardVM.AssetUrl))
+                {
+
+                    <img class="background-img cell small-12" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(cardVM.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0" />
+                }
+                else
+                {
+                    <img class="background-img cell small-12" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());" />
+                }
+            }
+            else if (cardVM.ResourceType == ResourceLinkType.Download)
+            {
+                <a href="@cardVM.AssetUrl" target="_blank" download onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                    <img class="background-img cell small-12" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                </a>
+            }
+            else if (cardVM.ResourceType == ResourceLinkType.ExternalLink)
+            {
+                <a href="@cardVM.AssetUrl" target="_blank" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                    <img class="background-img cell small-12" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                </a>
+            }
+            else
+            {
+                <a href="@cardVM.AssetUrl" target="@cardVM.TargetFrame" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                    <img class="background-img cell small-12" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                </a>
+            }
+        }
+        else
+        {
+            <a href="@cardVM.AssetUrl" target="@cardVM.TargetFrame" onclick="dataLayer.push(@cardVM.GoogleTags.GetAssetClickEventData());">
+                <div class="background-img cell small-12"></div>
+            </a>
+        }
+    }
+}

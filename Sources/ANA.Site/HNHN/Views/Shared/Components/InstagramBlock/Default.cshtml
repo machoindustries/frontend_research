@@ -1,0 +1,37 @@
+﻿@model ANA_HNHN.Models.ViewModels.InstagramBlockViewModel
+@{
+    var background = Model.CurrentBlock.BackgroundColor;
+    if (background == "blue")
+    {
+        background = "light-blue";
+    }
+}
+<section class="bg-@background">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h2>@Html.PropertyFor(m => m.CurrentBlock.Heading)</h2>
+                @Html.PropertyFor(m => m.CurrentBlock.Content)
+            </div>
+            @if (Model.InstagramModel != null && Model.InstagramModel.MediaCollection != null && Model.InstagramModel.MediaCollection.Any())
+            {
+            <div class="col-lg-8 px-auto px-lg-4 position-relative">
+                <div class="swiper instagram-carousel">
+                    <div class="swiper-wrapper">
+                        @foreach (var item in Model.InstagramModel.MediaCollection)
+                        {
+                        <div class="swiper-slide instagram-item">
+                            <a href="@item.Permalink" target="_blank">
+                                <img class="instagram-image" src="@item.MediaUrl" alt="@item.Caption" />
+                            </a>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="swiper-button-prev" aria-hidden="true"></div>
+                <div class="swiper-button-next" aria-hidden="true"></div>
+            </div>
+            }
+        </div>
+    </div>
+</section>

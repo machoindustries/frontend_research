@@ -1,0 +1,63 @@
+﻿@model ANA.Site.Models.ViewModels.ProfessionalEducationLightBox
+
+<div data-lightbox-src="continuingeducationedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.ProfessionalDevContiEdusId, new { data_pd_education_input_id = "" })
+        <label for="@Html.IdFor(m => m.Subject)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/Subject")</span>
+            @Html.TextBoxFor(m => m.Subject, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Education/Subject"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_education_input_subject = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Subject)"></div>
+
+        <label for="@Html.IdFor(m => m.Sponsor)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/Sponsors")</span>
+            @Html.TextBoxFor(m => m.Sponsor, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Education/Sponsors"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_education_input_sponsor = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Sponsor)"></div>
+
+        <label for="@Html.IdFor(m => m.Description)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/Description")</span>
+            @Html.TextBoxFor(m => m.Description, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Education/Description"), data_formfield_text = "", data_pd_education_input_description = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Description)"></div>
+
+        <label for="@Html.IdFor(m => m.ContactHours)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/Hours")</span>
+            @Html.TextBoxFor(m => m.ContactHours, null, new { @maxlength="6", @id="regularhourtb", @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Education/Hours"), data_formfield_text = "", data_validate = "",  data_validate_regex = "^(?!0\\d)\\d{0,9}(\\.\\d{1,2})?$", data_validate_message = "Invalid contact hours entered- please enter numerical data up to two decimal places(e.g., 0.5, 1.0, 2, 2.25)", data_pd_education_input_contact_hours = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-contacthours="" data-validation-for="@Html.NameFor(m => m.ContactHours)"></div>
+        <label for="@Html.IdFor(m => m.PharmHrs)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/PharmacoHours")</span>
+            @Html.TextBoxFor(m => m.PharmHrs, null, new { @maxlength = "6", @id="pharmhourstb", @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Education/PharmacoHours"), data_formfield_text = "", data_validate = "", data_validate_regex = "^(?!0\\d)\\d{0,9}(\\.\\d{1,2})?$", data_validate_message = "Invalid pharma hours entered- please enter numerical data up to two decimal places(e.g., 0.5, 1.0, 2, 2.25)", data_pd_education_input_pharma_hours = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-pharmhrs="" data-validation-for="@Html.NameFor(m => m.PharmHrs)"></div>
+
+        <label for="@Html.IdFor(m => m.DateOfOffering)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Education/lbDate")</span>
+            @Html.TextBoxFor(m => m.DateOfOffering, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Education/Date"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Education/lbDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_education_input_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.DateOfOffering)"></div>
+        <label for="@Html.IdFor(m => m.ANCCApproved.Value)" class="e-form__label e-form__label--checkbox e-form__label--checkbox--block e-form__label--checkbox--left" data-formfield="">
+            <span class="e-form__label-text">@Html.Translate("/ProfessionalDevelopment/Education/Approved")</span>
+            @Html.CheckBoxFor(m => m.ANCCApproved.Value, new { @class = "e-form__input e-form__input--checkbox", title = Html.Translate("/ProfessionalDevelopment/Education/Approved"), data_validate = "", data_pd_education_input_approved = "" })
+            <span class="e-form__fake-checkbox"></span>
+        </label>
+        @*<label for="@Html.IdFor(m => m.PharmacoTherapyFlag.Value)" class="e-form__label e-form__label--checkbox e-form__label--checkbox--block e-form__label--checkbox--left" data-formfield="">
+            <span class="e-form__label-text">@Html.Translate("/ProfessionalDevelopment/Education/Pharm")</span>
+            @Html.CheckBoxFor(m => m.PharmacoTherapyFlag.Value, new { @class = "e-form__input e-form__input--checkbox", title = Html.Translate("/ProfessionalDevelopment/Education/Pharm"), data_validate = "", data_pd_education_input_pharm = "" })
+            <span class="e-form__fake-checkbox"></span>
+        </label>*@
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/ProfessionalDevelopment/Education/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>
+
+<div data-lightbox-src="continuingeducationconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you would like to remove this entry?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>

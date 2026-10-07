@@ -1,0 +1,31 @@
+﻿@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Models.Blocks.Infographics
+@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HealthyNationStepBlock
+
+@{
+    var count = (ViewData["StepCount"] ?? "1").ToString();
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+
+<div class="model__item wow fadeInDown">
+    <div class="model__sequence" @Html.EditAttributes(m => m.StepImage)>
+        <img src="@_UrlResolver.GetUrl(Model.StepImage)" alt="" />
+    </div>
+    <h3 class="model__heading"> @Html.PropertyFor(m => m.StepName, new { CustomTag = "span" }) <span class="highlight"> @Html.PropertyFor(m => m.HighlightHeading, new { CustomTag = "span" })</span> </h3>
+    <button class="toggle-model__list collapsed" aria-expanded="false" type="button" data-toggle="collapse" data-target="#infographic@(count)"></button>
+    @if (Model.StepItems?.FirstOrDefault() != null || ContentHelper.PageIsInEditMode())
+    {
+        <ul class="model__list collapse" id="infographic@(count)">
+            @foreach (var item in Model.StepItems.GetContentItems<HowItWorksSubItemBlock>())
+            {
+                Html.RenderContentData(item, false);
+            }
+        </ul>
+    }
+</div>

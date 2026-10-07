@@ -1,0 +1,31 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCTestimonialBlock
+
+@{
+    IEnumerable<IContent> cards = new List<IContent>();
+    cards = Model.Cards != null && Model.Cards.FilteredItems != null
+        ? Model.Cards.FilteredItems.Select(i => (IContent)i.LoadContent())
+        : cards;
+}
+
+<section class="small-12 @Model.GetCssClass()">
+    <div class="small-12 heading-and-subheading">
+        <h2>@Html.PropertyFor(i => i.Heading)</h2>
+        @if (!string.IsNullOrEmpty(Model.SubHeading))
+        {
+            <div>@Html.PropertyFor(i => i.SubHeading)</div>
+        }
+    </div>
+    <div class="two-four-across-cards small-12">
+        @foreach (var card in cards)
+        {
+            if (card is CDCTestimonialCard)
+            {
+                CDCTestimonialTopMarginOverrideCard noTMcard = new CDCTestimonialTopMarginOverrideCard(card as CDCTestimonialCard);
+                noTMcard.EnableTopMargin = false;
+                @await Html.PartialAsync("~/Views/CDC/Blocks/CDCTestimonialCard.cshtml", noTMcard)
+            }
+        }
+    </div>
+</section>

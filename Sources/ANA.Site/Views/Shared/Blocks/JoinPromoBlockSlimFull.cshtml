@@ -1,0 +1,39 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.OJIN
+@using EPiServer.Find.Helpers
+@model ANA.Site.Models.Blocks.JoinPromoBlock
+
+@{ // TODO: Implement a dynamic <Heading> text that pulls membership price based on the person's state
+    var hasImage = Model.Image == null ? "" : "c-join-promo-block--has-background";
+    var promoCreative = Model.Image == null ? "no image" : Model.Image.GetUri().ToString();
+    var gtmPosition = "";
+    var currentPage = Model.GetCurrentPage();
+
+    if (currentPage != null)
+    {
+        gtmPosition = currentPage.Name;
+    }
+
+    var heading = Model.Heading?.ReplaceMembershipPlaceholders() ?? string.Empty; }
+<div class="grid-constraint">
+    <div class="grid grid--full">
+        <div class="c-join-promo-block @hasImage c-join-promo-block--slim" style="background-image: url(@(Model.Image?.GetCroppedImageUrl(400,400) ?? string.Empty));"
+             data-require="./src/views/join-promo-view"
+             data-join-promo=""
+             data-promo-id="JoinPromoSlimFull"
+             data-promo-name="@heading"
+             data-promo-creative="@promoCreative"
+             data-promo-position="@gtmPosition">
+            <div class="c-join-promo-block__content">
+                <h3 class="c-join-promo-block__title c-join-promo-block__title--slim--full" @Html.EditAttributes(m => m.Heading)>@heading</h3>
+                @if (Model.CTALink.IsNotNull())
+                {
+    <a href="@Url.ContentUrl(Model.CTALink)" class="e-button e-button--anchor e-button--orange e-button c-join-promo-block__button" data-join-promo-cta>
+        @Html.PropertyFor(m => m.CTATitle)
+    </a>}
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿@model ANA.Site.Models.Blocks.RtfBlock
+
+@if (!string.IsNullOrWhiteSpace(Model.Heading))
+{
+    <div>
+        @Html.PropertyFor(x => x.Heading)
+    </div>
+}
+@if (Model.Description is {IsEmpty: false})
+{
+    <div>
+        @Html.PropertyFor(x => x.Description)
+    </div>
+}

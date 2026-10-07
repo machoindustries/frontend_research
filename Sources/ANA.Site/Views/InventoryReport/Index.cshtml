@@ -1,0 +1,109 @@
+﻿@model ANA.Site.Business.Admin.InventoryReportModel
+@using EPiServer.Shell.Navigation
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory Report</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="~/assets/css/system.css" type="text/css" rel="stylesheet">
+    <link href="~/assets/css/ToolButton.css" type="text/css" rel="stylesheet">
+    <script src="~/assets/js/jquery.min.js"></script>
+    
+    <!-- Shell -->
+    @ClientResources.RenderResources("ShellCore")
+    @ClientResources.RenderResources("ShellWidgets")
+
+    <!-- LightTheme -->
+    @ClientResources.RenderResources("ShellCoreLightTheme")
+
+    <!-- Dojo Dashboard -->
+    @ClientResources.RenderResources("DojoDashboardCompatibility", new[] { ClientResourceType.Style })
+    <script>
+        $(document).ready(function () {
+            jQuery.expr[':'].contains = function (a, i, m) {
+                return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+            };
+
+            $("#txtKeyword").keyup(function () {
+                var allRows = $('#tblId tbody tr');
+                allRows.removeClass('hiddenRow');
+                var clickedText = $("#txtKeyword").val();
+                allRows.each(function () {
+                    if (!$(this).is(':contains("' + clickedText + '")')) {
+                        $(this).addClass('hiddenRow');
+                    }
+                });
+            });
+
+            $('#filterForm').submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("ContentTypeChosenAjax", "InventoryReport")',
+                    type: 'GET',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        $('#contentDetails').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error: ' + status + error);
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        a.ex1:link, a.ex1:visited {
+            color: cornflowerblue;
+            padding: 14px 25px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a.ex1:hover, a.ex1:active {
+            color: blue;
+        }
+
+        tr.hiddenRow {
+            display: none;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+        table.main
+        { 
+            margin-top: 40px;
+            width: 100%; 
+        }
+    </style>
+</head>
+<body style="overflow: scroll">
+    @Html.Raw(Html.CreatePlatformNavigationMenu())
+    <br /><br /><br /><br /><br />
+    <div @Html.ApplyPlatformNavigation()>
+        <center><h1>Inventory Report</h1></center>
+    </div>
+    <table class="main">
+        <tr>
+            <td>
+                <form id="filterForm">
+                    <fieldset>
+                        Filter By:
+                        @Html.DropDownList("ContentType", Model.ContentTypeItems as List<SelectListItem>)
+                        <input type="submit" value="Search" />
+                        <input type="text" id="txtKeyword" name="txtKeyword" placeholder="Filter By Keyword" />
+                    </fieldset>
+                    <br />
+                    <br />
+                </form>
+                <div id="contentDetails">
+                    @Html.Raw(Model.ContentDetailsHTMLString)
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,157 @@
+﻿@using ANA.Site.Business.State
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.CustomerAccountModels
+@model ANA.Site.Models.CustomerAccountModels.FormattedLineItem
+
+@{
+    var isMember = UserState.CurrentProfile.IsMember();
+    var membershipSuffix = isMember && (Model.ProductType ?? string.Empty).Equals("Membership") ? " Renewal" : string.Empty;
+}
+<li class="c-order-detail__items-row">
+    <div class="grid grid--full c-order-item"
+         data-purchased-product=""
+         data-product-item_name="@Model.DisplayName@membershipSuffix"
+         data-product-item_id="@Model.VariantCode"
+         data-product-price="@Model.Price"
+         data-product-item_brand="@(Model.BannerText ?? Model.Brand)"
+         data-product-item_category="@Model.ProductType"
+         data-product-item_variant="@Model.VariantCode"
+         data-product-position="@Model.Position"
+         data-product-quantity="@Model.Quantity"
+         data-product-format="@Model.BookType"
+         >
+        <div class="c-order-item__wrapper grid__item one-whole medium--six-twelfths">
+            <div class="c-order-item__content grid grid--full">
+                <div class="grid__item one-third small--one-quarter">
+                    <figure class="c-order-item__figure @(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "c-order-item__figure--icon" : string.Empty)">
+                        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl?width=37&height=55" alt="@Model.DisplayName" title="@Model.DisplayName" class="c-order-item__image" />
+                        }
+                        else
+                        {
+                            <span class="@Model.IconClass c-order-item__figure-icon"></span>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.BannerText))
+                        {
+                            <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                                <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                                <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                            </div>
+                        }
+                    </figure>
+                </div>
+                <div class="grid__item two-thirds small--three-quarters">
+                    @if (Model.IsBook)
+                    {
+                        if (string.IsNullOrWhiteSpace(Model.Url))
+                        {
+                            <div class="c-order-item__title">@Model.DisplayName</div>
+                            <div class="c-order-item__author">@Model.AuthorName</div>
+                        }
+                        else
+                        {
+                            <a href="@Model.Url" class="c-order-item__title-link">
+                                <div class="c-order-item__title">@Model.DisplayName</div>
+                                <div class="c-order-item__author">@Model.AuthorName</div>
+                            </a>
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(Model.BookType))
+                        {
+                            <div class="c-order-item__format">
+                                <div class="c-order-item__format-name">@Model.BookType</div>
+                            </div>
+                        }
+
+                        if (!string.IsNullOrEmpty(Model.EbookUrl))
+                        {
+                            <a href="@Model.EbookUrl" class="e-button e-button--anchor e-button--blue c-order-detail__download-link e-button" download>
+                                @Html.Translate("/MyAccount/Order/DownloadEbook")
+                            </a>
+                        }
+                        if (!string.IsNullOrEmpty(Model.EbookExpirationText))
+                        {
+                            <p>@Model.EbookExpirationText</p>
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.CEType))
+                        {
+                            <span class="c-order-item__product-type">@Model.CEType</span>
+                        }
+
+                        if (string.IsNullOrWhiteSpace(Model.Url))
+                        {
+                            <div class="c-order-item__title">@Model.DisplayName</div>
+                        }
+                        else
+                        {
+                            <a href="@Model.Url" class="c-order-item__title-link">
+                                <div class="c-order-item__title">@Model.DisplayName</div>
+                            </a>
+                            <br />
+                        }
+
+                        if (!string.IsNullOrEmpty(Model.CtaUrl) && !string.IsNullOrEmpty(Model.CtaText))
+                        {
+                            <a href="@Model.CtaUrl" class="e-button e-button--anchor e-button--blue c-order-detail__download-link e-button" target="_blank">
+                                @Model.CtaText
+                            </a>
+                            <br />
+                        }
+                        if (!string.IsNullOrWhiteSpace(Model.DeliveryOptionText))
+                        {
+                            <span style="color:brown;">@Model.DeliveryOptionText</span>
+                        }
+                    }
+
+                    @if (Model.IsCourse && !string.IsNullOrEmpty(Model.LmsUrl))
+                    {
+                        <a href="@Model.LmsUrl" class="e-button e-button--anchor e-button--blue c-order-detail__download-link e-button" target="_blank">
+                            @Html.Translate("/MyAccount/Order/GoToCourse")
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="grid__item one-whole medium--two-twelfths">
+            <dl class="c-order-item__content grid grid--full">
+                <dt class="c-order-item__row-label grid__item one-third small--one-quarter">@Html.Translate("/MyAccount/Order/ItemPrice"):</dt>
+                
+                <dd class="c-order-item__pricing grid__item two-thirds small--three-quarters">
+                    <span class="c-order-item__pricing-price">@Model.Price</span>
+                    <div class="c-order-item__pricing-price-caveat"></div>
+                </dd>
+               
+            </dl>
+        </div>
+        <div class="grid__item one-whole medium--two-twelfths">
+            <dl class="c-order-item__content grid grid--full">
+                <dt class="c-order-item__row-label grid__item one-third small--one-quarter">@Html.Translate("/MyAccount/Order/Quantity"):</dt>
+                <dd class="grid__item two-thirds medium--one-whole c-order-item__quantity">
+                    @Model.Quantity
+                </dd>
+            </dl>
+        </div>
+        <div class="grid__item one-whole medium--two-twelfths">
+            <dl class="c-order-item__content c-order-item__content--right grid">
+                <dt class="c-order-item__row-label grid__item one-third small--one-quarter">@Html.Translate("/MyAccount/Order/ItemTotal"):</dt>
+                @if (Model.TotalPrice.Amount > Model.TotalDiscountPrice.Amount)
+                {
+                    <dd class="c-order-item__pricing grid__item two-thirds small--three-quarters">
+                        <span class="c-order-item__pricing-price c-order-item__pricing-price--old">@Model.TotalPrice</span><br>
+                        <span class="c-order-item__pricing-price c-order-item__pricing-price--new">@Model.TotalDiscountPrice</span>                       
+                    </dd>
+                }
+                else
+                {
+                    <dd class="c-order-item__pricing grid__item two-thirds small--three-quarters">
+                        <div class="c-order-item__pricing-price">@Model.TotalPrice</div>
+                    </dd>
+                }
+            </dl>
+        </div>
+    </div>
+</li>

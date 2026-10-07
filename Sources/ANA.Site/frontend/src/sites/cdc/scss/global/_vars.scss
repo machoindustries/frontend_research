@@ -1,0 +1,295 @@
+$max-container-width: 1440px;
+
+/**
+ * MARK: TYPOGRAPHY
+ */
+$rem-base: 16;
+$base-unit: 16px;
+$base-line-height: 1.6em;
+$base-font-size: $base-unit;
+$medium-base-font-size: 16px;
+$small-base-font-size: 16px;
+
+$h1-font-size: rem-calc(66);
+$h2-font-size: rem-calc(56);
+$h3-font-size: rem-calc(40);
+$h4-font-size: rem-calc(32);
+$h5-font-size: rem-calc(28);
+$h6-font-size: rem-calc(22);
+$h7-font-size: rem-calc(16);
+
+$body-size: $base-font-size;
+$intro-font-size: rem-calc(28);
+$caption-size: rem-calc(14);
+$label-size: rem-calc(16);
+$quote-size: $intro-font-size;
+$featured-size: rem-calc(24);
+
+$h1-line-height: rem-calc(84);
+$h2-line-height: rem-calc(72);
+$h3-line-height: rem-calc(60);
+$h4-line-height: rem-calc(48);
+$h5-line-height: rem-calc(48);
+$h6-line-height: rem-calc(32);
+$h7-line-height: rem-calc(26);
+
+$intro-line-height: rem-calc(34);
+$large-body-line-height: rem-calc(32);
+$body-line-height: rem-calc(26);
+$caption-line-height: rem-calc(24);
+$label-line-height: rem-calc(24);
+$quote-line-height: rem-calc(36);
+$featured-line-height: rem-calc(34);
+
+$font-main: "MontserratLight", "Arial", "Helvetica", "sans-serif";
+$font-header: "MontserratSemiBold", "Arial", "Helvetica", "sans-serif";
+$font-button: "MontserratRegular", "Arial", "Helvetica", "sans-serif";
+$font-body: "MontserratLight", "Arial", "Helvetica", "sans-serif";
+$font-caption: $font-body;
+
+// TODO - UPDATE
+/**
+ * MARK: URL References
+ */
+//$url-image: '/-/media/Themes/path-here/images';
+
+// TODO - UPDATE
+/**
+ * MARK: Color
+ */
+$font-dark-blue2: #003365;
+$font-orange: #ce4421;
+$font-dark-blue: #2e698c;
+$font-light-blue: #318fba;
+$font-dark-green: #185568;
+$logo-blue: #009bde;
+$logo-red: #cd4422;
+$faded-blue: #85c6e4;
+$faded-green: #6da3a3;
+$faded-red: #d77876;
+$orange-secondary: #903016;
+$orange-button-outter2: #b73e1e;
+$orange-button-outter: #cf4a25;
+$orange-button-inner: #ee5229;
+$background-light-grey: #f7f7f7;
+$background-blue: #e7f4fc;
+$background-red: #faece9;
+$font-dark-grey: #455354;
+$font-mid-grey: #666666;
+$form-box-grey: #7a858b;
+$gradient-red: #c45c45;
+$gradient-blended: #868f9c;
+$gradient-blue: #299ed2;
+$resource-card-background: #EAEAEA;
+$resource-card-font: #123E67;
+$resource-card-small-text: #0A0A0A;
+$resource-card-link-background: #CF4520BF;
+$resources-results: #C83C1D;
+
+$media-content-social-card-background: #EAEAEA;
+$media-content-social-card-font: #123E67;
+$media-content-social-card-small-text: #0A0A0A;
+$media-content-social-card-link-background-full: #CF4520;
+$media-content-social-card-link-background: #CF4520BF;
+$media-content-social-card-results: #C83C1D;
+//Background-Gradients IE-Card-Nav
+$background-green: #398058; //RGB= 57, 128, 88
+$background-red: #cc4814; //RBG= 204, 72, 20
+$background-blue: #54a1ed; //RBG= 84, 161, 237
+$background-magenta: #9a1b64; //RBG= 154, 27, 100
+
+$themeColors: (
+  "font-orange": $font-orange,
+  "font-dark-blue": $font-dark-blue,
+  "font-light-blue": $font-light-blue,
+  "font-dark-green": $font-dark-green,
+  "logo-blue": $logo-blue,
+  "logo-red": $logo-red,
+  "faded-blue": $faded-blue,
+  "faded-green": $faded-green,
+  "faded-red": $faded-red,
+  "orange-button-outter2": $orange-button-outter2,
+  "orange-button-outter": $orange-button-outter,
+  "orange-button-inner": $orange-button-inner,
+  "background-blue": $background-blue,
+  "background-red": $background-red,
+  "font-dark-grey": $font-dark-grey,
+  "font-mid-grey": $font-mid-grey,
+  "form-box-grey": $form-box-grey,
+  "gradient-red": $gradient-red,
+  "gradient-blended": $gradient-blended,
+  "gradient-blue": $gradient-blue,
+);
+
+/**
+ * MARK: Accessibility Colors
+ */
+$dark-colors: $font-dark-blue, $font-orange, $font-dark-grey, $orange-button-outter, $orange-button-inner;
+
+/**
+ * MARK: Transitions
+ */
+$button-color-transition: 650ms;
+$rotate-transition: 400ms;
+
+/**
+ * MARK: Buttons
+ */
+$button-width: rem-calc(170);
+$button-width-large: rem-calc(230);
+
+/**
+ * MARK: Breakpoints
+ */
+$phone: 576px;
+$tablet: 768px;
+$laptop: 992px;
+$desktop: 1200px;
+
+$breakpoints: (
+  "": 0,
+  "phone": $phone,
+  "tablet": $tablet,
+  "laptop": $laptop,
+  "desktop": $desktop) !default;
+
+/**
+ * MARK: Margin Mixin Limit
+ */
+// Decides how many margins will be made
+// for the selector mt-n
+// Ex. if $margins: 9 ; means highest css
+// property will be mt-9
+// mixin is called margin-x
+$margins: 9;
+
+/**
+ * MARK: Colors
+ */
+.color-font-white {
+  color: $white;
+}
+
+.color-font-dark-blue {
+  color: $font-dark-blue;
+
+  span.accent-text {
+    color: $font-orange;
+  }
+}
+
+.color-font-light-blue {
+  color: $font-light-blue;
+
+  span.accent-text {
+    color: $font-orange;
+  }
+}
+
+.color-font-orange {
+  color: $font-orange;
+
+  span.accent-text {
+    color: $font-dark-blue;
+  }
+}
+
+.color-font-mid-grey {
+  color: $font-mid-grey;
+
+  span.accent-text {
+    color: $font-dark-blue;
+  }
+}
+
+.color-font-dark-grey {
+  color: $font-dark-grey;
+
+  span.accent-text {
+    color: $font-dark-blue;
+  }
+}
+
+$color-grad-1: $font-mid-grey;
+$color-grad-2: $logo-red;
+$color-grad-3: rgb(20, 51, 54);
+$color-grad-3a: rgb(36, 72, 71);
+$color-grad-4: rgb(37, 72, 71);
+$color-grad-5: rgb(142, 81, 82);
+
+/*  Color Samples
+--
+Orange Primary = RGB 206  69  33  =  #ce4421
+Dark Blue      = RGB  46 105 140  =  #2e698c
+Light Blue     = RGB  49 143 186  =  #318fba
+Dark Green     = RGB  24  85 104  =  #185568
+--
+Logo Blue = RGB   0 155 222  =  #009bde
+Logo Red  = RGB 205  68  34  =  #cd4422
+--
+Alternating Text w Images
+Alt Blue  = RGB 133 198 228  =  #85c6e4
+Alt Green = RGB 109 163 163  =  #6da3a3
+Alt Red   = RGB 215 120 118  =  #d77876
+--
+Light Grey = 247 247 247  =  #f7f7f7
+Mid Grey   = 102 102 102  =  #666666
+--
+Button Outer = RGB 211 113  88  =  #d37158
+Button Inner = RGB 238  82  41  =  #ee5229
+--
+Background Fade Blue =  RGB 231 244 252  =  #e7f4fc
+Background Fade Red  =  RGB 250 236 233  =  #faece9
+--
+Form Font = RGB  69  83  84  =  #455354
+Form Box  = RGB 122 133 139  =  #7a858b
+--
+Form Fade Red    = RBG 196  93  69  =  #c45c45
+Form Fade Middle = RGB 134 143 156  =  #868f9c
+Form Fade Blue   = RGB  41 158 210  =  #299ed2
+*/
+
+// //MOVE
+// .infx {
+//   display: inline-flex;
+// }
+
+// .grid-x {
+//   display: inline-block;
+// }
+
+// .col-12 {
+//   width: 100%;
+// }
+
+// .col-6 {
+//   width: 49.5%;
+// }
+
+// .col-4 {
+//   width: 29.5%;
+// }
+
+// .col-3 {
+//   width: 24.5%;
+// }
+
+// .col-md-12 {
+//   width: 100%;
+// }
+
+// .col-md-6 {
+//   width: 49.5%;
+// }
+
+// .col-md-4 {
+//   width: 29.5%;
+// }
+
+// .col-md-3 {
+//   width: 24.5%;
+// }
+
+// .bio-column {
+//   padding: 1rem;
+// }

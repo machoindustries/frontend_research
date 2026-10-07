@@ -1,0 +1,56 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCMontageBlock
+
+<div class="montage @Model.GetCssClass()">
+    <div class="montage-container">
+        <div class="mainimage">
+            @if (Model.ImageUrl != null)
+            {
+                <a href="@Model.ImageUrl.GetFriendlyUrl()">
+                    @Html.PropertyFor(i => i.Image)
+                </a>
+            }
+            else
+            {
+                @Html.PropertyFor(i => i.Image)
+            }
+        </div>
+        <div class="secondary1">
+            @if (Model.SatelliteImage1Url != null)
+            {
+                <a href="@Model.SatelliteImage1Url.GetFriendlyUrl()">
+                    @Html.PropertyFor(i => i.SatelliteImage1)
+                </a>
+            }
+            else
+            {
+                @Html.PropertyFor(i => i.SatelliteImage1)
+            }
+        </div>
+        <div class="secondary2">
+            @if (Model.SatelliteImage2Url != null)
+            {
+                <a href="@Model.SatelliteImage2Url.GetFriendlyUrl()">
+                    @Html.PropertyFor(i => i.SatelliteImage2)
+                </a>
+            }
+            else
+            {
+                @Html.PropertyFor(i => i.SatelliteImage2)
+            }
+        </div>
+        <div class="secondary3">
+            @if (Model.SatelliteImage3Url != null)
+            {
+                <a href="@Model.SatelliteImage3Url.GetFriendlyUrl()">
+                    @Html.PropertyFor(i => i.SatelliteImage3)
+                </a>
+            }
+            else
+            {
+                @Html.PropertyFor(i => i.SatelliteImage3)
+            }
+        </div>
+    </div>
+</div>

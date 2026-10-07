@@ -1,0 +1,47 @@
+@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Models.Blocks
+@model CDCGreenCTABanner
+
+<section class="cell 12 grid-x cta-mask @Model.GetCssClass()">
+    <div style="@Model.GetInlineStyle()" class="image-mask show-for-large cell large-5 grid-x">
+        <div class="circle-container">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <img />
+    <div class="content cell small-12 large-7">
+        @Html.PropertyFor(i => i.Text)
+
+        @if (Model.Button != null)
+        {
+            RenderButton(Model.Button);
+        }
+
+    </div>
+</section>
+
+@functions {
+void RenderButton(ContentReference reference)
+{
+    var logoUrl = "#";
+    if (Model.LogoImage != null)
+    {
+        logoUrl = Model.LogoImage.GetFriendlyUrl();
+    }
+
+    var block = reference.GetContent();
+
+    if (block is ButtonBlock)
+    {
+        var button = block as ButtonBlock;
+
+        <div class="logo-button-wrapper">
+            <img src="@logoUrl" alt="@button.Text">
+            <button class="button-hollow-white">
+                <a href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame">@button.Text</a>
+            </button>
+        </div>
+    }
+}
+}

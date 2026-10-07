@@ -1,0 +1,16 @@
+
+
+<div id="internal-nav-menu" class="hide-for-xlarge">
+  <ul class="menu dropdown" data-dropdown-menu>
+    <div class="top-bar-left ml-1">
+      {{#each cdc-nav.sub-nav}}
+      <li class="e-nav-primary__item e-nav-primary__item--home">
+        <a href="{{url}}" class="e-nav-primary__link" data-primary-nav-trigger="" data-primary-nav-link=""
+          data-gtm-event-action="{{title}}" data-gtm-event-label-title="">
+          <span class="e-nav-primary__link-text">{{title}}</span>
+        </a>
+      </li>
+      {{/each}}
+    </div>
+  </ul>
+</div>

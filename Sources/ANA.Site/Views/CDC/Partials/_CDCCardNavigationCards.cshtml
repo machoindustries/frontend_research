@@ -1,0 +1,40 @@
+﻿@using EPiServer.Web.Routing;
+@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Media;
+@using Geta.Optimizely.Extensions;
+
+@model ContentArea
+
+@{
+    var blocks = Model.FilteredItems.Select(i => i.LoadContent());
+}
+
+@foreach (var block in blocks)
+{
+    if (block is CDCCardNavigationCard)
+    {
+        var card = block as CDCCardNavigationCard;
+        var url = card.Link == null ? null : card.Link.GetFriendlyUrl();
+
+        var cardImage = !ContentReference.IsNullOrEmpty(card.Image)
+            ? EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(card.Image)
+            : null;
+
+        <article class="cell small-12 card__container">
+            <div class="img__container">
+                <div class="img-nav-card">    
+                    @if (cardImage is ImageFile)
+                    {
+                        var image = (ImageFile)cardImage;
+                        <img src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                    }
+                </div>
+            </div>
+            <div class="nav-card">
+                <h5>@card.Title</h5>
+                @Html.Raw(card.Text)
+                <a href="@card.Link" target="@card.TargetFrame">@card.LinkLabel</a>
+            </div>
+        </article>
+    }
+}

@@ -1,0 +1,54 @@
+﻿@using ANA.Site.Microsite.Models.Blocks.Landing
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model LandingShareBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-social-media grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="cell small-12 ana-social-media--content">
+            @Html.PropertyFor(m => m.Content)
+        </div>
+        @if (Model.EnableAddThis)
+        {
+            <div class="cell small-12 ana-social-media--links">
+                @Html.Raw(Model.AddthisInlineHtml)
+            </div>
+        }
+        else
+        {
+            var bgClass = Model.EnablePrimaryColorBackground ? "ana-bgcolor--secondary" : "ana-bgcolor--primary";
+            if (!string.IsNullOrEmpty(Model.FacebookUrl))
+            {
+                <a class="ana-social-media--link" href="@Model.FacebookUrl">
+                    <div class="ana-social-media--block @bgClass">
+                        <span class="svg-sprite -facebook-icon"><svg role="img" aria-label="alt text"><use xlink:href="#facebook-icon"></use></svg></span>
+                    </div>
+                </a>
+            }
+            if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+            {
+                <a class="ana-social-media--link" href="@Model.LinkedInUrl">
+                    <div class="ana-social-media--block @bgClass">
+                        <span class="svg-sprite -linkedin-icon"><svg role="img" aria-label="alt text"><use xlink:href="#linkedin-icon"></use></svg></span>
+                    </div>
+                </a>
+            }
+            if (!string.IsNullOrEmpty(Model.TwitterUrl))
+            {
+                <a class="ana-social-media--link" href="@Model.TwitterUrl">
+                    <div class="ana-social-media--block @bgClass">
+                        <span class="svg-sprite -twitter-icon"><svg role="img" aria-label="alt text"><use xlink:href="#twitter-icon"></use></svg></span>
+                    </div>
+                </a>
+            }
+            if (!string.IsNullOrEmpty(Model.InstagramUrl))
+            {
+                <a class="ana-social-media--link" href="@Model.InstagramUrl">
+                    <div class="ana-social-media--block @bgClass">
+                        <span class="svg-sprite -instagram-icon"><svg role="img" aria-label="alt text"><use xlink:href="#instagram-icon"></use></svg></span>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,66 @@
+﻿@model ANA.Site.Business.Admin.ContentReferencesModel
+@using EPiServer.Framework.Web.Resources
+@using EPiServer.Shell.Navigation
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Content Instances Report</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="~/assets/css/system.css" type="text/css" rel="stylesheet">
+    <link href="~/assets/css/ToolButton.css" type="text/css" rel="stylesheet">
+    <!-- Shell -->
+    @ClientResources.RenderResources("ShellCore")
+    <!-- Light Theme -->
+    @ClientResources.RenderResources("ShellCoreLightTheme")
+    <script>
+        function ShowRef(ref, value) {
+            if (value.style.display == "table-row") {
+                value.style.display = "none";
+                ref.innerHTML = "Show References";
+            }
+            else {
+                value.style.display = "table-row";
+                ref.innerHTML = "Hide References";
+            }
+        }
+    </script>
+    <style>
+        a.ex1:link, a.ex1:visited {
+            color: cornflowerblue;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a.ex1:hover, a.ex1:active {
+            color: blue;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+    </style>
+
+</head>
+<body>
+    @Html.Raw(Html.CreatePlatformNavigationMenu())
+    <div @Html.ApplyPlatformNavigation()>
+        <br /><br /><br /><br /><br />
+        <center>
+            <h1>Instances Of @Model.ContentName</h1>
+            <a class="ex1" href="/ContentDetails?Id=@Model.ContentId"><< Back</a>
+        </center>
+        <table width="100%">
+            <tr>
+                <td>
+                    <div id="contentDetails">
+                        @Html.Raw(Model.InstanceDetailsHTMLString)
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

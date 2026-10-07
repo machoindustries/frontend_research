@@ -1,0 +1,69 @@
+﻿@using ANA.Site.Models.ViewModels
+@using ANA.Site.Business.CustomPromotion;
+@model CTAPromoViewModel
+
+@{
+    bool showCta = false;
+    if (Model.CTAItems != null)
+    {
+        if (Model.CTAItems.Count > 0)
+        { showCta = true; }
+    }
+}
+
+@if (showCta)
+{
+<section class="c-container-block suggested-item-wrapper">
+
+
+    <h4 class="c-container-promoblock__heading c-container-block__heading--lines">
+        <span>@Model.CTAHeader</span>
+    </h4>
+    <div class="c-container-block__content c-container-block__content--margin grid--center grid--flex">
+
+        @foreach (ProductPartialViewModel product in Model.CTAItems)
+        {
+            <div class="c-container-block__content block grid__item suggested-item suggested-item--plus one-whole small--one-half medium--one-third large--one-sixth">
+                @{ await Html.RenderPartialAsync("_CTAProduct", product); }
+            </div>
+        }
+        <div class="c-container-block__content block suggested-item-total grid__item one-whole large--one-third">
+            @using (Html.BeginForm("CTAAddAllToCart", "Cart",
+                FormMethod.Post,
+                new
+                {
+                    data_ajax_form = "",
+                    data_add_to_cart_form = ""
+                })
+            )
+            {
+                @Html.HiddenFor(m => m.Codes)
+
+                <div class="c-product-page-detail__pricing-item">
+                    <span class="c-product-page-detail__pricing-label">
+                        @Html.Translate("/CTABlock/CTAPRiceFrom")
+                    </span>
+                    <span class="c-product-page-detail__pricing-price c-product-page-detail__pricing-price">@($"{Model.PriceFrom:C}")</span>
+                </div>
+                <div class="c-product-page-detail__pricing-item">
+                    <span class="c-product-page-detail__pricing-label">
+                        @Html.Translate("/CTABlock/CTANonMemberPrice")
+                    </span>
+                    <span class="c-product-page-detail__pricing-price c-product-page-detail__pricing-price--red">@($"{Model.NonMemberPromoPrice:C}")</span>
+                </div>
+                <div class="c-product-page-detail__pricing-item">
+                    <span class="c-product-page-detail__pricing-label">
+                        @Html.Translate("/CTABlock/CTAMemeberPrice")
+                    </span>
+                    <span class="c-product-page-detail__pricing-price c-product-page-detail__pricing-price--red">@($"{Model.MemberPromoPrice:C}")</span>
+                </div>
+                <div class="c-add-to-cart__add">
+                    <button class="e-button e-button--button e-button--blue e-button c-add-to-cart__button" data-add-to-cart data-tracked-cta>
+                        @Html.Translate("/CTABlock/CTAAddAlltoCart")
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+}

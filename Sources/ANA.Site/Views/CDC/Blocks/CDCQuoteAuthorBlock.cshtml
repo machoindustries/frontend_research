@@ -1,0 +1,11 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCQuoteAuthorBlock
+
+<section class="quote-block small-12 @Model.GetCssClass()">
+    <div>@Html.Raw(Model.Text)</div>
+    @if (!string.IsNullOrEmpty(Model.Author))
+    {
+        <div class="name"><span>-</span>@Html.PropertyFor(i => i.Author)</div>
+    }
+    <img src="/assets/img/quotes.png" alt="image of quotation marks">
+</section>

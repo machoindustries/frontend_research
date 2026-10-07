@@ -1,0 +1,13 @@
+/**
+ * Print specific styles and helper classes
+ */
+
+.print-only {
+	display: none;
+}
+
+@media print {
+	.print-only{
+		display: block;
+	} 	
+} 

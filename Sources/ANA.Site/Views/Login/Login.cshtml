@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authentication
+
+@model ANA.Site.Models.ViewModels.InternalLoginViewModel
+
+
+<div class="col-md-6 col-sm-6 jsLoginBlockWrapper">
+    <h3>@Html.Translate("/Login/Form/Label/Heading")</h3>
+    <p>@Html.Translate("/Login/Form/Label/LoginMessage")</p>
+
+    <div class="quicksilver-well">
+        @using (Html.BeginForm("InternalLogin", "Login", FormMethod.Post, new { @class = "jsLoginBlock", role = "form" }))
+        {
+            @Html.HiddenFor(x => x.ReturnUrl)
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Email)
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(x => x.Email)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(x => x.Password)
+                @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Password)
+            </div>
+            <div class="checkbox">
+                <label>
+                    @Html.CheckBoxFor(x => x.RememberMe) @Html.Translate("/Login/Form/Label/RememberMe")
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn--blue">@Html.Translate("/Login/Form/Label/Login")</button>
+
+            if (Model.ResetPasswordPage != null)
+            {
+                <a class="col-md-offset-1" href="@Url.ContentUrl(Model.ResetPasswordPage)">@Html.Translate("/Login/Form/Label/ForgotPasswordLink")</a>
+            }
+        }
+    </div>
+
+    @{
+        var loginProviders = ServiceLocator.Current.GetInstance<IAuthenticationSchemeProvider>().GetAllSchemesAsync().Result;
+
+        using (Html.BeginForm("ExternalLogin", "Login", new { returnUrl = Model.ReturnUrl }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+
+            <div id="socialLoginList">
+                <p>
+                    @foreach (var provider in loginProviders)
+                    {
+                        <div>
+                            <button type="submit" class="login-social btn-link" value="@provider.Name" id="@provider.Name" name="provider">
+                                <span class="social-icon social-icon--@provider.Name.ToLower()"></span>
+                                <p>@string.Format(Html.Translate("/Login/Form/Label/SocialLoginLabel").ToString(), @provider.Name.ToLower())</p>
+                            </button>
+                        </div>
+                    }
+                 </p>
+           </div>
+        }
+    }
+</div>
+

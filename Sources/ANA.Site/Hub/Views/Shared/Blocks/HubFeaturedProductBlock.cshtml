@@ -1,0 +1,277 @@
+@using ANA.Site.Business.State
+@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.CustomerAccountModels
+@using EPiServer
+@using EPiServer.Core
+@using EPiServer.Shell.Web.Mvc.Html
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions
+@using Global = ANA.Site.Global
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubFeaturedProductBlockViewModel
+
+<div class="block containerblock containerblock--heading containerblock--featured hub-featured-products">
+    <section class="c-container-block c-container-block--featured c-container-block--heading">
+        <div class="title-wrapper grid grid--center">
+            <div class="title-line"></div>
+            <div clss="c-container-block__heading c-container-block__heading--lines">
+                <h3 class="like-title c-container-block__heading">
+                    <span><span id="trending">@Html.PropertyFor(s => s.CurrentBlock.Title)</span></span>
+                </h3>
+            </div>
+        </div>
+        <div class="c-container-block__content c-container-block__content--margin grid grid--flex grid--center">
+            <div class="like-container">
+                <div class="like-wrapper" style="background: none; border: none">
+                    @foreach (var item in Model.FeaturedProducts.Where(item => item?.FirstVariant != null))
+                    {
+                        if (item.AnaProduct.GetOriginalType() == typeof(BookProduct))
+                        {
+                            var bookProduct = (BookProduct)item.AnaProduct;
+
+                            if (bookProduct.Authors != null && bookProduct.Authors.FilteredItems.Any())
+                            {
+                                var firstAuthor = (PersonBlock)bookProduct.Authors.FilteredItems.FirstOrDefault().LoadContent();
+
+                                if (!string.IsNullOrEmpty(firstAuthor?.Name))
+                                {
+                                    item.AuthorName = firstAuthor.Name;
+                                }
+                            }
+
+                            item.Classes.Add("c-product-detail--book");
+                        }
+
+                        var workshopProduct = item.AnaProduct as WorkshopProduct;
+                        if (workshopProduct != null)
+                        {
+                            item.ProductType = "Workshop";
+                            item.ContactHours = workshopProduct.ContactHour ?? "0";
+                            item.Classes.Add("c-product-detail--workshop");
+                            item.IsWorkshop = true;
+                        }
+
+                        if (ViewData.ContainsKey("Carousel") && (bool)ViewData["Carousel"])
+                        {
+                            item.Classes.Add("c-product-detail--carousel");
+                        }
+
+                        var gtmPrice = string.Empty;
+
+                        if (item.FirstVariant != null)
+                        {
+                            gtmPrice = item.FirstVariant.DiscountedPrice != null && item.FirstVariant.DiscountedPrice.Value.Amount > 0.0m ? item.FirstVariant.DiscountedPrice.ToString() : item.FirstVariant.PlacedPrice.ToString();
+
+                            if (UserState.CurrentProfile.IsMember())
+                            {
+                                gtmPrice = item.FirstVariant.DiscountedPrice != null && item.FirstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? item.FirstVariant.DiscountedMemberPrice.ToString() : item.FirstVariant.MemberPrice.ToString();
+                            }
+                        }
+
+                        var impression = new
+                        {
+                            productName = item.FirstVariant?.DisplayName ?? string.Empty,
+                            productId = item.FirstVariant?.Code ?? string.Empty,
+                            productPrice = gtmPrice,
+                            productBrand = item.AnaProduct.EntityBanner,
+                            productCategory = item.AnaProduct.GetOriginalType().Name.Replace("Product", string.Empty),
+                            productVariant = item.FirstVariant?.Code ?? string.Empty,
+                            productPosition = ViewBag.listingIndex,
+                            productQuantity = item.DefaultQtyOnProductListingPage,
+                            productFormat = item.FirstVariant?.VariantType ?? string.Empty
+                        };
+                        if (item.AnaProduct is CertificationProduct cert)
+                        {
+                            item.ProductGroup = cert.ProductGroupBlock;
+                            <div class="featured-product">
+                                <div class="block certificationproduct c-container-block__slide containerblockfeatured containerblockcarousel videosmall grid__item one-whole small--one-half medium--one-third large--one-quarter">
+                                    <div class="c-product-listing--cert">
+                                        <a href="@cert.ContentLink.GetFriendlyUrl()" class="featured-container grid__item">
+                                            <div class="featured-item">
+                                                <div class="title-container">
+                                                    <p class="title">
+                                                        @if (item.ProductGroup != null)
+                                                        {
+                                                            @item.ProductGroup.Name
+                                                        }
+                                                    </p>
+                                                    @if (!string.IsNullOrEmpty(cert.EntityBanner))
+                                                    {
+                                                        <div class="c-product-listing--cert__ribbon">
+                                                            <span class="c-product-listing--cert__ribbon__intro">PRESENTED</span><br/>
+                                                            <span class="c-product-listing--cert__ribbon__presenter">
+                                                                <span class="c-product-listing--cert__ribbon__presenter__smalltext">BY</span> @Html.Raw(cert.EntityBanner?.ToUpper())
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="content-container">
+                                                    <div class="content-wrapper">
+                                                        <p class="content-text">
+                                                            @cert.Heading
+                                                        </p>
+                                                    </div>
+                                                    <div class="bottom-container">
+                                                        <p class="bottom-text">@Html.Raw($"List price&nbsp;${(cert.PriceDisplayRegular > 0 ? cert.PriceDisplayRegular.ToString("0.00") : "")}")</p>
+                                                        <p class="bottom-text">@Html.Raw($"ANA Member Price:&nbsp;${(cert.PriceDisplayMember > 0 ? cert.PriceDisplayMember.ToString("0.00") : "")}")</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="featured-product">
+                                <div class="block @item.FirstVariant.Product.ProductType c-container-block__slide containerblockfeatured containerblockcarousel videosmall grid__item one-whole small--one-half medium--one-third large--one-quarter">
+                                    <article class="@string.Join(" ", item.Classes)"
+                                             data-product=""
+                                             data-product-item_name="@impression.productName"
+                                             data-product-item_id="@impression.productId"
+                                             data-product-price="@impression.productPrice"
+                                             data-product-item_brand="@impression.productBrand"
+                                             data-product-item_category="@impression.productCategory"
+                                             data-product-item_variant="@impression.productVariant"
+                                             data-product-index="@impression.productPosition"
+                                             data-product-quantity="@impression.productQuantity"
+                                             data-product-format="@impression.productFormat">
+
+                                        <div class="c-product-detail__wrapper">
+
+                                            <figure class="c-product-detail__figure" @Html.Raw(item.ProductGroup != null && string.IsNullOrEmpty(item.FirstVariant.ImageUrl) ? $"style=\"background-color: {item.ProductGroup.Colour}\"" : string.Empty)>
+                                                <a href="@item.AnaProduct.ContentLink.GetFriendlyUrl()" class="c-product-detail__figure-link" data-product-detail-link="">
+                                                    @if (!string.IsNullOrEmpty(item.FirstVariant.ImageUrl))
+                                                    {
+                                                        <img src="@item.FirstVariant.ImageUrl?width=150" alt="@item.FirstVariant.DisplayName" class="c-product-detail__image" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="@item.ProductIcon c-product-detail__figure-icon" @Html.Raw(item.ProductGroup != null ? $"style=\"color: {item.ProductGroup.Colour}\"" : string.Empty)></span>
+                                                    }
+                                                </a>
+                                                @if (item.AnaProduct.GetOriginalType() != typeof(BookProduct))
+                                                {
+                                                    <span class="c-product-detail__figure-info">
+                                                        @if (!string.IsNullOrWhiteSpace(item.ProductType))
+                                                        {
+                                                            <span class="c-product-detail__product-type">@item.ProductType</span>
+                                                        }
+                                                        <span class="c-product-detail__totalhours-description">
+                                                            @if (!string.IsNullOrEmpty(item.ContactHours))
+                                                            {
+                                                                <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span>
+                                                                <strong>@item.ContactHours</strong>
+                                                                @Html.Translate("/productpartial/contacthours")
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span>
+                                                                @Html.Translate("/productpartial/nocontacthours")
+                                                            }
+                                                        </span>
+                                                    </span>
+                                                }
+                                                @if (!string.IsNullOrEmpty(item.AnaProduct.EntityBanner))
+                                                {
+                                                    <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@item.AnaProduct.EntityBanner.ToLower()">
+                                                        <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                                                        <span class="c-product-detail__entity-banner-text">@item.AnaProduct.EntityBanner</span>
+                                                    </div>
+                                                }
+                                            </figure>
+                                            @if (item.ProductGroup != null)
+                                            {
+                                                <div class="c-product-detail__group-name" style="color: @item.ProductGroup.Colour;">
+                                                    @item.ProductGroup.Name
+                                                </div>
+                                            }
+                                            <div class="c-product-detail__info">
+                                                @if (!string.IsNullOrWhiteSpace(item.ProductType))
+                                                {
+                                                    <span class="c-product-detail__info-type">@item.ProductType</span>
+                                                }
+                                                <h3 class="c-product-detail__info-title">
+                                                    <a class="c-product-detail__info-link" href="@item.AnaProduct.ContentLink.GetFriendlyUrl()" data-product-detail-link>
+                                                        @item.AnaProduct.Heading
+                                                    </a>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="c-product-detail__wrapper">
+                                            <div class="c-product-detail__info">
+                                                @if (item.AnaProduct.GetOriginalType() != typeof(BookProduct))
+                                                {
+                                                    if (!string.IsNullOrEmpty(item.ContactHours))
+                                                    {
+                                                        <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @item.ContactHours</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @Html.Translate("/productpartial/nocontacthours")</span>
+                                                    }
+                                                }
+
+                                                @if (item.VariantsModel.Any(x => x.VariantType == Global.StringConstants.Paperback))
+                                                {
+                                                    <span class="c-product-detail__info-detail-2">
+                                                        @Html.Translate("/productpartial/paperback")
+                                                    </span>
+                                                }
+
+                                                @if (item.VariantsModel.Any(x => x.VariantType == Global.StringConstants.Ebook))
+                                                {
+                                                    <span class="c-product-detail__info-note">
+                                                        @Html.Translate("/productpartial/ebook")
+                                                    </span>
+                                                }
+                                            </div>
+                                            @{
+                                                var gtmPriceNormal = item.FirstVariant.DiscountedPrice != null && item.FirstVariant.DiscountedPrice.Value.Amount > 0.0m ? item.FirstVariant.DiscountedPrice : item.FirstVariant.PlacedPrice;
+                                            }
+
+                                            @{
+                                                var gtmPriceMember = item.FirstVariant.DiscountedMemberPrice != null && item.FirstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? item.FirstVariant.DiscountedMemberPrice : item.FirstVariant.MemberPrice;
+                                            }
+                                            <div class="c-product-detail__pricing" data-gtm-pricing-info="" data-gtm-price-normal="@gtmPriceNormal" data-gtm-price-member="@gtmPriceMember" style="padding-bottom: 1.25rem">
+
+                                                <div class="c-product-detail__pricing-item">
+                                                    <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/pricefrom")</span>
+                                                    @if (item.FirstVariant.DiscountedPrice != null && item.FirstVariant.DiscountedPrice.Value.Amount > 0.0m)
+                                                    {
+                                                        <span class="c-product-detail__pricing-price--old">@item.FirstVariant.PlacedPrice</span>
+                                                        <span class="c-product-detail__pricing-price">@item.FirstVariant.DiscountedPrice</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="c-product-detail__pricing-price">@item.FirstVariant.PlacedPrice</span>
+                                                    }
+                                                </div>
+
+                                                <div class="c-product-detail__pricing-item">
+                                                    <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/memberprice")</span>
+                                                    @if (item.FirstVariant.DiscountedMemberPrice != null && item.FirstVariant.DiscountedMemberPrice.Value.Amount > 0.0m)
+                                                    {
+                                                        <span class="c-product-detail__pricing-price--old">@item.FirstVariant.MemberPrice</span>
+                                                        <span class="c-product-detail__pricing-price">@item.FirstVariant.DiscountedMemberPrice</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="c-product-detail__pricing-price">@item.FirstVariant.MemberPrice</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                </div>
+                            </div>
+                        }
+                    }
+                    <div class="indicators-wrapper"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,34 @@
+﻿@model ANA.Site.Models.ViewModels.AccountMyMembershipViewModel
+
+<div class="c-account__section" data-require="./src/views/account-memberships-view">
+    <h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+    <p class="c-account__text">@Html.PropertyFor(m => m.Description)</p>
+    <div class="c-account__summary">
+        <a href="#" id="myMembershipTop" class="c-account__cta--add-new" title="Add a new membership" data-account-membership-add>@Html.Translate("/MyAccount/Membership/New")</a>
+    </div>
+    <table data-account-memberships-table style="display:none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/MyAccount/Membership/Association")</th>
+                <th>@Html.Translate("/MyAccount/Membership/MembershipId")</th>
+                <th>@Html.Translate("/MyAccount/Membership/StartDate")</th>
+                <th>@Html.Translate("/MyAccount/Membership/EndDate")</th>
+                <th>@Html.Translate("/MyAccount/Membership/Actions")</th>
+            </tr>
+        </thead>
+        <tbody data-account-memberships-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-memberships-no-results="">@Html.Translate("/MyAccount/Membership/NoResults")</div>
+    <a href="#myMembershipTop"  title="Back to top" data-account-memberships-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m=>m.LightboxMembership)
+    </div>
+
+    @if (Model?.DisplayUpgradeMemberShipBlock == true)
+    {
+        @Html.PropertyFor(m => m.UpgradeMembershipBlock)
+        <div id="membershipComparisonPopup" class="mfp-hide">
+            <img src=@Model.CompareMembershipBenefitsImageUrl alt="Membership Comparison">
+        </div>
+    }
+</div>

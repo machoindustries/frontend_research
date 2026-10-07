@@ -1,0 +1,44 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Blocks.Infographics
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HowItWorksStepBlock
+
+@{ 
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+
+<li>
+    @Html.PropertyFor(m => m.Text, new { CustomTag = "span" })
+    @if (Model.Icon != null || ContentHelper.PageIsInEditMode())
+    {
+        <span class="icon-hnhn" @Html.EditAttributes(m => m.Icon)>
+            <img src="@_UrlResolver.GetUrl(Model.Icon)" alt="" />
+        </span>
+    }
+    @*Take a personalized health risk assessment. <span class="icon-hnhn"><img src="/static/images/icons/health-risk-icon.svg" alt="health risk"></span>*@
+    @if (Model.SubItems?.FirstOrDefault() != null || ContentHelper.PageIsInEditMode())
+    {
+        <ul class="focus-area-list" @Html.EditAttributes(m => m.SubItems)>
+            @foreach (var item in Model.SubItems.GetContentItems<HowItWorksSubItemBlock>())
+            {
+                Html.RenderContentData(item, false);
+            }
+        </ul>
+    }
+</li>
+@*<li>
+        Pick your focus area(s):
+        <ul class="focus-area-list">
+            <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/activity-icon.svg" alt="Activity"></span> Activity </a></li>
+            <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/rest-icon.svg" alt="Rest"></span> Rest </a></li>
+            <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/nutrition-icon.svg" alt="nutrition"></span> Nutrition </a></li>
+            <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/quality-of-life-icon.svg" alt="quality of life"></span> Quality of life </a></li>
+            <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/safety-icon.svg" alt="safety"></span> Safety </a></li>
+        </ul>
+    </li>*@

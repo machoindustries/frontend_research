@@ -1,0 +1,24 @@
+﻿@model ANA.Site.Models.ViewModels.IconGrid.IconGridBlockViewModel
+
+<div class="grid-constraint">
+    <div class="grid grid--full">
+        <div class="grid__item one-whole">
+            <div class="c-about-us"  style="@(Model.HideBackgroundImage ? "background-image: none" : "" )">
+                @if (Model.SpotlightBlockViewModel.HasSpotlightBlock)
+                {
+                    await Html.RenderPartialAsync("~/Views/Shared/Blocks/SpotlightBlock.cshtml", Model.SpotlightBlockViewModel);
+                }
+                <div class="c-about-us__list">
+
+                    @if (Model.HasCtaBlockViewModels)
+                    {
+                        foreach (var item in Model.CtaBlockViewModels)
+                        {
+                            await Html.RenderPartialAsync("~/Views/IconGridBlock/IconGridCtaBlock.cshtml", item);
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

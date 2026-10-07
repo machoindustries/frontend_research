@@ -1,0 +1,38 @@
+/**
+ * Helper classes
+ */
+
+/**
+ * Creates a more 508 compliant background image. 
+ * Use this when you would use "background-size: cover" on an image 
+ * that is essential to the user and needs to be visible by screen readers.
+ */
+.background-img {
+  position: relative;
+  .stretch-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -10;
+    img {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: auto;
+    max-height: none;
+    max-width: none;
+    min-height: 100%;
+    min-width: 100%;
+    transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.flip-icon {
+  transform: rotate(180deg);
+}

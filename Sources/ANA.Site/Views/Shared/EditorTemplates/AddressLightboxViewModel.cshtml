@@ -1,0 +1,114 @@
+﻿@model ANA.Site.Models.ViewModels.AddressLightboxViewModel
+
+<div data-lightbox-src="addressedit">
+    <div id="address-notice-header" hidden style="color: #d9534f; font-weight: bold; font-size: 1.75rem; margin-bottom: 4px;">
+        Address is Required to Proceed to Checkout
+    </div>
+    <details id="address-notice-details" hidden style="margin-top: 6px;margin-bottom: 12px; font-size: 0.85rem;">
+        <summary style="cursor: pointer; color: #0066cc; text-decoration: underline; font-weight: 500;">
+            Details and address format recommendations
+
+        </summary>
+        <div style="margin-top: 8px; padding: 10px; background-color: #f8f9fa; border-left: 3px solid #d9534f; line-height: 1.4;">
+            <p style="margin: 0 0 8px 0;">
+                To proceed to checkout, your account requires a valid address. Your account is either missing an address or all addresses previously entered have been flagged as invalid.
+            </p>
+            <p style="margin: 0 0 16px 0;">
+                Please verify your address using the
+                <a href="https://tools.usps.com/zip-code-lookup.htm?byaddress" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">USPS Zip Code Lookup</a>
+                or
+                <a href="https://www.smarty.com/products/us-address-verification" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline;">Smarty Address Verification</a>
+                and enter it in the fields below based on that recommended format.
+            </p>
+            <p style="margin: 0 0 4px 0;">
+                For further assistance, please contact our Customer service team.
+                <br />
+                <strong>Customer service</strong>
+            </p>
+            <p style="margin: 0 0 0 28px ;">
+                Phone:&nbsp;1-800-284-2378
+                <br />
+                Email:&nbsp;<a href="mailto:customerservice@ana.org">customerservice@ana.org</a>
+            </p>
+        </div>
+    </details>
+    <h3 data-lightbox-heading></h3>
+    <div data-error-text style="color:#cf4520;" id="error-text"></div>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.AddressId, new { data_address_input_address_id = "" })
+        <label for="@Html.IdFor(m => m.Name)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Name")</span>
+            @Html.TextBoxFor(m => m.Name, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Name"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_address_input_name = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Name)"></div>
+        <label for="@Html.IdFor(m => m.Address1)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Line1")</span>
+            @Html.TextBoxFor(m => m.Address1, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Line1"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_address_input_address_1 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Address1)"></div>
+        <label for="@Html.IdFor(m => m.Address2)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Line2")</span>
+            @Html.TextBoxFor(m => m.Address2, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Line2"), data_formfield_text = "", data_address_input_address_2 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Address2)"></div>
+        <label for="@Html.IdFor(m => m.Address3)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Line3")</span>
+            @Html.TextBoxFor(m => m.Address3, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Line3"), data_formfield_text = "", data_address_input_address_3 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Address3)"></div>
+        <label for="@Html.IdFor(m => m.City)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/City")</span>
+            @Html.TextBoxFor(m => m.City, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/City"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_address_input_city = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.City)"></div>
+        
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-address-label-state>
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.StateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/Shared/Address/Form/Label/State"), data_formfield_text = "", data_address_input_state = "" })
+        </label>
+        
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-address-label-can-state style="display:none;">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.CanStateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/Shared/Address/Form/Label/State"), data_formfield_text = "", data_address_input_can_state = "" })
+        </label>
+        
+        <label for="@Html.IdFor(m => m.ZipCode)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/ZipCode")</span>
+            @Html.TextBoxFor(m => m.ZipCode, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/ZipCode"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_address_input_zipcode = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.ZipCode)"></div>
+        <label for="@Html.IdFor(m => m.Country)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/CountryName")</span>
+            @Html.DropDownListFor(m => m.Country, Enumerable.Empty<SelectListItem>(), new { @class = "e-form__input e-form__input--select", title = Html.Translate("/Shared/Address/Form/Label/CountryName"), data_address_input_country = "" })
+        </label>
+        <label for="@Html.IdFor(m => m.DefaultBillingAddress)" class="e-form__label e-form__label--checkbox e-form__label--checkbox--block e-form__label--checkbox--left" data-formfield="">
+            <span class="e-form__label-text" data-lightbox-default-address-text>@Html.Translate("/Shared/Address/Form/Label/DefaultBillingAddress")</span>
+            <input type="checkbox" class="e-form__input e-form__input--checkbox" id="@Html.IdFor(m => m.DefaultBillingAddress)" name="@Html.NameFor(m => m.DefaultBillingAddress)" title="@Html.Translate("/Shared/Address/Form/Label/DefaultBillingAddress")" data-validate="" data-address-input-default-billing>
+            <span class="e-form__fake-checkbox"></span>
+        </label>
+        <label for="@Html.IdFor(m => m.DefaultShippingAddress)" class="e-form__label e-form__label--checkbox e-form__label--checkbox--block e-form__label--checkbox--left" data-formfield="">
+            <span class="e-form__label-text" data-lightbox-default-address-text>@Html.Translate("/Shared/Address/Form/Label/DefaultShippingAddress")</span>
+            <input type="checkbox" class="e-form__input e-form__input--checkbox" id="@Html.IdFor(m => m.DefaultShippingAddress)" name="@Html.NameFor(m => m.DefaultShippingAddress)" title="@Html.Translate("/Shared/Address/Form/Label/DefaultShippingAddress")" data-validate="" data-address-input-default-shipping>
+            <span class="e-form__fake-checkbox"></span>
+        </label>
+        <label for="@Html.IdFor(m => m.Phone1)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Phone1")</span>
+            @Html.TextBoxFor(m => m.Phone1, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Phone1"), data_formfield_text = "", data_validate = "", data_validate_digits = "", data_address_input_phone_1 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Phone1)"></div>
+        <label for="@Html.IdFor(m => m.Phone2)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/Phone2")</span>
+            @Html.TextBoxFor(m => m.Phone2, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/Shared/Address/Form/Label/Phone2"), data_formfield_text = "", data_validate = "", data_validate_digits = "", data_address_input_phone_2 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Phone2)"></div>
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/Shared/Address/Form/Label/Submit")" data-submit-address>
+    </form>
+</div>
+<div class="yes-no" data-lightbox-src="editaddressconfirm">
+    <form>
+        <h3>Edit Address Confirmation</h3>
+        <span>Do you want to edit both shipping and billing addresses?</span>
+        <input class="e-button--blue" type="button" value="yes" data-address-edit-confirm-yes="" />
+        <input class="e-button--white" type="button" value="no" data-address-edit-confirm-no="" />
+    </form>
+</div>

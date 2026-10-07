@@ -1,0 +1,26 @@
+{{#each ana-by-the-numbers.data}}
+<div class="cell small-12">
+  <div class="grid-x grid-margin-x ana-by-the-numbers
+  {{~#if isFullBleed}} ana-full-bleed{{/if~}}
+  {{~#if hasBackgroundColor}} ana-bgcolor--primary{{/if~}}
+  {{~#if isInverted}} ana-inverted{{/if~}}" style="
+    {{~#if bgSize}}background-size: {{bgSize}};{{/if~}}
+    {{~#if bgImage}}background-image: url('{{base 'images'}}{{bgImage}}');{{/if~}}">
+
+    {{#each blocks}}
+    <div class="ana-by-the-numbers--block" data-module-core="by-the-number">
+      {{#if firstNum}}<div class="ana-by-the-numbers--first-num" data-number="{{{firstNum}}}"
+        data-effect="{{{firstNumEffect}}}">{{{firstNum}}}</div>{{/if}}
+      {{#if firstText}}<div class="ana-by-the-numbers--first-text">{{{firstText}}}</div>{{/if}}
+      {{#if secondNum}}<div class="ana-by-the-numbers--second-num" data-number="{{{secondNum}}}"
+        data-effect="{{{secondNumEffect}}}">{{{secondNum}}}</div>{{/if}}
+      {{#if secondText}}<div class="ana-by-the-numbers--second-text">{{{secondText}}}</div>
+      {{/if}}
+      {{#if thirdText}}<div class="ana-by-the-numbers--third-text">{{{thirdText}}}</div>
+      {{/if}}
+
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{/each}}

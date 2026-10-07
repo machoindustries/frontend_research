@@ -1,0 +1,18 @@
+<section class="resource-carousel grid-x align-center cell small-12">
+  {{#each data.card}}
+  <div  class="cell small-12 card-wrapper align-center medium-6 large-3 grid-x">
+    {{>
+        media-content-social-links
+        background=background
+        image=image
+        alt=alt
+        title=title
+        content=content
+        url=url
+        source=source
+        topic=topic
+        subTopic=subTopic
+    }}
+</div>
+{{/each}}
+</section>

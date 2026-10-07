@@ -1,0 +1,90 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using EPiServer.SpecializedProperties
+@using ANA.Site.Microsite.Models.Pages
+@using ANA.Site.Microsite.Extensions
+@using ANA.Site.Models.Media
+@using ANA.Site.Business.Helpers
+@model ANA.Site.Microsite.Models.IMicrositePageViewModel<MicrositePageData>
+@{
+    var footerNavigation = Model.Layout.FooterNavigation.GetContentItems<ANA.Site.Models.Blocks.LinkListBlock>();
+}
+
+<footer class="brandfooter row" role="contentinfo">
+    <img class="footer__image" alt="ANA flame logo" src="@(Model.Layout.AssetPrefix)img/ana-flame-white.svg" />
+    <div class="footer__navigation grid-x">
+        <nav class="footer__nav-container small-offset-1 small-10">
+            @if (footerNavigation != null && footerNavigation.Any())
+            {
+                foreach (var footerSection in footerNavigation)
+                {
+                    <ul class="footer__nav-list">
+                        @if (!string.IsNullOrEmpty(footerSection.Heading))
+                        {
+                            <h5>
+                                <a href="@footerSection.HeadingLink.GetSafeFriendlyUrl()">
+                                    @footerSection.Heading
+                                </a>
+                            </h5>
+                            <hr>
+                        }
+                        @foreach (var link in footerSection.Links ?? new LinkItemCollection())
+                        {
+                            <li>@Html.PropertyFor(m => link)</li>
+                        }
+                    </ul>
+                }
+            }
+
+            <ul class="footer__nav-list social-media-list">
+                <h5>Social Media</h5>
+                <hr>
+                <li>
+                    <a href="@Model.Layout.TwitterUrl.GetSafeFriendlyUrl()">
+                        <img src="@(Model.Layout.AssetPrefix)img/icon-twitter-x.svg" alt="X">
+                    </a>
+                </li>
+                <li>
+                    <a href="@Model.Layout.FacebookUrl.GetSafeFriendlyUrl()">
+                        <img src="@(Model.Layout.AssetPrefix)img/fi-social-facebook.svg" alt="facebook">
+                    </a>
+                </li>
+                <li>
+                    <a href="@Model.Layout.LinkedInUrl.GetSafeFriendlyUrl()">
+                        <img src="@(Model.Layout.AssetPrefix)img/fi-social-linkedin.svg" alt="linkedin">
+                    </a>
+                </li>
+                <li>
+                    <a href="@Model.Layout.YouTubeUrl.GetSafeFriendlyUrl()">
+                        <img src="@(Model.Layout.AssetPrefix)img/fi-social-youtube.svg" alt="youtube">
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="brandfooter__attribution grid-x">
+        <div class="brandfooter__attribution-container small-offset-1 small-10">
+            <div class="footer__left-side">
+                <img src="@(Model.Layout.AssetPrefix)img/ana-lockup-white.png" alt="ANA group logo">
+            </div>
+            <div class="footer__right-side">
+                <div class="footer__copyright">@Model.Layout.CopyrightText</div>
+                <div class="footer__other-links">
+                    @{
+                        var i = 0;
+                        foreach (var link in Model.Layout.FooterUtilityNavigation ?? new LinkItemCollection())
+                        {
+                            i++;
+                            @Html.PropertyFor(m => link)
+                            if (i < Model.Layout.FooterUtilityNavigation.Count)
+                            {
+                                @: |
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

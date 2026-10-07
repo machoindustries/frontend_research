@@ -1,0 +1,45 @@
+.faq-accordion { 
+  
+  &.mt-2 {
+    margin-top: 2rem;
+  }
+
+  .accordion {
+    border-bottom: 1px solid #318FBA;
+    margin-top: 1.5rem;
+    
+  .is-active {
+    .accordion-title::before {
+      transform: rotate(180deg);
+    }
+  }
+
+    .accordion-title {
+      border: none;
+      border-top: 1px solid #318FBA;
+      text-decoration: none;
+      font-size: 1.125rem;
+      font-weight: 600;
+      line-height: 1.5rem;
+      color: #CF4520;
+    }
+
+    .accordion-title:hover, .accordion-title:focus {
+      background-color: transparent;
+    }
+
+    .accordion-title::before {
+      content: '⌵';
+      color: #CF4520;
+      font-size: 1.25rem;
+    } 
+
+    .accordion-content {
+      border: none;
+
+      @media(min-width: 992px) {
+        padding-left: 3rem;
+      }
+    }
+  }
+}

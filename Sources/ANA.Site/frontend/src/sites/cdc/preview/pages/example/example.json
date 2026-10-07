@@ -1,0 +1,18 @@
+{
+  "title": "Example Page",
+  "template": "layout-default",
+  "intro": "Example intro text",
+  "example-list": {
+    "article": [
+      {
+        "title": "Example Title 1",
+        "summary": "Lorem Ipsum #1"
+      },
+      {
+        "title": "Example Title 2",
+        "summary": "Ipsum Lorem #2"
+      }
+    ]
+  },
+  "page": "example"
+}

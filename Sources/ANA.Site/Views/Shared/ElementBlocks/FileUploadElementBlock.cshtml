@@ -1,0 +1,31 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+
+@model FileUploadElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var helpText = Model.GetHelpText();
+}
+
+<div class="@Model.GetGridCssClass()">
+
+    <div class="Form__Element FormFileUpload @Model.GetValidationCssClasses() @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" data-epiforms-element-name="@formElement.ElementName" >
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="file" class="FormFileUpload__Input"
+            @if(!string.IsNullOrEmpty(Model.FileExtensions)) {
+			    @:accept="@Model.FileExtensions"
+    	    }     
+            @Model.AttributesString />
+        <div class="FormFileUpload__PostedFile"></div>
+        @if (!string.IsNullOrWhiteSpace(helpText))
+        {
+            <p class="Form__HelpText">@helpText</p>
+        }
+        <span data-epiforms-linked-name="@formElement.ElementName" class="Form__Element__ValidationError" style="display: none;">@Model.GetGenericErrorMessage()</span>
+    </div>
+
+</div>

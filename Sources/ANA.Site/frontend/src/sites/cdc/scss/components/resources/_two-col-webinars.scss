@@ -1,0 +1,17 @@
+.intro {
+  margin-bottom: 3rem;
+}
+
+@media screen and (min-width: $large) {
+  .two-col-resource {
+    .webinar-container {
+      min-width: calc(50%);
+    }
+  }
+}
+
+@media screen and (min-width: $large) {
+  .two-col-resource-intro {
+    padding-right: 2.5rem;
+  }
+}

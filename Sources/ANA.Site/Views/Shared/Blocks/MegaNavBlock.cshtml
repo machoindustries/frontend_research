@@ -1,0 +1,53 @@
+﻿@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.MegaNavBlock
+
+@{
+    var hasChildren = Model.Column1 != null && Model.Column1.FilteredItems.Any() ||
+                                      Model.Column2 != null && Model.Column2.FilteredItems.Any() ||
+                                      Model.Column3 != null && Model.Column3.FilteredItems.Any() ||
+                                      Model.Column4 != null && Model.Column4.FilteredItems.Any();
+}
+
+<div class="grid-constraint">
+    <div class="c-sitemap grid">
+        <div class="c-sitemap__section">
+
+            <div class="grid__item one-whole">
+
+                <h2 class="c-sitemap__section-title">
+
+                    @using (var x = ANA.Site.Business.Helpers.HtmlHelpers.BeginConditionalLink(Html, Model.SectionLink != null, new HtmlString(Model.SectionLink != null ? Model.SectionLink.GetFriendlyUrl() : ""), cssClass: "c-sitemap__section-link"))
+                    {
+                        @Model.SectionName
+                    }
+
+                </h2>
+
+            </div>
+
+            @{
+                await RenderColumn(Model.Column1);
+                await RenderColumn(Model.Column2);
+                await RenderColumn(Model.Column3);
+                await RenderColumn(Model.Column4);
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+async Task RenderColumn(ContentArea contentArea)
+{
+    if (contentArea != null && contentArea.FilteredItems.Any())
+    {
+        <div class="grid__item one-whole medium--one-half large--one-quarter">
+                @foreach (var navItem in contentArea.FilteredItems.Select(item => item.LoadContent()).OfType<LinkListBlock>())
+            {
+                { await Html.RenderPartialAsync("MegaNavItemInSitemap", navItem); }
+            }
+        </div>
+    }
+}
+}

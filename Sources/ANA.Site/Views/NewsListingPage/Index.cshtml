@@ -1,0 +1,101 @@
+﻿@using ANA.Site.Business.Interfaces
+@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Editor
+@using Geta.Optimizely.Extensions;
+@model NewsListingViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+@{ await Html.RenderPartialAsync("HeroArea", Model.CurrentPage as IHero); }
+
+@Html.PropertyFor(m => m.CurrentPage.Blocks, new { CssClass = "content-area b-vsb--large" })
+
+<div class="grid-constraint">
+    <div class="grid">
+        <div class="grid__item one-whole" data-require="./src/views/filter-view">
+            <form action="@Url.ContentUrl(Model.CurrentPage.GetFriendlyUrl())"
+                  class="c-product-search-form c-product-search-form--news-listing"
+                  data-require = "./src/views/form-view"
+                  data-filter-form = ""
+                  >
+                <div class="grid" data-require="./src/views/filter-view">
+                    @if (Model.CurrentPage.FilterCategories != null && Model.CurrentPage.FilterCategories.Any())
+                    {
+                        <div class="grid__item one-whole medium--five-twelfths">
+                            <label class="e-form__label e-form__label--select" for="@Html.IdFor(p => p.Filter)">
+                                <span class="e-form__label-text" data-fake-placeholder>Subject</span>
+                                @{
+                                    var filterList = Model.CurrentPage.FilterCategories.Select(x => new { @class = "e-form__input e-form__input--select", Value = x, Text = x }).ToList();
+                                    filterList.Insert(0, new { @class = "e-form__input e-form__input--select", Value = "", Text = "Select" });
+                                }
+                                @Html.DropDownListFor(m => m.Filter, new SelectList(filterList, "Value", "Text"), new { @class = "c-search-results__filter-select e-form__input e-form__input--select", onchange = @"form.submit();", data_filter_search_field = "" })
+                            </label>
+                        </div>
+                    }
+
+                    <div class="grid__item one-whole medium--one-twelfth c-product-search-form__results">
+                        <div class="c-product-search-form__results-count">
+                            <span class="c-product-search-form__results-count-text">@Model.TotalMatching.ToString("N0") @Html.Translate("/NewsListPage/Results")</span>
+                        </div>
+                    </div>
+
+                    <div class="grid__item one-whole medium--three-twelfths">
+                        <label class="e-form__label e-form__label--select" for="@Html.IdFor(p => p.ResultPage)">
+                            <span class="e-form__label-text">@Html.Translate("/NewsListPage/ResultsPerPage")</span>
+                            @Html.DropDownListFor(m => m.ResultPage, (List<SelectListItem>)ViewBag.ResultList, new { @class = "e-form__input e-form__input--select", onchange = @"form.submit();", data_results_per_page = "" })
+                        </label>
+                    </div>
+
+                    <div class="grid__item one-whole medium--three-twelfths">
+                        <label class="e-form__label e-form__label--select" for="@Html.IdFor(p => p.SortBy)">
+                            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/NewsListPage/SortBy")</span>
+                            @Html.DropDownListFor(m => m.SortBy, (List<SelectListItem>)ViewBag.SortByList, new { @class = "e-form__input e-form__input--select", onchange = @"form.submit();", data_sort_by = "" })
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model.HasArticles)
+{
+    <div class="content-area">
+        <div class="block containerblock">
+            <div class="c-container-block">
+
+                <div class="grid-constraint">
+                    <div class="c-container-block__content grid grid--flex grid--overflow-hidden">
+                        @foreach (var article in Model.Articles)
+                        {
+                        <div class="block ctablock ctablock--third ctablock--news grid__item medium--one-half large--one-third">
+
+                            @{ await Html.RenderPartialAsync("/Views/CtaBlock/Index.cshtml", article); }
+
+                        </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    { await Html.RenderPartialAsync("Pagination", Model.Paging); }
+}
+else
+{
+    <div class="content-area">
+        @{ await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+           {
+               Introduction = Model.CurrentPage.NoResultsHtml
+           });
+        }
+    </div>
+}
+
+@Html.PropertyFor(x => x.CurrentPage.FooterBlocks, new { CssClass = "content-area" })

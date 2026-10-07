@@ -1,0 +1,13 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCIconicText
+
+<div class="grid-x grid-margin-x grid-margin-y mt-1 mb-1">
+    <div class="image__container cell small-4 large-2">
+        @Html.PropertyFor(i => i.Image)
+    </div>
+    <div class="cell small-8 large-10">
+        @Html.PropertyFor(i => i.Text)
+    </div>
+</div>

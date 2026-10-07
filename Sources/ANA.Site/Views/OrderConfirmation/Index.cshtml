@@ -1,0 +1,297 @@
+﻿@using ANA.Site.Models.ViewModels
+@using EPiServer.Editor
+
+@model OrderConfirmationViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    var gtmDonations = "[";
+    var donationsIdx = 0;
+
+    foreach (var donation in Model.OrderDetail.Donations)
+    {
+        gtmDonations += "{";
+        gtmDonations += "\"id\":\"" + donation.Code + "\",";
+        gtmDonations += "\"amount\":\"" + donation.Amount + "\",";
+        gtmDonations += "\"displayName\":\"" + donation.DisplayName + "\"";
+        gtmDonations += "}";
+
+        if (donationsIdx++ < Model.OrderDetail.Donations.Count() - 1)
+        {
+            gtmDonations += ",";
+        }
+    }
+
+    gtmDonations += "]";
+}
+@Html.PropertyFor(x => x.CurrentPage.Adverts)
+
+<div class="block" data-require="./src/views/order-confirmation-page-view"
+     data-gtm-donation-amount="@Model.OrderDetail.Donations.Sum(x => x.Amount.Amount)"
+     data-gtm-donations="@gtmDonations"
+     data-transaction-id="@Model.OrderDetail.Order.OrderNumber"
+     data-transaction-revenue="@Model.OrderDetail.Total.ToString()"
+     data-transaction-tax="@Model.OrderDetail.TotalTax.ToString()"
+     data-transaction-shipping="@Model.OrderDetail.TotalShipping.ToString()">
+    <div class="grid-constraint">
+        <div class="c-container-block c-container-block--heading b-vst--medium b-vsb--small">
+            <div class="grid-constraint">
+                <div class="grid grid--center">
+                    <div class="grid__item one-whole">
+                        <h1 class="c-container-block__heading c-container-block__heading--lines c-container-block__heading--large">
+                            <span>@Model.CurrentPage.Heading</span>
+                        </h1>
+                    </div>
+                    <div class="c-container-block__intro grid__item one-whole medium--eight-twelfths">
+                        <div class="e-richtext">
+                            @if (Model.CurrentPage.ConfirmationText != null && !Model.CurrentPage.ConfirmationText.IsEmpty)
+                            {
+                                @Html.Raw(Model.CurrentPage.ConfirmationText.ToString().Replace("{{FIRSTNAME}}", Model.User.FirstName).Replace("{{LASTNAME}}", Model.User.LastName).Replace("{{ORDERNUMBER}}", Model.OrderDetail.Order.OrderNumber).Replace("%7B%7BORDERNUMBER%7D%7D", Model.OrderDetail.Order.OrderNumber).Replace("{{EMAIL}}", Model.User.Email))
+                            }
+                            else if (Model.IsBulkPurchase)
+                            {
+                                  
+                                    <p>@Html.Raw(string.Format(Html.Translate("/OrderConfirmation/IntroCompleteOrder").ToString(), Model.User.FirstName, Model.User.LastName, $"<strong>{Model.OrderDetail.Order.OrderNumber}</strong>"))</p>
+                                
+                            }
+                            else
+                            {
+                                <p>@Html.Raw(string.Format(Html.Translate("/OrderConfirmation/Intro").ToString(), Model.User.FirstName, Model.User.LastName, $"<strong>{Model.OrderDetail.Order.OrderNumber}</strong>", Model.User.Email))</p>
+                            }
+                            @if (Model.OrderDetail.HasMembership || ContentHelper.PageIsInEditMode())
+                            {
+                                @Html.PropertyFor(x => x.CurrentPage.MembershipText)
+                            }
+                            @if (Model.OrderDetail.HasCertification || ContentHelper.PageIsInEditMode())
+                            {
+                                @Html.PropertyFor(x => x.CurrentPage.CertificationText)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="grid__item one-whole">
+                <div class="block block--full c-container-block__divider">
+                    <div class="grid">
+                        <div class="grid__item one-whole medium--one-half large--one-third">
+                            @if (Model.IsBulkPurchase)
+                            {
+                                <div class="c-address">
+                                    <h4>@Html.Translate("/Shared/Address/BulkShippingHeading")</h4>
+                                    <ul class="c-address__address">
+                                        <li class="c-address__address-item">@Html.Translate("/Shared/Address/BulkShippingMessage")</li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="c-address">
+                                    <h4>@Html.Translate("/Shared/Address/ShippingHeading")</h4>
+                                    <ul class="c-address__address">
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Name))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Name)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Address1))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Address1)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Address2))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Address2)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Address3))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Address3)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.City))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.City)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.State))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.State)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Country))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Country)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.ZipCode))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.ZipCode)</li>
+                                        }
+                                        @* @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Phone1))
+                                        {
+                                            <li class="c-address__address-item c-address__address-item--push">@(Model.OrderDetail.Order.Addresses.ShipAddress.Phone1)</li>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.ShipAddress.Phone2))
+                                        {
+                                            <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.ShipAddress.Phone2)</li>
+                                        } *@
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                        <div class="grid__item one-whole medium--one-half large--one-third">
+                            <div class="c-address">
+                                <h4>@Html.Translate("/Shared/Address/BillingHeading")</h4>
+                                <ul class="c-address__address">
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Name))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Name)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Address1))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Address1)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Address2))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Address2)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Address3))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Address3)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.City))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.City)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.State))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.State)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Country))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Country)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.ZipCode))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.ZipCode)</li>
+                                    }
+                                    @* @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Phone1))
+                                    {
+                                        <li class="c-address__address-item c-address__address-item--push">@(Model.OrderDetail.Order.Addresses.BillAddress.Phone1)</li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Model.OrderDetail.Order.Addresses.BillAddress.Phone2))
+                                    {
+                                        <li class="c-address__address-item">@(Model.OrderDetail.Order.Addresses.BillAddress.Phone2)</li>
+                                    } *@
+                                </ul>
+                            </div>
+                            @if (Model.OrderDetail.Order.PaymentInfo != null)
+                            {
+                                <div class="c-order-detail__payment">
+                                    <h4 class="c-order-detail__heading">@Html.Translate("/MyAccount/Order/PaymentDetails")</h4>
+                                    <p class="c-order-detail__address">@Model.OrderDetail.Order.PaymentInfo.ReceiptTypeDescr @Model.OrderDetail.Order.PaymentInfo.PartialCardNumber</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="grid__item one-whole large--one-third">
+                            <div class="c-order-summary is--enabled">
+                                <h4 class="c-order-summary__heading">
+                                    Order summary
+                                </h4>
+                                <dl class="c-order-summary__content" data-order-summary-content="">
+                                    <div class="c-order-summary__section">
+                                        <dl class="c-order-summary__row grid">
+                                            <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">Items</dt>
+                                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-items="">@Model.OrderDetail.TotalItems.ToString()</dd>
+                                        </dl>
+                                        <dl class="c-order-summary__row grid">
+                                            <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">Tax</dt>
+                                            <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-tax="">@Model.OrderDetail.TotalTax.ToString()</dd>
+                                        </dl>
+                                        @if (Model.OrderDetail.TotalDiscount.HasValue)
+                                        {
+                                            <div class="c-order-summary__row">
+                                                <dl class="c-order-summary__row-dl grid">
+                                                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">
+                                                        <strong>@Html.Translate("/CartCheckout/Labels/AppliedPromotion"):</strong>
+                                                    </dt>
+                                                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-discount="">-@Model.OrderDetail.TotalDiscount.Value.ToString()</dd>
+                                                    @foreach (var couponDiscount in ViewBag.CouponDiscounts)
+                                                    {
+
+                                                        <dt class="c-order-summary__item--discount grid__item one-half">@couponDiscount.DisplayName</dt>
+                                                        <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">
+                                                            <span class="c-order-summary__remove-discount"></span>
+                                                        </dd>
+                                                    }
+                                                    @if (@ViewBag.MarketCode != null && @ViewBag.MarketCode != string.Empty && @ViewBag.MarketCode != "\"\"")
+                                                    {
+                                                        <dt class="c-order-summary__item--discount grid__item one-half">@ViewBag.MarketCode</dt>
+                                                        <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half">
+                                                            <span class="c-order-summary__remove-discount"></span>
+                                                        </dd>
+                                                    }
+                                                </dl>
+                                            </div>
+                                        }
+                                        <div class="c-order-summary__row grid">
+                                    <dt class="c-order-summary__item c-order-summary__item--label grid__item one-half">Shipping &amp; Handling</dt>
+                                    <dd class="c-order-summary__item c-order-summary__item--value grid__item one-half" data-order-summary-output-shipping="">@Model.OrderDetail.TotalShipping.ToString()</dd>
+                            </div>
+                        </div>
+                        @foreach (var donation in Model.OrderDetail.Donations)
+                        {
+                            <div class="c-order-summary__section">
+                                <div class="c-order-summary__row">
+                                    <dt class="c-order-summary__item c-order-summary__item--label">
+                                        @donation.DisplayName
+                                        <span class="c-order-summary__item--discount">@Html.Translate(donation.DisplayName.Contains("ANA-PAC") ? "/CartCheckout/Labels/DonationNotTaxDeductible" : "/CartCheckout/Labels/DonationTaxDeductible")</span>
+                                    </dt>
+                                    <dd class="c-order-summary__item c-order-summary__item--value">@donation.Amount.ToString()</dd>
+                                </div>
+                            </div>
+                        }
+                        </dl>
+                        <span class="c-order-summary__total">
+                            @Html.Translate("/MyAccount/Order/Total"): <span data-order-summary-output-total="">@Model.OrderDetail.Total.ToString()</span>
+                        </span>
+                    </div>
+                    @if (Model.OrderDetail.Order.PaymentInfo.CardType == "EFT")
+                    {
+                        <div class="c-order-detail__address"><strong style="color:red">@Html.Translate("/MyAccount/Order/EFTMessage")</strong></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<div class="grid-constraint">
+    <div class="block block--full grid grid--full">
+        <div class="grid__item one-whole">
+            <h4 class="c-order-detail__heading">@Html.Translate("/OrderConfirmation/WhatYouOrdered")</h4>
+            <div class="c-order-detail">
+                <ul class="c-order-detail__items" data-purchased-products>
+                    <li class="grid grid--full c-order-detail__items-header">
+                        <div class="grid__item one-whole medium--six-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/CartCheckout/Labels/Item")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <div class="c-order-detail__column-label">@Html.Translate("/CartCheckout/Labels/ItemPrice")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <div class="c-order-detail__column-label c-order-detail__column-label--center">@Html.Translate("/CartCheckout/Labels/Quantity")</div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <div class="c-order-detail__column-label c-order-detail__column-label--right">@Html.Translate("/CartCheckout/Labels/ItemTotal")</div>
+                        </div>
+                    </li>
+                    @{
+                        int positionIdx = 0;
+                    }
+                    @foreach (var lineItem in Model.OrderDetail.LineItems)
+                    {
+                        @Html.DisplayFor(m => lineItem, new { position = positionIdx++ })
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

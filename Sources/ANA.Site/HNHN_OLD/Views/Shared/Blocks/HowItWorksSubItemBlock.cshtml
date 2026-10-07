@@ -1,0 +1,23 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HowItWorksSubItemBlock
+
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+@*  commented out because original markup had link in it and changes removed it
+        @if (PageEditing.PageIsInEditMode)
+    {
+        <div class="clearfix edit-box">
+            <span class="link-edit" @Html.EditAttributes(m => m.Link)>Edit link</span>
+            <a href="#"><span class="icon-hnhn">@Html.PropertyFor(m => m.Icon, new { Tag = "ContentReferencePartial"})</span> @Html.PropertyFor(m => m.Text, new { CustomTag = "span" })</a>
+        </div>
+    }*@
+@*else
+    {*@
+@*<a href="@Url.ContentUrl(Model.Link)"><span class="icon-hnhn">@Html.DisplayFor(m => m.Icon, new { Tag = "ContentReferencePartial" })</span> @Model.Text </a>*@
+<li><span class="icon-hnhn"><img src="@_UrlResolver.GetUrl(Model.Icon)" alt="" /></span> @Model.Text</li>
+@*}*@

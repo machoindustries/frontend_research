@@ -1,0 +1,23 @@
+﻿@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site.Business.Extensions
+
+@model ParagraphTextElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var paragraphText = Model.ParagraphText;
+}
+
+<div class="@Model.GetGridCssClass()">
+
+    <div class="Form__Element FormParagraphText Form__Element--NonData" data-epiforms-element-name="@formElement.ElementName">
+        @if (ContentHelper.PageIsInEditMode())
+        {
+            <div class="e-richtext" name="@formElement.ElementName" id="@formElement.Guid" @Html.Raw(Model.AttributesString)>@Html.Raw(Model.EditViewFriendlyTitle)</div>
+        }
+        else
+        {
+            <div class="e-richtext"  name="@formElement.ElementName" id="@formElement.Guid" @Html.Raw(Model.AttributesString)>@Html.Raw(paragraphText)</div>
+        }
+    </div>
+</div>

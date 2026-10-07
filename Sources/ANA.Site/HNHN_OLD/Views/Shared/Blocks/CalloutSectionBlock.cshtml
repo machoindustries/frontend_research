@@ -1,0 +1,76 @@
+﻿@using ANA.Site.HNHN_OLD.Helpers
+@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Blocks
+@using Defs = ANA.Site.HNHN.Global.Definitions
+
+@model ANA.Site.HNHN.Models.Blocks.CalloutSectionBlock
+
+@{
+    string sectionClass = (ViewData["SectionClass"] ?? "").ToString();
+    sectionClass += " " + Defs.Layout.GetCalloutDisplayClass(Model.CalloutDisplay);
+}
+
+<section class="section @(!string.IsNullOrWhiteSpace(sectionClass)?sectionClass:"")">
+    <div class="container container-extra">
+        @if (!string.IsNullOrWhiteSpace(Model.Heading) || ContentHelper.PageIsInEditMode())
+        {
+                <h2 class="heading heading--center fadeInDown wow">@Html.PropertyFor(m => m.Heading)</h2>
+        }
+
+        @*         
+            @Html.PropertyFor(m => m.CalloutItems, new
+            {
+                // Tag = "ContentRow", // Commented out for template cyclic issue 
+                GroupClass = Model.RowCssClass,
+                MaxItemsPerRow = Model.MaxItems,
+                ColumnSize = Defs.Layout.GetCalloutColumnClass(Model.ColumnSize)
+            })
+        *@
+
+        @{
+            string columnSize = (Defs.Layout.GetCalloutColumnClass(Model.ColumnSize) ?? "md").ToString();
+            string groupClass = (Model.RowCssClass ?? "").ToString();
+            int maxItems = Model.MaxItems;
+
+            @if (Model.CalloutItems.Items.Any())
+            {
+                var contentItems = Model.CalloutItems.Items.GetContentItems<BaseBlockData>();
+                int rowCount = (int)Math.Ceiling(contentItems.Count() / (float)maxItems);
+
+                for (int i = 0; i < rowCount; i++)
+                {
+                    <div class="row @groupClass">
+                        @{
+                            var currentItems = contentItems.Skip(i * maxItems).Take(maxItems);
+                            int colsCount = (12 / currentItems.Count());
+                            int currentCol = 0;
+                            foreach (var item in currentItems)
+                            {
+                                <div class="col-@columnSize-@colsCount wow @Html.GetContentColumnFadeClass(currentCol, maxItems)" data-wow-duration="1.3s">
+                                    @{
+                                        Html.RenderContentData(item, true);
+                                    }
+                                </div>
+                                currentCol++;
+                            }
+                        }
+                    </div>
+                }
+            }
+        }
+
+        @if ((Model.CallToActionButtons != null && Model.CallToActionButtons.Items.Any()) || ContentHelper.PageIsInEditMode())
+        {
+                <div class="btn-groups btn-groups--center" @Html.EditAttributes(m => m.CallToActionButtons)>
+                    <div class="btns-wrap">
+                    @Html.DisplayFor(m => m.CallToActionButtons)
+                    </div>
+                </div>
+        }
+    </div>
+
+</section>

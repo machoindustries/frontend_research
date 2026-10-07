@@ -1,0 +1,176 @@
+---
+style: 'news-articles'
+card:
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 1 this is a very long title to this card. this is a very long title card 1 this is a very long title to this card. this is a very long title card 1 this is a very long title to this card. this is a very long title"
+  content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  article-source:
+    date: "Jan 21, 2022"
+    source: "APIC"
+    tags:
+      -
+        tag: "apic"
+      -
+        tag: "omicron"
+      -  
+        tag: "covid-19"
+-
+  background: "./assets/img/download-icon.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 2"
+  # content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  article-source:
+    date: "Jan 21, 2022"
+    source: "APIC"
+    tags:
+      -
+        tag: "apic"
+      -
+        tag: "omicron"
+-
+  background: "./assets/img/external-link.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt1 image"
+  title: "card 3"
+  # content: "Gain practical tips on the go with 2-10 minutes videos from CDC expert Dr. Michael Bell. Topics include the ins and outs of PPE, tips to reduce transmission, and an introduction to Project Firstline."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  article-source:
+    date: "Jan 21, 2022"
+    source: "APIC"
+    tags:
+      -
+        tag: "apic"
+      -
+        tag: "omicron"
+      -  
+        tag: "covid-19"
+      -
+        tag: "apic"
+      -
+        tag: "omicron"
+      -  
+        tag: "covid-19"
+      -
+        tag: "apic"
+      -
+        tag: "omicron"
+      -  
+        tag: "covid-19"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt2 image"
+  title: "card 4"
+  # content: "Project Firstline is a collaborative effort led by the CDC, with ANA, to bring together diverse health care and public health collaborators to provide infection control training."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 5"
+  # content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  ANA: "ANA"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 6"
+  content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt1 image"
+  title: "card 7"
+  content: "Gain practical tips on the go with 2-10 minutes videos from CDC expert Dr. Michael Bell. Topics include the ins and outs of PPE, tips to reduce transmission, and an introduction to Project Firstline."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt2 image"
+  title: "card 8"
+  content: "Project Firstline is a collaborative effort led by the CDC, with ANA, to bring together diverse health care and public health collaborators to provide infection control training."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 9"
+  content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  ANA: "ANA"
+  topic: "Infection Basics"
+  subTopic: 'The Basic Science of Viruses'
+  source: ANA
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt3 image"
+  title: "card 10"
+  content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  url-caption: "Review the catalog"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt1 image"
+  title: "card 11"
+  content: "Gain practical tips on the go with 2-10 minutes videos from CDC expert Dr. Michael Bell. Topics include the ins and outs of PPE, tips to reduce transmission, and an introduction to Project Firstline."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+-
+  background: "./assets/img/youtube-1.svg"
+  image: "https://picsum.photos/seed/picsum/200/300"
+  alt: "alt2 image"
+  title: "card 12"
+  content: "Project Firstline is a collaborative effort led by the CDC, with ANA, to bring together diverse health care and public health collaborators to provide infection control training."
+  iconUrl: "x"
+  cardUrl: "x"
+  socialUrl: "x"
+  source: ANA
+  topic: 'Infection Basics'
+  subTopic: "The Basic Science of Viruses"
+ 

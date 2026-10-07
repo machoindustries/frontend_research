@@ -1,0 +1,11 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.OJIN
+
+<div class="e-lightbox-source">
+    <div data-lightbox-src="addedtocartconfirmation">
+        <h3>@Html.Translate("/Product/Lightbox/AddedToCart")</h3>
+        <a href="@SettingsHelper.GetSettings().CartPageReference.GetUri().ToString()" class="e-button e-button--anchor e-button--blue e-button">@Html.Translate("/Product/Lightbox/GoToCart")</a>
+        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-modal-close="">@Html.Translate("/Product/Lightbox/ContinueShopping")</a>
+    </div>
+</div>

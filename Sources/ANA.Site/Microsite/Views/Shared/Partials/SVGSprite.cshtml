@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Hosting
+@using System.IO
+@inject IWebHostEnvironment WebHostEnvironment
+
+<div class="svg-sprite-sheet visuallyhidden" aria-hidden="true">
+    @{
+        var iconsFilePath = System.IO.Path.Combine(WebHostEnvironment.ContentRootPath, "Microsite/assets/icons/icons.svg");
+        var iconsSvgContent = System.IO.File.ReadAllText(iconsFilePath);
+    }
+    @Html.Raw(iconsSvgContent)
+</div>

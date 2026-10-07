@@ -1,0 +1,39 @@
+﻿@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+<nav class="c-breadcrumb">
+
+    <div class="grid-constraint">
+        <div class="grid grid--center">
+            <div class="grid__item one-whole">
+
+                <ul class="c-breadcrumb__list" itemscope itemtype="http://schema.org/BreadcrumbList">
+
+                    @foreach (var itm in Model.Layout.Breadcrumbs)
+                    {
+                        if (!itm.IsCurrentPage)
+                        {
+                            <li class="c-breadcrumb__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" data-breadcrumb-list-item>
+                                <a class="c-breadcrumb__link" href="@itm.LinkUrl" itemprop="item" title="@itm.LinkText">
+                                    <span itemprop="name">@itm.LinkText</span>
+                                </a>
+                                <meta itemprop="position" content="@itm.Index" />
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="c-breadcrumb__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" data-breadcrumb-list-item>
+                                <span itemprop="item" title="@itm.LinkText">
+                                    <span itemprop="name">@itm.LinkText</span>
+                                </span>
+                                <meta itemprop="position" content="@itm.Index" />
+                            </li>
+                        }
+                    }
+
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+</nav>

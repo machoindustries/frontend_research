@@ -1,0 +1,48 @@
+﻿@model ANA.Site.Models.ViewModels.ProfessionalCredLightBox
+
+<div data-lightbox-src="creditedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.ProfessionalDevAcadCredsId, new { data_pd_credit_input_id = "" })
+        <label for="@Html.IdFor(m => m.Subject)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Credits/Subject")</span>
+            @Html.TextBoxFor(m => m.Subject, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Credits/Subject"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_credit_input_subject = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Subject)"></div>
+        
+        <label for="@Html.IdFor(m => m.Sponsor)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Credits/Sponsors")</span>
+            @Html.TextBoxFor(m => m.Sponsor, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Credits/Form/Sponsors"), data_formfield_text = "", data_validate = "", data_pd_credit_input_sponsor = "" })
+        </label>
+        
+        <label for="@Html.IdFor(m => m.Date)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Credits/LbDate")</span>
+            @Html.TextBoxFor(m => m.Date, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Credits/Date"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Credits/LbDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_credit_input_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Date)"></div>
+        
+        <label for="@Html.IdFor(m => m.Credits)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Credits/Credits")</span>
+            @Html.TextBoxFor(m => m.Credits, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Credits/Credits"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_credit_input_credits = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Credits)"></div>
+        
+        <label for="@Html.IdFor(m => m.FocusSpecialtyFlag)" class="e-form__label e-form__label--checkbox e-form__label--checkbox--block e-form__label--checkbox--left" data-formfield="">
+            <span class="e-form__label-text">@Html.Translate("/ProfessionalDevelopment/Credits/Specialty")</span>
+            @Html.CheckBoxFor(m => m.FocusSpecialtyFlag, new { @class = "e-form__input e-form__input--checkbox", title = Html.Translate("/ProfessionalDevelopment/Credits/Specialty"), data_validate = "", data_pd_credit_input_specialty_focus = "" })
+            <span class="e-form__fake-checkbox"></span>
+        </label>
+        
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/ProfessionalDevelopment/Credits/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>
+
+<div data-lightbox-src="creditconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you would like to remove this entry?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>

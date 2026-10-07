@@ -1,0 +1,29 @@
+.ojin-columns {     
+
+    &__editor {
+        color: $ojin-lightGray2;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    &__date {
+        font-weight: 600;
+        color: $ojin-lightGray2;
+        font-size: 1.2rem;
+    }
+
+    ul {
+        padding-bottom: 30px;
+
+        // &:last-child {
+        //     padding-bottom: 0;
+        // }
+    }
+}
+
+@media (min-width: $breakpoint-min-1200) {
+    .ojin-columns {   
+        padding: 0 0 40px;
+    }
+
+}

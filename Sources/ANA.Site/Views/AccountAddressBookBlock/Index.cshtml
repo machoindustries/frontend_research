@@ -1,0 +1,23 @@
+﻿@model ANA.Site.Models.ViewModels.AccountAddressBookViewModel
+
+<div class="c-account__section grid" data-require="./src/views/address-book-view">
+    <div class="grid__item one-whole">
+        <h4 class="c-account__subtitle">@Model.Heading</h4>
+        <a href="#" class="c-account__action-link c-account__action-link--add-address" data-address-book-add>+ @Html.Translate("/Shared/Address/AddNewAddress")</a>
+        <p>@Model.Description</p>
+    </div>
+    <div class="grid__item one-whole">
+        <div class="grid" data-address-book-list>
+            <div class="grid__item one-whole">@Html.Translate("/Shared/Address/NoAddressesToDisplay")</div>
+        </div>
+    </div>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m => m.LightboxAddress)
+
+        <div data-lightbox-src="removeaddressconfirmation">
+            <h3>Remove this address?</h3>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-modal-close="">CANCEL</a>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-address-confirm-removal data-modal-close="">CONFIRM</a>
+        </div>
+    </div>
+</div>

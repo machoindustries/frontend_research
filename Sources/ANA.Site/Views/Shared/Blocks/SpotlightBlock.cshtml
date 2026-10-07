@@ -1,0 +1,36 @@
+﻿@model ANA.Site.Models.ViewModels.IconGrid.SpotlightBlockViewModel
+
+<div class="c-about-us__featured">
+    @if (Model.HasImage)
+    {
+        <div class="image">
+
+            <!--TODO: recommended image size 641x608-->
+            <img src="@Model.SpotlightImage.Url" alt="@Model.SpotlightImage.Description">
+
+        </div>
+    }
+    <div class="text">
+        @if (Model.HasHeading)
+        {
+            <p class="eyebrow">@Model.SpotlightBlock.Heading</p>
+        }
+        @if (Model.HasIntroduction)
+        {
+            <h2>
+                <a href="@(Model.HasCta ? Model.SpotlightBlock.CTALink : "#")">@Model.SpotlightBlock.Introduction</a>
+            </h2>
+        }
+        @if (Model.HasContent)
+        {
+            <p class="desc">@Model.SpotlightBlock.Content</p>
+        }
+        @if (Model.HasCta)
+        {
+            <p class="button">
+                <a href="@Model.SpotlightBlock.CTALink" class="e-button e-button--blue">@Model.SpotlightBlock.CTAText</a>
+            </p>
+        }
+
+    </div>
+</div>

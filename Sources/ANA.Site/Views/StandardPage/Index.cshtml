@@ -1,0 +1,88 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.Pages
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.Models.ViewModels.PageViewModel<StandardPage>
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    var showLeftHandNav = !Model.CurrentPage.HideInPageNavigation;
+    var rightColClass = $"{ ANA.Site.Global.StringConstants.GridClass } { (showLeftHandNav ? ANA.Site.Global.StringConstants.GridClass8ColRight : ANA.Site.Global.StringConstants.GridClass8ColCentre) }";
+
+    var hasMainBody = Model.CurrentPage.MainBody != null && !Model.CurrentPage.MainBody.IsEmpty;
+}
+
+@Html.PropertyFor(x => x.CurrentPage.Adverts, new { CssClass = "b-vst--medium" })
+
+
+<div data-subnav-container>
+
+    @* DTX-2 - Sitewide Ad Zone *@
+    @{
+        var billboardAd = ANA.Site.Business.Helpers.SettingsHelper.GetBillboardAd();
+        if (!string.IsNullOrWhiteSpace(billboardAd))
+        {
+            <div class="dynamic-ad-container dynamic-ad-container-billboard">
+                @Html.Raw(billboardAd)
+            </div>
+        }
+    }
+
+    <div class="grid-constraint @(hasMainBody ? "b-vs--medium" : "b-vst--medium")">
+        <div class="grid">
+
+            @if (showLeftHandNav)
+            {
+                <div class="grid__item one-whole large--two-thirds pad--large--one-third">
+                    <h1 class="t-type-h2" @Html.EditAttributes(x => x.CurrentPage.Heading)>@Html.Raw(Model.CurrentPage.Heading.ReplaceSpecialCharacters())</h1>
+                </div>
+
+                <div class="grid__item one-whole large--one-quarter zero-height">
+                    @{ await Html.RenderPartialAsync("/Views/Shared/SubNav.cshtml", Model); }
+                </div>
+            }
+
+            @if (!showLeftHandNav || hasMainBody || ContentHelper.PageIsInEditMode())
+            {
+                <div class="@rightColClass">
+
+                    @if (!showLeftHandNav)
+                    {
+                        <h1 class="t-type-h2" @Html.EditAttributes(x => x.CurrentPage.Heading)>@Html.Raw(Model.CurrentPage.Heading.ReplaceSpecialCharacters())</h1>
+                    }
+
+                    @if (hasMainBody || ContentHelper.PageIsInEditMode())
+                    {
+                        <div class="e-richtext">
+                            @Html.PropertyFor(x => x.CurrentPage.MainBody)
+                        </div>
+                    }
+
+                    @* DTX-2 - Sitewide Ad Zone *@
+                    @{
+                        var leaderboardAd = ANA.Site.Business.Helpers.SettingsHelper.GetLeaderboardAd();
+                        if (!string.IsNullOrWhiteSpace(leaderboardAd))
+                        {
+                            <div class="dynamic-ad-container dynamic-ad-container-leaderboard">
+                                @Html.Raw(leaderboardAd)
+                            </div>
+                        }
+                    }
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+    @Html.PropertyFor(x => x.CurrentPage.Blocks,
+        new
+        {
+            CssClass = "content-area",
+            Tag = showLeftHandNav ? ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator : ""
+        })
+
+</div>

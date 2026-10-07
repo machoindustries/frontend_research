@@ -1,0 +1,138 @@
+﻿@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@model ANA.Site.Models.ViewModels.VariantsViewModel
+
+@{
+    var modifierClass = "";
+    var gridDropdownClass = "medium--one-half";
+    var gridQuantityAddToCartClass = "medium--one-half";
+    var isProductBulkPurchase = false;
+    if (ViewData.ContainsKey("ModifierClass"))
+    {
+        modifierClass = ViewData["ModifierClass"] as string;
+    }
+
+    if (ViewData.ContainsKey("GridDropdownClass"))
+    {
+        gridDropdownClass = ViewData["GridDropdownClass"] as string;
+    }
+
+    if (ViewData.ContainsKey("GridQuantityAddToCartClass"))
+    {
+        gridQuantityAddToCartClass = ViewData["GridQuantityAddToCartClass"] as string;
+    }
+}
+
+<div class="c-add-to-cart@(string.IsNullOrWhiteSpace(modifierClass) ? "" : " " + modifierClass)" data-require="./src/views/add-to-cart-view">
+
+    @using (Html.BeginForm("AddToCart", "Cart",
+                FormMethod.Post,
+                new
+                {
+                    @class = "grid",
+                    data_ajax_form = "",
+                    data_add_to_cart_form = ""
+                }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Code)
+
+        var gtmPrice = Model.DiscountedPrice != null && Model.DiscountedPrice.Value.Amount > 0.0m ? Model.DiscountedPrice.ToString() : Model.PlacedPrice.ToString();
+
+        if (UserState.CurrentProfile.IsMember())
+        {
+            gtmPrice = Model.DiscountedPrice != null && Model.DiscountedMemberPrice.Value.Amount > 0.0m ? Model.DiscountedMemberPrice.ToString() : Model.MemberPrice.ToString();
+        }
+
+        var gtmFormat = !string.IsNullOrWhiteSpace(Model.VariantType) ? Model.VariantType : string.Empty;
+
+        <div class="grid__item @gridDropdownClass">
+            <div class="e-price" data-product-pricing data-product-price="@gtmPrice" data-product-format="@gtmFormat">
+                <dl class="e-price__item">
+                    <dd class="e-price__item-label">List Price:</dd>
+                    <dd class="e-price__item-value">@Model.PlacedPrice</dd>
+                </dl>
+                @*<span class="e-price__divider">/</span>*@
+                <dl class="e-price__item">
+                    <dd class="e-price__item-label">ANA Member Price:</dd>
+                    <dd class="e-price__item-value">@Model.MemberPrice</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="grid__item @gridQuantityAddToCartClass">
+
+            <div class="c-add-to-cart__quantity">
+                <label for="@Html.IdFor(m => m.Quantity)" class="e-form__label c-add-to-cart__form-label">
+                    <span class="e-form__label-text c-add-to-cart__form-label-text">@Html.Translate("/BookPage/Quantity") </span>
+                    @if (Model.Variant is ANA.Site.Models.Commerce.Variants.BookVariant)
+                    {
+                        @Html.TextBoxFor(m => m.Quantity, new { type = "number", min = "1", @class = "e-form__input e-form__input--text c-add-to-cart__form-input--text" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.Quantity, new { type = "number", disabled = "disabled", min = "1", @class = "e-form__input e-form__input--text c-add-to-cart__form-input--text" })
+
+
+                    }
+                </label>
+            </div>
+
+            <div class="c-add-to-cart__add">
+                <button class="e-button e-button--button e-button--blue e-button c-add-to-cart__button" data-add-to-cart data-tracked-cta>
+                    @Html.Translate("/BookPage/Add")
+                </button>
+                @if (Model.Variant is ANA.Site.Models.Commerce.Variants.DefaultVariant)
+                {
+                    if (((ANA.Site.Models.Commerce.Variants.DefaultVariant)Model.Variant).IsBulkPurchase == true)
+                    {
+                        if (((ANA.Site.Models.Commerce.Variants.DefaultVariant)Model.Variant).IsBulkPurchase == true || ((ANA.Site.Models.Commerce.Variants.WorkshopVariant)Model.Variant).IsBulkPurchase == true)
+                        {
+
+                            isProductBulkPurchase = true;
+                        }
+                    }
+
+                }
+                @if (Model.Variant is ANA.Site.Models.Commerce.Variants.WorkshopVariant)
+                {
+                    if (((ANA.Site.Models.Commerce.Variants.WorkshopVariant)Model.Variant).IsBulkPurchase == true)
+                    {
+                        if (((ANA.Site.Models.Commerce.Variants.WorkshopVariant)Model.Variant).IsBulkPurchase == true || ((ANA.Site.Models.Commerce.Variants.WorkshopVariant)Model.Variant).IsBulkPurchase == true)
+                        {
+
+                            isProductBulkPurchase = true;
+                        }
+                    }
+
+                }
+
+                @if (isProductBulkPurchase)
+                {
+                    <a href="@Url.Action("GoToEnrollment", "Cart")" data-go-to-bulkpurchase-link></a>
+                    <a class="e-button e-button--button e-button--blue e-button c-enrollment__bulkbutton" title=" @Html.Translate("/productpartial/BulkPurchaseOnlyForRegisteredUsers")" data-go-to-bulkpurchase>
+                        @Html.Translate("/BookPage/BulkPurchase")
+                    </a>
+                }
+            </div>
+
+        </div>
+
+        <div class="grid__item one-whole">
+            @if (isProductBulkPurchase)
+            {
+                <p class="c-add-to-cart__description">
+                    @Html.Translate("/BookPage/BulkPurchaseQueryOne") <br /> <a href="mailto:@Html.Translate("/BookPage/EmailCustomerCare")">@Html.Translate("/BookPage/EmailCustomerCare")</a> @Html.Translate("/BookPage/BulkPurchaseQueryTwo")
+                </p>
+
+            }
+            else
+            {
+                <p class="c-add-to-cart__description">
+                    @Html.Translate("/BookPage/PurchaseQuery") <a href="mailto:@Html.Translate("/BookPage/Email")">@Html.Translate("/BookPage/Email")</a>
+                </p>
+            }
+        </div>
+    }
+
+</div>

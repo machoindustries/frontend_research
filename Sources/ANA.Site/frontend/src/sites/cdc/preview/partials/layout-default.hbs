@@ -1,0 +1,169 @@
+<!doctype html>
+<html class="loading" lang="en">
+
+<head>
+	<meta charset="utf-8">
+	{{> metatags}}
+	<title>{{ title }}</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+		crossorigin="anonymous"></script>
+	<link href="https://allfont.net/allfont.css?fonts=montserrat-light" rel="stylesheet" type="text/css" />
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
+
+	{{{favicon 'favicon.html'}}}
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+
+	<meta name="theme-color" content="#C92027">
+
+	<link rel="shortcut icon" href="https://www.nursingworld.org/favicon.ico" type="image/icon">
+
+	<link
+		href="https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900italic,900&amp;subset=latin,latin-ext"
+		rel="stylesheet" type="text/css">
+
+	<!--[if (gt IE 9)|!(IE)]><!-->
+	<link href="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/css/screen.css" rel="stylesheet">
+	<!--<![endif]-->
+	<!--[if IE 9 ]>
+			<link href="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/css/screen-ie9.css" rel="stylesheet" />
+		<![endif]-->
+	<!--[if IE 8 ]>
+			<script src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/es5-shim.min.js"></script>
+			<script src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/es5-sham.min.js"></script>
+			<link href="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/css/screen-ie8.css" rel="stylesheet" />
+			<script>
+				window.isIE8 = true;
+			</script>
+		<![endif]-->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+	
+	<link href="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/css/print.css" rel="stylesheet"
+		media="print">
+  <!-- <script src="https://kit.fontawesome.com/7543c6b46d.js" crossorigin="anonymous"></script> -->
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/modernizr-custom.js"></script>
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://kit.fontawesome.com/2b5f9029cc.js" crossorigin="anonymous"></script>
+
+	<style>
+		@font-face {
+			font-family: icons;
+			src: url(/assets/fonts/icons.eot?ua7f8990c);
+			src: url(/assets/fonts/icons.eot?#iefix) format("embedded-opentype"), url(/assets/fonts/icons.woff?ua7f8990c) format("woff"), url(/assets/fonts/icons.ttf?ua7f8990c) format("truetype");
+			font-weight: 400;
+			font-style: normal
+		}
+
+		@font-face {
+			font-family: font-awesome-6;
+			src: url(/assets/fonts/icons.eot?#iefix) format("embedded-opentype"), 
+				url(/assets/fonts/icons.woff?ua7f8990c) format("woff");
+			font-weight: 400;
+			font-style: normal
+		}
+
+		@font-face {
+		font-weight: 400;
+		font-style: normal;
+		font-family: MontserratLight;
+		src:url('/assets/fonts/montserrat-300.eot?u3e96cdda');
+		src:url('/assets/fonts/montserrat-300.eot?#iefix') format("embedded-opentype"),
+			url('/assets/fonts/montserrat-300.woff?u3e96cdda') format("woff"),
+			url('/assets/fonts/montserrat-300.ttf?u3e96cdda') format("truetype");
+		}
+
+		@font-face {
+		font-weight: 400;
+		font-style: normal;
+		font-family: MontserratRegular;
+		src:url('/assets/fonts/montserrat-400_q.eot?u8e8d0c21');
+		src:url('/assets/fonts/montserrat-400_q.eot?#iefix') format("embedded-opentype"),
+			url('/assets/fonts/montserrat-400_q.woff?u8e8d0c21') format("woff"),
+			url('/assets/fonts/montserrat-400_q.ttf?u8e8d0c21') format("truetype");
+		}
+
+		@font-face {
+		font-weight: 400;
+		font-style: normal;
+		font-family: MontserratSemiBold;
+		src:url('/assets/fonts/montserrat-600.eot?u9983702c');
+		src:url('/assets/fonts/montserrat-600.eot?u9983702c');
+		src:url('/assets/fonts/montserrat-600.eot?#iefix') format("embedded-opentype"),
+			url('/assets/fonts/montserrat-600.woff?u9983702c') format("woff"),
+			url('/assets/fonts/montserrat-600.ttf?u9983702c') format("truetype");
+		}
+	</style>
+  <link href="{{base 'css'}}cdc.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+	{{> header}}
+
+	<main id="main-content" role="main" tabindex="0" data-module-core="resource-modal">
+		<!-- Dynamically Load Template -->
+		{{> (lookup @root 'page')}}
+	</main>
+
+	{{> footer}}
+
+	{{{svgInline 'icons.svg'}}}
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/modernizr-custom.js"></script>
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/jquery-ui.min.js"></script>
+	<script src="https://www.nursingworld.org/~BzNuvOyfm0220_iGcReo4w/assets/js/entry.js"></script>
+	<script src="{{base 'js'}}cdc.js" type="text/javascript" async></script>
+
+	<!-- <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+	<script type="text/javascript">
+		   const slickopts = {
+			dots: true,
+			prevArrow: '<div class="slide-arrow prev-arrow"><span class="chevron left"></span></div>',
+    		nextArrow: '<div class="slide-arrow next-arrow"><span class="chevron right"></span></div>',
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			rows: 1,
+			infinite: false,
+			responsive: [
+			{
+				breakpoint: 992,
+				settings: {
+				slidesToShow: 2,
+				slidesToScroll: 2,
+				},
+			},
+			{
+				breakpoint: 640,
+				settings: {
+				slidesToShow: 1,
+				slidesToScroll: 1,
+				rows: 1, 
+				},
+			}],
+		};
+      $('.resource-carousel').slick(slickopts);
+	</script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<!--<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-622d421464a2b961"></script>-->
+
+
+</body>
+
+</html>
+
+

@@ -1,0 +1,30 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@using ANA_HNHN.Services.Search.Models
+@model IEnumerable<SearchHit>
+@{
+    var criteria = (SearchCriteriaModel)ViewData["criteria"];
+}
+<div id="global-listings">
+    @foreach (var item in Model)
+    {
+        <div class="search__item search__item__global__Search">
+            <div class="card">
+                <div class="card-body p-0">
+                    @if (item.Categories.Any())
+                    {
+                        <div class="search__category-list">
+                            @foreach (var cat in item.Categories)
+                            {
+                                <a href="" data-page-key=@cat.Key aria-label="@cat.Value Category">@cat.Value</a>
+                            }
+                        </div>
+                    }
+                    <h4>@Html.Raw(item.Title)</h4>
+                    <p>@item.Excerpt</p>
+                    <div>@item.PublishedDate</div>
+                    <a class="absolute-link" href="@item.Url" aria-label="Search Result Link"></a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,216 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels
+@using System.Configuration
+@using ANA.Site.Settings
+
+@model CartViewModel
+
+@inject IAppSettings _appSettings
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    string cartEmptyVisibleClass = Model.IsEmpty ? " is--visible" : "";
+    List<string> quantityMismatchProducts = ViewBag.quantityMismatchProducts;
+    var IsQuantityMatching = ViewBag.IsQuantityMatching;
+    var IsLimitExceeded = ViewBag.IsLimitExceeded;
+    var IsAllAddressExistsInPersonify = ViewBag.IsAllAddressExistsInPersonify;
+    var BulkLineItems = ViewBag.BulkLineItems;
+    var SingleLineItems = ViewBag.SingleLineItems;
+    var errorQuantity = @Html.Translate("/CartCheckout/Errors/QuantityMismatch");
+    var errorLimitExceeded = @Html.Translate("/CartCheckout/Errors/LimitExceeded").ToString();
+    var errorAddressNotExistsInPersonify = @Html.Translate("/CartCheckout/Errors/AddressNotExistsInPersonify");
+    var BulkSingleLineItemsMisMatch = @Html.Translate("/CartCheckout/Errors/BulkSingleLineItemsMisMatch");
+    var bulkOrderEnrolmentLimit = _appSettings.BulkOrderEnrollmentsLimit;
+
+}
+
+<div data-require="./src/views/cart-page-view">
+
+    <div class="e-notifications" data-require="./src/views/notifications-view">
+
+        <div class="grid-constraint">
+            <div class="grid">
+                <div class="grid__item one-whole">
+                    <div class="e-notifications__items" data-notifications></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @{ await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+        {
+            AdditionalCssClass = "b-vst--medium b-vsb--small",
+            Heading = Model.CurrentPage.Heading,
+            HeadingAdditionalCssClass = "c-container-block__heading--large",
+            Introduction = Model.CurrentPage.EmptyBasketHtml,
+            IntroductionDataAttributes = "data-empty-cart-html",
+            IntroductionAdditionalCssClass = "c-cart__empty-html" + cartEmptyVisibleClass
+        });
+    }
+
+    @*<div class="grid-constraint c-cart__applied-promotions@(Model.BannerPromotionNames.Any() ? " is--visible" : "")" data-require="./src/views/cart-applied-promotions-view">
+            <div class="grid">
+                <div class="grid__item">
+                    <h4 class="c-cart__applied-promotions-title">Applied promotions:</h4>
+                    <ul class="c-cart__applied-promotions-list" data-applied-promotions-list>
+                        @if (Model.BannerPromotionNames.Any())
+                        {
+                            foreach(string s in Model.BannerPromotionNames)
+                            {
+                                <li><span>@s</span></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>*@
+
+    @if (Model.ValidationIssues.Any())
+    {
+        {
+            await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vsb--small",
+                Heading = "",
+                Introduction = new XhtmlString("<p>We have the following error(s):<ul>" +
+                                                 string.Join("", Model.ValidationIssues.Select(p => $"<h4><span>{p}</span></h4>"))
+                                                 + "</ul>")
+            });
+        }
+    }
+    <div style="display:none" id='QuantityErrorAfterRemove' data-quantity-mismatch-error-verbiage='@Html.Translate("/CartCheckout/Errors/QuantityMismatch")'></div>
+    @if (IsQuantityMatching != true && quantityMismatchProducts.Count != 0)
+    {
+        {
+
+            await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vsb--small",
+                Heading = "",
+                Introduction = new XhtmlString("<ul data-quantity-mismatch-error  data-hide-when-cart-empty id='QuantityError' class=\"c-enrollment__error_cart\" style = 'white-space: pre-line;'>" + errorQuantity + "<br>" +
+                                                 string.Join("", quantityMismatchProducts.Select(p => $"<span>{p}</span><br>"))
+                                                  + "</ul>")
+            });
+        }
+    }
+    @if (BulkLineItems && SingleLineItems)
+    {
+        {
+
+            await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vsb--small",
+                Heading = "",
+                Introduction = new XhtmlString("<ul data-hide-when-cart-empty id='bulkSingleLineItemsMisMatch' class=\"c-enrollment__error_cart\">" + BulkSingleLineItemsMisMatch + "</ul>")
+            });
+        }
+    }
+
+    @if (IsLimitExceeded == true)
+    {
+        {
+            await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vsb--small",
+                Heading = "",
+                Introduction = new XhtmlString("<ul data-hide-when-cart-empty id='errorLimitExceeded' class=\"c-enrollment__error_cart\" >" +
+                @Html.Raw(string.Format(errorLimitExceeded, bulkOrderEnrolmentLimit)) + "</ul>")
+            });
+        }
+    }
+
+    @if (IsAllAddressExistsInPersonify == false)
+    {
+        {
+
+            await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vsb--small",
+                Heading = "",
+                Introduction = new XhtmlString("<ul data-hide-when-cart-empty id='errorAllAddressNotExistsInPersonify' class=\"c-enrollment__error_cart\" >" + errorAddressNotExistsInPersonify + "</ul>")
+            });
+        }
+    }
+    <div class="grid-constraint">
+
+        <div class="grid">
+
+            <div class="grid__item one-whole">
+
+                @if (!Model.IsEmpty)
+                {
+                    <div class="c-order-detail" data-hide-when-cart-empty>
+                        <ul class="c-order-detail__items">
+                            <li class="grid c-order-detail__items-header">
+                                <div class="grid__item one-whole medium--six-twelfths">
+                                    <div class="c-order-detail__column-label">@Html.Translate("/CartCheckout/Labels/Item")</div>
+                                </div>
+                                <div class="grid__item one-whole medium--two-twelfths">
+                                    <div class="c-order-detail__column-label">@Html.Translate("/CartCheckout/Labels/ItemPrice")</div>
+                                </div>
+                                <div class="grid__item one-whole medium--two-twelfths">
+                                    <div class="c-order-detail__column-label c-order-detail__column-label--center">@Html.Translate("/CartCheckout/Labels/Quantity")</div>
+                                </div>
+                                <div class="grid__item one-whole medium--two-twelfths">
+                                    <div class="c-order-detail__column-label c-order-detail__column-label--right">@Html.Translate("/CartCheckout/Labels/ItemTotal")</div>
+                                </div>
+                            </li>
+                            @{
+                                int itemIdx = 0;
+                            }
+                            @foreach (var cartItem in Model.Shipment.CartItems.Where(i => i.IsVisible))
+                            {
+                                { await Html.RenderPartialAsync("_Item", cartItem, new ViewDataDictionary(this.ViewData) { { "ListIndex", itemIdx++ } }); }
+                            }
+                        </ul>
+                    </div>
+
+                    { await Html.RenderPartialAsync("_Summary", Model); }
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-hide-when-cart-empty>
+        @{ await Html.RenderPartialAsync("_RelatedProducts", new RelatedProductsViewModel
+            {
+                Heading = Html.Translate("/CartCheckout/CartRelatedProductsHeading").ToString(),
+                RelatedProducts = Model.RelatedProducts.Select(p => new ProductPartialViewModel
+                {
+                    Product = p.Product,
+                    VariantsModel = p.VariantsModel,
+                    BannerText = p.Product.EntityBanner
+                }).ToList()
+            });
+        }
+    </div>
+
+    <div class="e-lightbox-source">
+        <div data-lightbox-src="confirmremoveitem">
+            <h3>Confirm removal</h3>
+            <p>Are you sure you would like to remove this item from your shopping cart?</p>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+            <p class="e-form__error" data-delete-error style="display:none"></p>
+        </div>
+    </div>
+    <div class="e-lightbox-source">
+        <div data-lightbox-src="oneclickmembership">
+            <p> <div oneclick-html>@Html.Raw(ViewBag.OneClickPopupHTML)</div></p>
+            <div class="one-click-mbrshp-popup-btn-container">
+                <a href="#" class="e-button e-button--anchor one-click-mbrshp-popup-btn-grey" data-modal-close>
+                    No, Thank You
+                </a>
+                <a href="@Url.Action("JoinNowOneClickMembership", "Cart")" class="e-button e-button--anchor e-button--grey e-button">Join Now</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>

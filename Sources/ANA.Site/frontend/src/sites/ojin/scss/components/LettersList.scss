@@ -1,0 +1,51 @@
+.ojin-lettersList {
+
+    &__item {
+        border-top: 1px solid $ojin-lightGray2;
+        padding: 25px 0 10px;
+    }
+
+    .grid-item {
+        border: none;
+        padding-top: 0;
+
+        &__content {
+            max-width: 100%;
+            padding-right: 0;
+        }
+
+        &__title {
+            a {
+                text-decoration: none;
+            }
+        }
+    }
+
+    &__editor {
+        color: $ojin-lightGray2;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    &__reply {
+        padding: 5px 0 0 50px;
+        position: relative;
+
+        &:after {
+            content: "\f064";
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            font-size: 2.5rem;
+            font-family: $FontAwesome;
+            transform: scaleY(-1);
+            color: $ojin-lightGray2;
+        }
+    }
+}
+
+@media (min-width: $breakpoint-min-1200) {
+    .ojin-lettersList {
+        padding: 0 100px 0 0;
+    }
+}

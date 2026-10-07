@@ -1,0 +1,132 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@using EPiServer.ServiceLocation
+@using ANA_HNHN.Models.Media
+@using ANA_HNHN.Extensions
+@using ANA_HNHN.Models.Pages
+@using Geta.Optimizely.Categories
+@model ChallengePageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<ChallengePageViewModel>
+
+@{
+    var background = Model.CurrentPage.BackgroundColor.Trim();
+    if (background == "LightBlue")
+    {
+        background = "light-blue";
+    }
+
+    var accentColor = Model.CurrentPage.AccentColor;
+    if (accentColor == "darkBlue")
+    {
+        accentColor = "dark-blue";
+    }
+}
+@Html.FullRefreshPropertiesMetaData([nameof(Model.CurrentPage.MainImage)])
+
+<section class="challenge-hero bg-@background">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-5 order-2 order-md-1 mt-5 mt-md-0" data-aos="fade-right" data-aos-once="true">
+                <div class="challenge-hero__categories">
+                    @if (Model.Categories != null && Model.Categories.Any())
+                    {
+                        foreach (var item in Model.Categories)
+                        {
+                            <a href="@Html.Raw(Model.Layout.SearchActionUrl)?f=@item.Key">@item.Value</a>
+                        }
+                    }
+                </div>
+                <h1>
+                    @Html.PropertyFor(x => x.CurrentPage.Title)
+                </h1>
+                <div class="challenge-hero__dates mb-4">
+                    @if (Model.CurrentPage.StartDate != null)
+                    {
+                        @(Model.CurrentPage.StartDate?.ToString("MMMM d, yyyy"))
+                    }
+                    @if (Model.CurrentPage.EndDate != null)
+                    {
+                        <span> to </span>
+                        @(Model.CurrentPage.EndDate?.ToString("MMMM d, yyyy"))
+                    }
+                </div>
+                <a data-page-id="@Model.CurrentPage.ContentLink.ID" class="btn btn-primary challenge-hero__button@(Model.IsUserSignedUp ? " disabled" : "")" role="button">
+                    @if (Model.IsUserSignedUp)
+                    {
+                        @Html.Translate("/challengepage/signedupbuttonlabel")
+                    }
+                    else
+                    {
+                        @Html.Translate("/challengepage/signupbuttonlabel")
+                    }
+                </a>
+            </div>
+            <div class="col-md-7 order-1 order-md-2 challenge-hero__image-wrap" @Html.EditAttributes(x => x.CurrentPage.MainImage)>
+                @if (ContentReference.IsNullOrEmpty(Model.CurrentPage.MainImage))
+                {
+                    <div class="img-placeholder"></div>
+                }
+                else
+                {
+                    <img class="challenge-hero__image" src="@Model.MainImageUrl" alt="@Model.MainImageAltText" data-aos="fade-left" data-aos-once="true">
+                }
+            </div>
+        </div>
+    </div>
+    <div class="challenge-hero__slant challenge-hero__slant--@accentColor"></div>
+</section>
+<section class="bg-cream section--squiggle">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="challenge-content">
+                    @Html.PropertyFor(x => x.CurrentPage.MainContent)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.UserId == null)
+{
+    <div class="modal fade" id="challenge-modal" tabindex="-1" aria-labelledby="challenge-modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    @Html.PropertyFor(x => x.ChallengeSignUpText)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    const challengeButton = document.querySelector('.challenge-hero__button');
+    const pageId = challengeButton.getAttribute('data-page-id');
+    const requestData = {
+        challengePageId: pageId,
+    };
+
+    if (!@(Model.Layout.LoggedIn.ToString().ToLower())) {
+        challengeButton.setAttribute('data-bs-toggle', 'modal');
+        challengeButton.setAttribute('data-bs-target', '#challenge-modal');
+    }
+    else {
+        $(challengeButton).on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/api/challenge/signup',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    challengeButton.classList.add('disabled');
+                    challengeButton.textContent = '@Html.Translate("/challengepage/signedupbuttonlabel")';
+                },
+                error: function (xhr, status, error) {
+                    alert('Form submission failed:', error);
+                }
+            });
+        });
+    }
+</script>

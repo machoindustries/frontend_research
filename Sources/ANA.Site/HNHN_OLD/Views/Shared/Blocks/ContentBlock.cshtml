@@ -1,0 +1,7 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.Blocks.ContentBlock
+
+<h4>@Html.PropertyFor(m => m.Title)</h4>
+@Html.PropertyFor(m => m.Content)

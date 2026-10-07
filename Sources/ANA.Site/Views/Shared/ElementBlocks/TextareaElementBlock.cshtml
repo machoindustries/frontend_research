@@ -1,0 +1,29 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+
+@model TextareaElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var helpText = Model.GetHelpText();
+    var errorMessage = Model.GetErrorMessage();
+}
+
+<label for="@formElement.Guid" class="e-form__label e-form__label--text" data-formfield>
+    <span class="e-form__label-text" data-fake-placeholder>@Model.PlaceHolder</span>
+    <textarea name="@formElement.ElementName" id="@formElement.Guid" class="e-form__input e-form__input--text @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" title="@labelText" data-epiforms-label="@labelText" @Model.AttributesString @Model.GetValidationAttributes()>@(Model.GetSubmittedValue() ?? Model.GetDefaultValue())</textarea>
+</label>
+@if (!string.IsNullOrWhiteSpace(helpText))
+{
+    <p class="Form__HelpText">@helpText</p>
+}
+@Model.RenderDataList()
+<div class="e-form__validation-errors" data-validation-error="" data-validation-for="@formElement.ElementName">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div id="@formElement.ElementName-error" class="error-msg">@errorMessage</div>
+    }
+</div>

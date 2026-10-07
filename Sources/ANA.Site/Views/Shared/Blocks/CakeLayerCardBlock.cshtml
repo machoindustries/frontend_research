@@ -1,0 +1,21 @@
+﻿@using ANA.Site.Models.OJIN.Blocks
+
+@model CakeLayerCardBlock
+
+@if(Model.Heading !=null) 
+{
+    <div class="col-md-4">
+        <div class="ojin-currentTopic__card orange">
+            <div class="ojin-currentTopic__desc">
+                <h3 class="ojin-currentTopic__title">
+                    @Html.PropertyFor(m => m.Heading);
+                </h3>
+                <p>@Html.DisplayFor(m => m.TeaserText)</p>
+                <div class="ojin-currentTopic__btnCon">
+                    <a href="#" class="btn btn--secondary">@Html.PropertyFor(m => m.ButtonText)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

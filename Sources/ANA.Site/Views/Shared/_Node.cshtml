@@ -1,0 +1,27 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.AnaCategoryViewModel
+
+<div class="block containerblock" data-require="./src/views/container-block-view" data-carousel-mobile="true" data-carousel-desktop="true" data-product-carousel>
+    <section>
+        <div class="grid-constraint">
+            <div class="grid grid--center">
+                <div class="grid__item one-whole">
+                    <h2 class="containerblock__heading">
+                        <a href="@Model.CurrentPage.ContentLink.GetFriendlyUrl()">@Model.CurrentPage.Heading</a>
+                    </h2>
+                </div>
+            </div>
+            <div class="containerblock__content grid grid--full">
+                <div class="grid__item one-whole">
+                    <div class="grid" data-containerblock-content>
+                        @foreach (var item in Model.Listings)
+                        {
+                            item.PartialCssClass = "grid__item one-whole";
+                            await Html.RenderPartialAsync("_Product", item);
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+	</section>
+</div>

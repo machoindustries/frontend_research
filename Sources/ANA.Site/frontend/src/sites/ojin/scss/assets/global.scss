@@ -1,0 +1,26 @@
+p {
+    padding-bottom: 15px;
+}
+
+#tinymce > p {
+    font-size: 100%;
+}
+#tinymce > strong {
+    font-size: 100%;
+}
+
+#tinymce > p > strong {
+    font-size: 100%
+}
+
+#tinymce > table > tbody > tr:nth-child(1) > td:nth-child(1) > p > strong {
+    font-size: 100%;
+}
+
+#tinymce > p > span {
+    width: 200px;
+}
+
+#tinymce > h1 > span > strong {
+    font-size: 100%;
+}

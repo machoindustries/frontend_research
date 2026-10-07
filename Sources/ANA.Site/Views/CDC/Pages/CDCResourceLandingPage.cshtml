@@ -1,0 +1,46 @@
+﻿@using ANA.Site.Models.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using Geta.Optimizely.Extensions;
+@model PageViewModel<CDCResourceLandingPage>
+@{
+    Layout = "~/Views/Shared/Layouts/_CDCContent.cshtml";
+    var sections = Model.CurrentPage.Sections?.FilteredItems?
+        .Select(i => i.LoadContent()).OfType<CDCResourceLandingPage>();
+}
+
+@await Html.PartialAsync("~/Views/CDC/Partials/_CDCHeadingInOneColumnLayout.cshtml", Model.CurrentPage)
+
+<section id="resources" class="cell small-12">
+    @if (sections != null && sections.Count() > 1)
+    {
+        <nav id="jump-nav" class="jump-nav not-fixed anchor-links">
+            <div id="jump-nav-expand">
+                <h5>Explore Topics</h5>
+            </div>
+            <div class="grid-x cell">
+                <div class="jump-links">
+                    @foreach (var resourcesection in sections)
+                    {
+                        <a class="nav-arrow-link" href="#@resourcesection.GetSectionName()">
+                            @Html.PropertyFor(i => resourcesection.Heading)
+                        </a>
+                    }
+                </div>
+                <div class="jump-links jump-back">
+                    <a class="nav-arrow-link" href="#top" data-back-to-top="" data-require="./src/views/scroll-to-top-view">Back to Top</a>
+                </div>
+            </div>
+        </nav>
+    }
+
+    <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+            @Html.PropertyFor(i => this.Model.CurrentPage)
+            @Html.PropertyFor(i => i.CurrentPage.Sections, new { HasContainer = false, HasItemContainer = false })
+            @if (!Model.CurrentPage.DisableGlobalBlocks)
+            {
+                @Html.PropertyFor(i => i.Layout.CDCHomePage.GlobalDetailPageBlocks, new { HasContainer = false, HasItemContainer = false })
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,14 @@
+<div class="iconic-text__list {{get-class}}">
+  <div class="grid-container">
+    {{#each this.list}}
+    <div class="grid-x grid-margin-x grid-margin-y mt-1 mb-1">
+      <div class="image__container cell small-4 large-2">
+          <img src="{{imgsrc}}" alt="{{imgalt}}" />
+      </div>
+      <div class="cell small-8 large-10">
+          <p>{{text}}</p>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>

@@ -1,0 +1,18 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Models.Blocks
+@model ANA.Site.HNHN.Models.Blocks.Callouts.CTACallout
+
+@{
+    var btnViewData = (ViewData["BtnClass"] ?? "").ToString();
+    var btnClass = (!string.IsNullOrWhiteSpace(btnViewData) ? btnViewData : "btn-primary btn-hnhn");
+}
+
+<h4>@Model.Title</h4>
+<p>@Model.Summary</p>
+@if (Model.CallToAction != null)
+{
+    var ctalink = Model.CallToAction.GetContent<CallToActionBlock>();
+    <a href="@ctalink.Link" class="btn @btnClass">@ctalink.Text</a>
+}

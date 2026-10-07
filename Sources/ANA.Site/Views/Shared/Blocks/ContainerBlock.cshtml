@@ -1,0 +1,180 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Interfaces
+@using ANA.Site.Models.Blocks
+@using EPiServer.Cms.Shell.UI.Rest.Internal
+@using EPiServer.Editor
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.Models.Blocks.ContainerBlock
+
+@inject IHttpContextAccessor _httpContextAccessor
+
+@{
+    var isCertProducts = _httpContextAccessor.HttpContext?.Request.GetDisplayUrl().Contains("our-certifications") ?? false;
+
+    var rightHeading = false;
+    var tag = Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string ?? string.Empty;
+    var constrainedTo8Col = Model.Is8Col && tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator);
+
+    var inGrid = tag.Contains(ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator);
+
+
+    if (Model.Blocks?.FilteredItems != null && Model.Blocks.FilteredItems.Any())
+    {
+        var firstItem = Model.Blocks.FilteredItems.FirstOrDefault().LoadContent() as IEightCol;
+        var displayOption = Model.Blocks.FilteredItems.First().LoadDisplayOption();
+        rightHeading = firstItem != null && firstItem.IsEightCol(displayOption != null ? displayOption.Tag : string.Empty, tag);
+    }
+
+    const string cssClass = ANA.Site.Global.StringConstants.GridClass8ColRight;
+
+    var hasHeading = !string.IsNullOrWhiteSpace(Model.Heading);
+    var hasIntro = Model.Introduction != null && !Model.Introduction.IsEmpty && Model.Introduction.ToHtmlString().Length > 0;
+
+    var classes = new List<string>
+{
+"c-container-block"
+};
+
+    if (Model.IsFeatured)
+    {
+        classes.Add("c-container-block--featured");
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.Heading) && !rightHeading)
+    {
+        classes.Add("c-container-block--heading");
+    }
+
+    if (rightHeading && tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator))
+    {
+        classes.Add("c-container-block--heading-8col");
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.AdditionalCssClass))
+    {
+        classes.Add(Model.AdditionalCssClass);
+    }
+
+    if (constrainedTo8Col)
+    {
+        classes.Add("c-container-block--blocks-8col");
+    }
+
+    var additionalDataAttributes = !string.IsNullOrWhiteSpace(Model.AdditionalDataAttributes) ? " " + Model.AdditionalDataAttributes : "";
+
+    var model2 = Model.CreateWritableClone() as ContainerBlock;
+    if (model2?.Blocks?.FilteredItems != null && model2.Blocks.FilteredItems.Any())
+    {
+        foreach (var item in model2.Blocks.Items)
+        {
+            var displayOption = item.LoadDisplayOption();
+
+            if (displayOption == null || (displayOption.Tag ?? string.Empty).Equals(string.Empty) || displayOption.Tag.Equals(ANA.Site.Global.DisplayOptions.VideoFull) || displayOption.Tag.Equals(ANA.Site.Global.DisplayOptions.VideoLarge) || displayOption.Tag.Equals(ANA.Site.Global.DisplayOptions.VideoStandard))
+            {
+                item.RenderSettings["data-epi-content-display-option"] = ANA.Site.Global.DisplayOptions.VideoSmall;
+            }
+        }
+    }
+
+    var mobile = (string)Model.IsCarouselAtMobile.ToString().ToLower();
+
+
+}
+<section class="@string.Join(" ", classes)"
+         data-require="./src/views/container-block-view"
+         data-carousel-mobile="@((Model.IsCarouselAtPage && !isCertProducts) ? Model.IsCarouselAtMobile.ToString().ToLower() :"false")"
+         data-carousel-desktop="@((Model.IsCarouselAtPage && !isCertProducts) ? Model.IsCarouselAtDesktop.ToString().ToLower():"false")"
+         data-carousel-slide-items-small="@Model.CarouselSlideItemsAtSmall"
+         data-carousel-slide-items-medium="@Model.CarouselSlideItemsAtMedium"
+         data-carousel-slide-items-large="@Model.CarouselSlideItemsAtLarge" @additionalDataAttributes>
+    @if (!inGrid)
+    {
+        @:<div class="grid-constraint">
+        }
+
+    @if (rightHeading && tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator) || constrainedTo8Col)
+    {
+        <div class="grid">
+            @if (!string.IsNullOrWhiteSpace(Model.Heading) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="grid__item @cssClass">
+                    <h2 class="c-container-block__heading c-container-block__heading--8col">
+                        @Html.PropertyFor(m => m.Heading)
+                    </h2>
+                </div>
+            }
+            @if (Model.Introduction != null && !Model.Introduction.IsEmpty || ContentHelper.PageIsInEditMode())
+            {
+                <div class="grid__item e-richtext @cssClass@(string.IsNullOrWhiteSpace(Model.IntroductionAdditionalCssClass) ? "" : " " + Model.IntroductionAdditionalCssClass)">
+                    @Html.PropertyFor(m => m.Introduction)
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="grid grid--center">
+            @if (!string.IsNullOrWhiteSpace(Model.Heading) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="grid__item one-whole">
+                    <h2 class="c-container-block__heading c-container-block__heading--lines@(string.IsNullOrWhiteSpace(Model.HeadingAdditionalCssClass) ? "" : " " + Model.HeadingAdditionalCssClass)">
+                        <span>@Html.PropertyFor(m => m.Heading)</span>
+                    </h2>
+                </div>
+            }
+            @if (Model.Introduction != null && !Model.Introduction.IsEmpty || ContentHelper.PageIsInEditMode())
+            {
+                <div class="c-container-block__intro@(string.IsNullOrWhiteSpace(Model.Heading) ? " c-container-block__intro--no-heading" : "") grid__item one-whole medium--eight-twelfths@(string.IsNullOrWhiteSpace(Model.IntroductionAdditionalCssClass) ? "" : " " + Model.IntroductionAdditionalCssClass)" @(Html.Raw(string.IsNullOrWhiteSpace(Model.IntroductionDataAttributes) ? "" : " " + Model.IntroductionDataAttributes))>
+                    <div class="e-richtext">
+                        @Html.PropertyFor(m => m.Introduction)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @if (Model.IsCenteredAndEqualWidth)
+    {
+        string colCount;
+
+        switch (model2.Blocks.Count)
+        {
+            case 2:
+                colCount = "c-container-block--equal-cols-2";
+                break;
+            case 3:
+                colCount = "c-container-block--equal-cols-3";
+                break;
+            case 4:
+                colCount = "c-container-block--equal-cols-4";
+                break;
+            case 5:
+                colCount = "c-container-block--equal-cols-5";
+                break;
+            default:
+                colCount = "c-container-block--equal-cols-1";
+                break;
+        }
+
+        @Html.PropertyFor(x => model2.Blocks, new
+        {
+            CssClass = "block ctablock c-container-block c-container-block--child-override c-container-block--equal-cols " + colCount
+        })
+    }
+    else
+    {
+        @Html.PropertyFor(x => model2.Blocks, new
+            {
+                Tag = ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator +
+                                  tag + ANA.Site.Global.StringConstants.TagSeparator +
+                                  (Model.IsFeatured ? ANA.Site.Global.ContentAreaTags.ContainerBlockFeatured + ANA.Site.Global.StringConstants.TagSeparator : "") +
+                                  (Model.IsCarouselAtPage ? Model.IsCarouselAtMobile || Model.IsCarouselAtDesktop ? ANA.Site.Global.ContentAreaTags.ContainerBlockCarousel + ANA.Site.Global.StringConstants.TagSeparator : "" : ""),
+                CssClass = $"c-container-block__content{(hasHeading || hasIntro ? " c-container-block__content--margin" : "")} grid grid--flex{(Model.IsCentred ? " grid--center" : "")}",
+                ChildrenCssClass = "c-container-block__slide"
+            })
+    }
+    @if (!inGrid)
+    {
+    @:</div>
+}
+</section>

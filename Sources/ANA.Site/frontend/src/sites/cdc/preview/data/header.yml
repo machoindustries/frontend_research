@@ -1,0 +1,8 @@
+---
+main-nav:
+  -
+    title: "Home"
+    url: "/"
+  -
+    title: "Example"
+    url: "/example/example.html"

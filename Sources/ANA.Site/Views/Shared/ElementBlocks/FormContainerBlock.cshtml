@@ -1,0 +1,214 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Pages
+@using EPiServer
+@using EPiServer.Editor
+@using EPiServer.Forms
+@using EPiServer.Forms.Configuration
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Forms.Core
+@using EPiServer.Forms.EditView.Internal
+@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using Geta.Optimizely.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Global = ANA.Site.Global
+
+@model FormContainerBlock
+
+@{
+    var formConfig = ServiceLocator.Current.GetInstance<IEPiServerFormsImplementationConfig>();
+
+    var contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
+    var startPage = contentLoader.Get<StartPage>(ContentReference.StartPage);
+
+    var settingPage = startPage.SettingsPage.GetPage<SettingsPage>();
+
+    const string dateFormat = "dd/mm/yy";
+
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+
+    var gridClasses = "one-whole large--eight-twelfths";
+
+    if (displayOption == ANA.Site.Global.ContentAreaTags.LeftHandNav)
+    {
+        gridClasses = "one-whole large--eight-twelfths pad--large--one-third";
+    }
+
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <div class="EPiServerForms">
+
+        @if (Model.Form != null)
+        {
+            <div class="grid grid--center">
+                <div class="grid__item @gridClasses">
+                    <h2 class="Form__Title">@Html.PropertyFor(m => m.Title)</h2>
+                    <p class="Form__Description">@Html.PropertyFor(m => m.Description)</p>
+                </div>
+            </div>
+
+            <div class="grid grid--center">
+                <div class="grid__item @gridClasses">
+                    <div class="">
+                        @Html.PropertyFor(m => m.ElementsArea, new { Tag = ANA.Site.Global.ContentAreaTags.Row })
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid--center">
+                <div class="grid__item @gridClasses">
+                    <span class="Form__Warning">@Html.Translate("/episerver/forms/editview/cannotbuildformmodel")</span>
+                </div>
+            </div>
+        }
+
+    </div>
+}
+else if (Model.Form != null)
+{
+    @*
+        Using form tag (instead of div) for the sake of html elements' built-in features e.g. reset, file upload
+        Using enctype="multipart/form-data" for post data and uploading files
+    *@
+
+    var validationFailCssClass = ViewBag.ValidationFail ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : string.Empty;
+
+    @* Form will post to its own page Controller *@
+
+    <div class="grid-constraint">
+        <form method="post" action="#@Model.Form.FormGuid" data-epiforms-async-submit="true" enctype="multipart/form-data" class="e-form EPiServerForms @validationFailCssClass" data-epiforms-type="form" id="@Model.Form.FormGuid" data-require="./src/views/form-view" data-date-format="@dateFormat" data-epi-content-form>
+            @* Meta data, authoring data of this form is transfer to clientside here. We need to take form with language coresponse with current page's language *@
+
+            @* Meta data, send along as a SYSTEM information about this form, so this can work without JS *@
+            <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormGuid" value="@Model.Form.FormGuid" />
+            <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormHostedPage" value="@FormsExtensions.GetCurrentPageLink().ToString()" />
+            <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormLanguage" value="@FormsExtensions.GetCurrentPageLanguage()" />
+            <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormCurrentStepIndex" value="@(ViewBag.CurrentStepIndex ?? "")" />
+            <input type="hidden" class="Form__Element Form__SystemElement FormHidden FormHideInSummarized" name="__FormSubmissionId" value="@ViewBag.FormSubmissionId" />
+
+            @Html.AntiForgeryToken()
+            <div class="grid grid--center">
+                <div class="grid__item @gridClasses">
+                    @if (!string.IsNullOrWhiteSpace(Model.Title))
+                    {
+                        <h2 class="Form__Title" data-epi-content-form-title>@Model.Title</h2>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Description) && !ViewBag.FormFinalized)
+                    {
+                        <p class="Form__Description">@Model.Description</p>
+                    }
+
+                    @{
+                        var statusDisplay = "hide";
+                        var message = ViewBag.Message;
+                    }
+                    @if (ViewBag.FormFinalized || ViewBag.IsProgressiveSubmit)
+                    {
+                        statusDisplay = "Form__Success__Message";
+                    }
+                    else if (!ViewBag.Submittable || ViewBag.ValidationFail)
+                    {
+                        statusDisplay = "Form__Warning__Message";
+                    }
+
+                    @if (ViewBag.IsReadOnlyMode)
+                    {
+                        <div class="Form__Status">
+                            <div class="Form__Readonly__Message e-richtext">
+                                @Html.Translate("/episerver/forms/viewmode/readonlymode")
+                            </div>
+                        </div>
+                    }
+
+                    @* area for showing Form's status or validation *@
+                    <div class="Form__Status">
+                        <div class="Form__Status__Message e-richtext @statusDisplay">
+                            @if (ViewBag.FormFinalized)
+                            {
+                                @Html.Raw(message)
+                            }
+                            else
+                            {
+                                @Html.Raw(message)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="Form__MainBody" @Html.Raw(ViewBag.FormFinalized ? "style=\"display: none;\"" : string.Empty)>
+
+                @{
+                    var i = 0;
+                    var currentStepIndex = ViewBag.CurrentStepIndex == null ? -1 : (int)ViewBag.CurrentStepIndex;
+                    string stepDisplaying;
+
+                    foreach (var step in Model.Form.Steps)
+                    {
+                        stepDisplaying = currentStepIndex == i && !ViewBag.FormFinalized && (bool)ViewBag.IsStepValidToDisplay ? "" : "hide";
+
+                        <section id="@step.ElementName" data-epiforms-element-name="@step.ElementName" class="Form__Element FormStep Form__Element--NonData @stepDisplaying" data-epiforms-stepindex="@i">
+
+                            <div class="grid grid--center">
+                                <div class="grid__item @gridClasses">
+                                    @{
+                                        var stepBlock = step.SourceContent as ElementBlockBase;
+
+                                        if (stepBlock != null)
+                                        {
+                                            Html.RenderContentData(step.SourceContent, false);
+                                        }
+
+                                        @* Each FormStep groups the elements below it til the next FormStep *@
+                                        Html.RenderElementsInStep(i, step.Elements);
+                                    }
+                                </div>
+                            </div>
+
+                        </section>
+
+                        i++;
+                    } // end foreach steps %>
+
+                    @* show Next/Previous buttons when having Steps > 1 and navigationBar when currentStepIndex is valid *@
+
+                    var currentDisplayStepCount = Model.Form.Steps.Count();
+                    if (currentDisplayStepCount > 1 && currentStepIndex > -1 && currentStepIndex < currentDisplayStepCount && !ViewBag.FormFinalized)
+                    {
+                        string prevButtonDisableState = (currentStepIndex == 0) || !ViewBag.Submittable ? "disabled" : "";
+                        string nextButtonDisableState = (currentStepIndex == currentDisplayStepCount - 1) || !ViewBag.Submittable ? "disabled" : "";
+
+
+                        if (Model.ShowNavigationBar)
+                        {
+                            <nav role="navigation" class="Form__NavigationBar">
+                                <button type="submit" name="submit" value="@SubmitButtonType.PreviousStep.ToString()" class="Form__NavigationBar__Action FormExcludeDataRebind btnPrev" @prevButtonDisableState>@Html.Translate("/episerver/forms/viewmode/stepnavigation/previous")</button>
+                                @{
+                                    // calculate the progress style on-server-side
+                                    var currentDisplayStepIndex = currentStepIndex + 1;
+                                    var progressWidth = (100 * currentDisplayStepIndex / currentDisplayStepCount) + "%";
+                                }
+                                <div class="Form__NavigationBar__ProgressBar">
+                                    <div class="Form__NavigationBar__ProgressBar--Progress" style="width: @progressWidth"></div>
+                                    <div class="Form__NavigationBar__ProgressBar--Text">
+                                        <span class="Form__NavigationBar__ProgressBar__ProgressLabel">@Html.Translate("/episerver/forms/viewmode/stepnavigation/page")</span> <span class="Form__NavigationBar__ProgressBar__CurrentStep">@currentDisplayStepIndex</span>/<span class="Form__NavigationBar__ProgressBar__StepsCount">@currentDisplayStepCount</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" name="submit" value="@SubmitButtonType.NextStep.ToString()" class="Form__NavigationBar__Action FormExcludeDataRebind btnNext" @nextButtonDisableState>@Html.Translate("/episerver/forms/viewmode/stepnavigation/next")</button>
+                            </nav>
+                        }
+
+                    } // endof if %>
+                }
+            </div>
+            @* endof FormMainBody *@
+        </form>
+    </div>
+}      

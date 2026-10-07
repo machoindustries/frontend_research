@@ -1,0 +1,409 @@
+﻿@using EPiServer.Editor
+@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@using System.Data
+@using ANA.Site.Business.Helpers
+
+@model ANA.Site.Models.ViewModels.AccountPersonalDevelopmentViewModel
+@{
+    var settings = SettingsHelper.GetSettings();
+    var ExplanatoryText = string.IsNullOrEmpty(settings.DownloadAllCERecExplanatoryText) ? "" : settings.DownloadAllCERecExplanatoryText;
+}
+
+<div class="c-account__section">
+    <div data-require="./src/views/account-continuing-education-view">
+        @if (!string.IsNullOrWhiteSpace(Model.EducationHeading) || ContentHelper.PageIsInEditMode())
+        {
+            <h2 class="c-account__title">@Html.PropertyFor(m => m.EducationHeading)</h2>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.EducationDescription) || ContentHelper.PageIsInEditMode())
+        {
+            <p class="c-account__text">@Html.PropertyFor(m => m.EducationDescription)</p>
+        }
+
+        @Html.ActionLink("DOWNLOAD ALL CE RECORDS", "DownloadContinuingEducation", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+            { { "class", "e-button--orange" } })
+        <br />
+        <br />
+        <div>
+            <b>Total Contact Hours: <span id="TotalContactHours" data-account-continuing-education-total-contact-hours>0</span></b>
+            <br /><b>Total Pharmacotherapeutics Hours: <span id="TotalPharmaHours" data-account-continuing-education-total-pharma-hours>0</span></b>
+        </div>
+        <div class="awards_title" data-account-continuing-education-title-self-entered>
+            Self-Entered Professional Development Entries
+        </div>
+        @if (!string.IsNullOrEmpty(ExplanatoryText))
+        {
+            <br />
+            <br />
+            <div class="label-info">
+                <span>@ExplanatoryText</span>
+            </div>
+        }
+
+        <div class="c-account__summary">
+            <a href="#" id="myCETop" class="c-account__cta--add-new-display" title="@Html.Translate(" /ProfessionalDevelopment/Education/New")" data-account-continuing-education-add>@Html.Translate("/ProfessionalDevelopment/Education/New")</a>
+            <div style="text-align:right;float:right">
+                <b>
+                    Contact Hours: <span id="totalHours" data-account-continuing-education-total-hours>0</span>
+                    <br /> Pharmacotherapeutics Hours: <span id="totalPharma" data-account-continuing-education-total-pharma>0</span>
+                </b>
+            </div>
+        </div>
+
+
+        <table data-account-continuing-education-table style="display: none;">
+            <thead>
+                <tr>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Subject")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Description")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Sponsors")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Date")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Hours")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/PharmacoHours")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Approved")</th>
+                    <th>@Html.Translate("/ProfessionalDevelopment/Education/Options")</th>
+                </tr>
+            </thead>
+            <tbody data-account-continuing-education-list=""></tbody>
+        </table>
+        <div class="c-account__no-results" data-account-continuing-education-no-results="">@Html.Translate("/ProfessionalDevelopment/Education/NoResults")</div><br />
+        <div class="e-lightbox-source">
+            @Html.EditorFor(m => m.ProfessionalEducationLightBox)
+        </div>
+    </div>
+    <div data-require="./src/views/account-continuing-education-awards-view">
+        @if (!string.IsNullOrEmpty(ExplanatoryText))
+        {
+            <br />
+            <br />
+            <div class="label-info">
+                <span>@ExplanatoryText</span>
+            </div>
+        }
+        <div>
+            <div class="awards_title" data-account-continuing-education-title-auto-populated>
+                Auto Populated ANA Courses Table
+            </div>
+            <div class="col-sm-6" style="float:left;margin-top:10px;margin-bottom:5px;" data-account-continuing-education-filter-section>
+                <input type="hidden" id="yearHiddenFrom " name="yearHiddenFrom " value="0" data-account-continuing-education-from-year-fitler>
+                <input type="hidden" id="hiddenToYear" name="hiddenToYear" value="0" data-account-continuing-education-to-year-fitler>
+                <b>Completion Date:</b>
+                From:
+                <select id="fromYear" name="fromYear" class="select_no_dropdown">
+                </select>&nbsp;&nbsp;
+                To:
+                <select id="toYear" name="toYear" class="select_no_dropdown">
+                </select>&nbsp;&nbsp;
+                <input type="hidden" id="hiddenStatus" name="hiddenStatus" value="Restored" data-account-continuing-education-status-fitler>
+                &nbsp;&nbsp;<b>Status:</b>
+                <select id="status" name="status" class="select_no_dropdown">
+                    <option value="All">All</option>
+                    <option value="Restored" selected>Active</option>
+                    <option value="Archived">Archived</option>
+                </select>
+                &nbsp;&nbsp;&nbsp;
+                <button class="apply-date-filter" data-account-continuing-education-apply-fitler> Apply </button>
+                <button class="clear-date-filter" onclick="resetFields();" data-account-continuing-education-clear-fitler> Clear </button>
+            </div>
+            <div>
+                <div class="col-sm-6" style="margin-bottom:-16px;text-align:right;">
+
+                    <br /><br /><b>
+                        Contact Hours: <span data-account-continuing-education-contact-hours></span>
+                        <br />
+                        Pharmacotherapeutics Hours: <span data-account-continuing-education-pharma-hours></span>
+                    </b>
+                </div>
+                <br />
+                <div class="col-sm-6" style="font-size: smaller; font-weight: 600;" data-account-continuing-education-awards-table-message>@Html.Translate("/ProfessionalDevelopment/awards/TableDataMessage")</div>
+                <div class="col-sm-6" style="font-size: smaller; font-weight: 600;" data-account-continuing-education-awards-table-message>
+                    @Html.Translate("/ProfessionalDevelopment/awards/SaveContactHoursMessage")
+                <button class="save-update-records awards-button" style="margin-bottom: 1%; margin-top: 1%;" data-account-continuing-education-save-records="" data-contact-hours-modified=false> Save </button>
+            </div>
+        </div>
+    </div>
+    <table data-account-continuing-education-awards-table class="auto_populated_table" style="display: none;">
+        <thead>
+            <tr>
+                <th class="c-account__sortable" style="width: 21%;text-align:center;">@Html.Translate("/ProfessionalDevelopment/awards/ANACourseName")<button class="sort_button" data-account-continuing-education-sortby-name> </button></th>
+                <th>@Html.Translate("/ProfessionalDevelopment/awards/Provider")</th>
+                <th class="c-account__sortable">@Html.Translate("/ProfessionalDevelopment/awards/CompletionDate")  <button class="sort_button" data-account-continuing-education-sortby-completion-date> </button></th>
+                <th>@Html.Translate("/ProfessionalDevelopment/awards/RegularHours")</th>
+                <th>
+                    @Html.Translate("/ProfessionalDevelopment/awards/PharmacoHours")
+                </th>
+                <th>@Html.Translate("/ProfessionalDevelopment/awards/Approved")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/awards/Actions")</th>
+            </tr>
+        </thead>
+        <tbody data-account-continuing-education-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-continuing-education-no-results="">@Html.Translate("/ProfessionalDevelopment/Education/NoResults")</div><br />
+    <span>
+        <a href="#myCETop" title="Back to top" data-account-continuing-education-awards-table="">back to top</a> &nbsp;
+        <span class="pagination" style="float: right" data-account-continuing-education-pagination="">
+            <button class="prev awards-button" style="margin-right: 1px;" data-account-continuing-education-pagination-previous="">« Previous</button>
+            <a class="page-numbers" data-account-continuing-education-pagination-page-numbers></a>
+            <button class="next awards-button" style="" data-account-continuing-education-pagination-next="">Next »</button>
+        </span>
+    </span>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m => m.ProfessionalEducationLightBox)
+    </div>
+</div>
+
+</div>
+<br />
+<div class="c-account__section" data-require="./src/views/account-academic-credits-view">
+    @if (!string.IsNullOrWhiteSpace(Model.CreditsHeading) || ContentHelper.PageIsInEditMode())
+    {
+        <h2 class="c-account__title">@Html.PropertyFor(m => m.CreditsHeading)</h2>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CreditsDescription) || ContentHelper.PageIsInEditMode())
+    {
+        <p class="c-account__text">@Html.PropertyFor(m => m.CreditsDescription)</p>
+    }
+    @Html.ActionLink("DOWNLOAD ALL ACADEMIC CREDITS", "DownloadAcademicCredits", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+        { { "class", "e-button--orange" } })
+
+    <br />
+    <br />
+    <div class="c-account__summary e-richtext">
+        <p>Credit Subtotal: <span data-account-academic-credits-total-credits>0</span></p>
+    </div>
+    <div class="c-account__summary">
+        <a href="#" id="myCreditstop" class="c-account__cta--add-new" title="@Html.Translate(" /ProfessionalDevelopment/Credits/New")" data-account-academic-credits-add>@Html.Translate("/ProfessionalDevelopment/Credits/New")</a>
+    </div>
+    <table data-account-academic-credits-table style="display: none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Subject")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Sponsors")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Date")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Credits")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Specialty")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Credits/Options")</th>
+            </tr>
+        </thead>
+        <tbody data-account-academic-credits-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-academic-credits-no-results="">@Html.Translate("/ProfessionalDevelopment/Credits/NoResults")</div>
+    <a href="#myCreditsTop" title="Back to top" data-account-academic-credits-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m => m.ProfessionalCredLightBox)
+    </div>
+</div>
+
+
+<br />
+<div class="c-account__section" data-require="./src/views/account-presentations-view">
+    @if (!string.IsNullOrWhiteSpace(Model.PresentationsHeading) || ContentHelper.PageIsInEditMode())
+    {
+        <h2 class="c-account__title">@Html.PropertyFor(m => m.PresentationsHeading)</h2>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.PresentationsDescription) || ContentHelper.PageIsInEditMode())
+    {
+        <p class="c-account__text">@Html.PropertyFor(m => m.PresentationsDescription)</p>
+    }
+    @Html.ActionLink("DOWNLOAD ALL PRESENTATIONS", "DownloadPresentations", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+        { { "class", "e-button--orange" } })
+    <br />
+    <br />
+    <div class="c-account__summary e-richtext">
+        <p>Presentation Subtotal: <span data-account-presentations-total>0</span></p>
+    </div>
+    <div class="c-account__summary">
+        <a href="#" id="myPresentationsTop" class="c-account__cta--add-new" title="@Html.Translate(" /ProfessionalDevelopment/Presentations/New")" data-account-presentation-add>@Html.Translate("/ProfessionalDevelopment/Presentations/New")</a>
+    </div>
+    <table data-account-presentations-table style="display: none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/Subject")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/Sponsors")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/Date")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/Audience")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/ClockHrs")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Presentations/Options")</th>
+            </tr>
+        </thead>
+        <tbody data-account-presentations-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-presentations-no-results="">@Html.Translate("/ProfessionalDevelopment/Presentations/NoResults")</div>
+    <a href="#myPresentationsTop" title="Back to top" data-account-presentations-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(x => x.ProfessionalPresentationLightBox)
+    </div>
+</div>
+<br />
+<div class="c-account__section" data-require="./src/views/account-publications-view">
+    @if (!string.IsNullOrWhiteSpace(Model.PublicationsHeading) || ContentHelper.PageIsInEditMode())
+    {
+        <h2 class="c-account__title">@Html.PropertyFor(m => m.PublicationsHeading)</h2>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.PublicationsDescription) || ContentHelper.PageIsInEditMode())
+    {
+        <p class="c-account__text">@Html.PropertyFor(m => m.PublicationsDescription)</p>
+    }
+    @Html.ActionLink("DOWNLOAD ALL PUBLICATIONS", "DownloadPubsAndResearch", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+        { { "class", "e-button--orange" } })
+    <br />
+    <br />
+    <div class="c-account__summary e-richtext">
+        <p>Publication / Research Subtotal: <span data-account-publications-total>0</span></p>
+    </div>
+    <div class="c-account__summary">
+        <a href="#" id="myPublicationsTop" class="c-account__cta--add-new" title="@Html.Translate(" /ProfessionalDevelopment/Publications/New")" data-account-publication-add>@Html.Translate("/ProfessionalDevelopment/Publications/New")</a>
+    </div>
+    <table data-account-publications-table style="display: none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/ProfessionalDevelopment/Publications/Subject")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Publications/Sponsors")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Publications/Date")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Publications/Options")</th>
+            </tr>
+        </thead>
+        <tbody data-account-publications-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-publications-no-results="">@Html.Translate("/ProfessionalDevelopment/Publications/NoResults")</div>
+    <a href="#myPublicationsTop" title="Back to top" data-account-publications-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(x => x.ProfessionalPublicationLightbox)
+    </div>
+</div>
+<br />
+<div class="c-account__section" data-require="./src/views/account-preceptorships-view">
+    @if (!string.IsNullOrWhiteSpace(Model.PreceptorshipHeading) || ContentHelper.PageIsInEditMode())
+    {
+        <h2 class="c-account__title">@Html.PropertyFor(m => m.PreceptorshipHeading)</h2>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.PreceptorshipDescription) || ContentHelper.PageIsInEditMode())
+    {
+        <p class="c-account__text">@Html.PropertyFor(m => m.PreceptorshipDescription)</p>
+    }
+    @Html.ActionLink("DOWNLOAD ALL PRECEPTORSHIPS", "DownloadPreceptorships", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+        { { "class", "e-button--orange" } })
+    <br />
+    <br />
+
+    <div class="c-account__summary e-richtext">
+        <p>Credit Subtotal: <span data-account-preceptorships-total>0</span></p>
+    </div>
+    <div class="c-account__summary">
+        <a href="#" id="myPreceptorshipTop" class="c-account__cta--add-new" title="@Html.Translate(" /ProfessionalDevelopment/Preceptorship/New")" data-account-preceptorship-add>@Html.Translate("/ProfessionalDevelopment/Preceptorship/New")</a>
+    </div>
+    <table data-account-preceptorships-table style="display: none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/ProfessionalDevelopment/Preceptorship/Sponsor")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Preceptorship/StudentType")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Preceptorship/EndDate")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Preceptorship/TotalHours")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Preceptorship/Options")</th>
+            </tr>
+        </thead>
+        <tbody data-account-preceptorships-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-preceptorships-no-results="">@Html.Translate("/ProfessionalDevelopment/Preceptorship/NoResults")</div>
+    <a href="#myPreceptorshipTop" title="Back to top" data-account-preceptorships-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(x => x.ProfessionalPreceptorshipLightBox)
+    </div>
+</div>
+<br />
+<div class="c-account__section" data-require="./src/views/account-professional-services-view">
+    @if (!string.IsNullOrWhiteSpace(Model.ProfessionalServiceHeading) || ContentHelper.PageIsInEditMode())
+    {
+        <h2 class="c-account__title">@Html.PropertyFor(m => m.ProfessionalServiceHeading)</h2>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.ProfessionalServiceDescription) || ContentHelper.PageIsInEditMode())
+    {
+        <p class="c-account__text">@Html.PropertyFor(m => m.ProfessionalServiceDescription)</p>
+    }
+    @Html.ActionLink("DOWNLOAD ALL PROFESSIONAL SERVICES", "DownloadProfessionalServices", "AccountPersonalDevelopmentBlock", null, new Dictionary<string, object>
+        { { "class", "e-button--orange" } })
+    <br />
+    <br />
+    <div class="c-account__summary">
+        <a href="#" id="myServicesTop" class="c-account__cta--add-new" title="@Html.Translate(" /ProfessionalDevelopment/Services/New")" data-account-professional-service-add>@Html.Translate("/ProfessionalDevelopment/Services/New")</a>
+    </div>
+    <table data-account-professional-services-table style="display: none;">
+        <thead>
+            <tr>
+                <th>@Html.Translate("/ProfessionalDevelopment/Services/Organization")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Services/ServiceType")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Services/StartDate")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Services/EndDate")</th>
+                <th>@Html.Translate("/ProfessionalDevelopment/Services/Options")</th>
+            </tr>
+        </thead>
+        <tbody data-account-professional-services-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-professional-services-no-results="">@Html.Translate("/ProfessionalDevelopment/Services/NoResults")</div>
+    <a href="#myServicesTop" title="Back to top" data-account-professional-services-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(x => x.ProfessionalServiceLightboxViewModel)
+    </div>
+</div>
+
+<script>
+
+    const fromYearSelect = document.getElementById('fromYear');
+    const toYearSelect = document.getElementById('toYear');
+    const yearHiddenFrom  = document.getElementById('yearHiddenFrom ');
+    const hiddenToYear = document.getElementById('hiddenToYear');
+    const statusSelect = document.getElementById('status');
+    const hiddenStatus = document.getElementById('hiddenStatus');
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        fromYearSelect.addEventListener('change', function () {
+        const selectedValueFrom = fromYearSelect.value;
+        yearHiddenFrom .value = selectedValueFrom;
+        });
+
+        toYearSelect.addEventListener('change', function () {
+        const selectedValueTo = toYearSelect.value;
+        hiddenToYear.value = selectedValueTo;
+        });
+
+        statusSelect.addEventListener('change', function () {
+        const selectedValueStatus = statusSelect.value;
+        hiddenStatus.value = selectedValueStatus;
+        });
+    });
+    function resetFields() {
+    fromYearSelect.selectedIndex = 0;
+    toYearSelect.selectedIndex = 0;
+    statusSelect.selectedIndex = 1;
+    yearHiddenFrom .value = '';
+    hiddenToYear.value = '';
+    hiddenStatus.value = 'Restored';
+    }
+</script>
+<div hidden>
+    <div data-lightbox-src="archiveRecord">
+        <h3>
+            Confirm
+        </h3>
+        <p>
+            Are you sure want to archive the record?
+        </p>
+        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-archive-yes>Yes</a>
+        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>No</a>
+
+    </div>
+
+    <div data-lightbox-src="restoreRecord">
+        <h3>
+            Confirm
+        </h3>
+        <p>
+            Are you sure want to restore the record?
+        </p>
+        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-restore-yes>Yes</a>
+        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>No</a>
+
+    </div>
+</div>

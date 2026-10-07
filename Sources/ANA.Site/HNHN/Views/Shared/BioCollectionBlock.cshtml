@@ -1,0 +1,190 @@
+﻿@using ANA_HNHN.Models.Media
+@using Brightfind.Helper
+@using EPiServer.ServiceLocation
+@model ANA_HNHN.Models.Blocks.BioCollectionBlock
+@{
+    var heading = Model.Heading;
+    var background = Model.BackgroundColor;
+}
+
+@if (Model != null)
+{
+    @switch (Model.View)
+    {
+        case "ThreePerRow":
+            <section class="bio-collection section--squiggle bg-@background">
+                <div class="container">
+                    <div class="row d-flex justify-content-center text-center">
+                        <div class="col-md-8">
+                            <h1>@heading</h1>
+                            @Html.Raw(Model.Content)
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        @if (Model.Collection != null)
+                        {
+                            @foreach (var item in Model.Collection.Items)
+                            {
+                                var contentItem = item.LoadContent();
+                                var bioBlock = contentItem as ANA_HNHN.Models.Blocks.BioBlock;
+                                var bioName = bioBlock.Name;
+                                var bioCreds = bioBlock.Credentials;
+                                var bioTitle = bioBlock.Title;
+                                var bioCompany = bioBlock.Company;
+                                var bioBiography = bioBlock.Bio;
+                                var bioImage = MediaHelper.GetUrl(bioBlock.Image);
+                                var bioImageAlt = MediaHelper.GetImageAltText(bioBlock.Image);
+                                var bioColor = bioBlock.Color;
+
+                                <div class="col-md-4">
+                                    <div class="bio-collection__block">
+                                        <div class="bio-collection__inner">
+                                            <div class="bio-collection__front">
+                                                <div class="bio-collection__image @bioColor">
+                                                    @if (bioImage != null)
+                                                    {
+                                                        <img src="@bioImage" alt="@bioImageAlt">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/hnhn/img/image-bio-placeholder.svg" alt="Avatar Image">
+                                                    }
+                                                </div>
+                                                <h2 class="bio-collection__heading">@bioName</h2>
+                                                <div class="bio-collection__info">
+                                                    @if (!String.IsNullOrWhiteSpace(bioCreds))
+                                                    {
+                                                        <span>@bioCreds</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioTitle))
+                                                    {
+                                                        <span>@bioTitle</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioCompany))
+                                                    {
+                                                        <span>@bioCompany</span>
+                                                    }
+                                                </div>
+                                                <p class="mt-auto"><a class="bio-collection__link small" href="javascript:void(0)" role="button">Read More</a></p>
+                                            </div>
+                                            <div class="bio-collection__back">
+                                                <h2 class="bio-collection__heading">@bioName</h2>
+                                                <div class="bio-collection__info">
+                                                    @if (!String.IsNullOrWhiteSpace(bioCreds))
+                                                    {
+                                                        <span>@bioCreds</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioTitle))
+                                                    {
+                                                        <span>@bioTitle</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioCompany))
+                                                    {
+                                                        <span>@bioCompany</span>
+                                                    }
+                                                </div>
+                                                <div class="bio-collection_bio">
+                                                    @Html.Raw(bioBiography)
+                                                </div>
+                                                <p class="mt-auto"><a class="bio-collection__link small" href="javascript:void(0)" role="button">Read Less</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </section>
+            break;
+
+        case "FourPerRow":
+            <section class="bio-collection section--squiggle bg-@background">
+                <div class="container">
+                    <div class="row d-flex align-items-center text-center text-md-start">
+                        <div class="col-md-auto pe-auto pe-md-4">
+                            <h2>@heading</h2>
+                        </div>
+                        <div class="col-md">
+                            @Html.Raw(Model.Content)
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        @if (Model.Collection != null)
+                        {
+                            @foreach (var item in Model.Collection.Items)
+                            {
+                                var contentItem = item.LoadContent();
+                                var bioBlock = contentItem as ANA_HNHN.Models.Blocks.BioBlock;
+                                var bioName = bioBlock.Name;
+                                var bioCreds = bioBlock.Credentials;
+                                var bioTitle = bioBlock.Title;
+                                var bioCompany = bioBlock.Company;
+                                var bioBiography = bioBlock.Bio;
+                                var bioImage = MediaHelper.GetUrl(bioBlock.Image);
+                                var bioImageAlt = MediaHelper.GetImageAltText(bioBlock.Image);
+                                var bioColor = bioBlock.Color;
+
+                                <div class="col-md-3">
+                                    <div class="bio-collection__block bio-collection__block--sm">
+                                        <div class="bio-collection__inner">
+                                            <div class="bio-collection__front">
+                                                <div class="bio-collection__image @bioColor">
+                                                    @if (bioImage != null)
+                                                    {
+                                                        <img src="@bioImage" alt="@bioImageAlt">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/hnhn/img/image-bio-placeholder.svg" alt="Avatar Image">
+                                                    }
+                                                </div>
+                                                <h2 class="bio-collection__heading">@bioName</h2>
+                                                <div class="bio-collection__info">
+                                                    @if (!String.IsNullOrWhiteSpace(bioCreds))
+                                                    {
+                                                        <span>@bioCreds</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioTitle))
+                                                    {
+                                                        <span>@bioTitle</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioCompany))
+                                                    {
+                                                        <span>@bioCompany</span>
+                                                    }
+                                                </div>
+                                                <p class="mt-auto"><a class="bio-collection__link small" href="javascript:void(0)">Read More</a></p>
+                                            </div>
+                                            <div class="bio-collection__back">
+                                                <h2 class="bio-collection__heading">@bioName</h2>
+                                                <div class="bio-collection__info">
+                                                    @if (!String.IsNullOrWhiteSpace(bioCreds))
+                                                    {
+                                                        <span>@bioCreds</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioTitle))
+                                                    {
+                                                        <span>@bioTitle</span>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(bioCompany))
+                                                    {
+                                                        <span>@bioCompany</span>
+                                                    }
+                                                </div>
+                                                <div class="bio-collection_bio">
+                                                    @Html.Raw(bioBiography)
+                                                </div>
+                                                <p class="mt-auto"><a class="bio-collection__link small" href="javascript:void(0)">Read Less</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </section>
+            break;
+    }
+}

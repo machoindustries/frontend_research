@@ -1,0 +1,15 @@
+﻿@using ANA.Site.Business.Interfaces
+@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels
+@using EPiServer.Editor
+
+@model StartPageViewModel
+
+@if (Model == null)
+{
+    return;
+}
+
+@{ await Html.RenderPartialAsync("HeroArea", Model.CurrentPage as IHero); }
+
+@Html.PropertyFor(x => x.CurrentPage.Blocks, new { CssClass = "content-area" })

@@ -1,0 +1,72 @@
+﻿@using ANA_HNHN.Extensions
+@model ANA_HNHN.Services.Search.Models.SearchPaginationModel
+
+@if (Model != null && Model.TotalPages > 0)
+{
+    <input type="hidden" id="totalPages" name="name" value="@Model.TotalPages" />
+    <input type="hidden" id="currentPage" name="name" value="@Model.CurrentPage" />
+    <nav aria-label="Page navigation" class="search__pagination mt-2 mb-4">
+        <ul class="pagination m-0">
+            <!-- First Page Button -->
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link First" href="#" aria-label="First Page" role="button" tabindex="@(Model.CurrentPage == 1 ? "-1" : "0")">
+                    <svg width="19" height="17" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.44616 1L1 8.44616L8.44616 15.8923" stroke="@(Model.CurrentPage == 1 ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M17.6874 1.00011L10.2412 8.44627L17.6874 15.8924" stroke="@(Model.CurrentPage == 1 ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </li>
+
+            <!-- Previous Page Button -->
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link prevPage" href="#" aria-label="Previous Page" role="button" tabindex="@(Model.CurrentPage == 1 ? "-1" : "0")">
+                    <svg width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1L1 8.5L8 16" stroke="@(Model.CurrentPage == 1 ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </li>
+
+            @if (Model.TotalPages > 5)
+            {
+                if (Model.CurrentPage > 3)
+                {
+                    <li class="page-item"><a class="page-link" href="#" aria-label="Page 1" role="button">1</a></li>
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+
+                @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.CurrentPage + 2, Model.TotalPages); i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="#" aria-label="Page @i" role="button">@i</a></li>
+                }
+
+                if (Model.CurrentPage < Model.TotalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <li class="page-item"><a class="page-link" role="button" aria-label="Page @Model.TotalPages" href="#">@Model.TotalPages</a></li>
+                }
+            }
+            else
+            {
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")"><a class="page-link" href="#" role="button" aria-label="Page @i">@i</a></li>
+                }
+            }
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link Next nextPage" role="button" aria-label="Next Page" href="#" tabindex="@(Model.CurrentPage == Model.TotalPages ? "-1" : "0")">
+                    <svg width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1L1 8.5L8 16" stroke="@(Model.CurrentPage == Model.TotalPages ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </li>
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link Next Last" role="button" aria-label="Last Page" href="#" tabindex="@(Model.CurrentPage == Model.TotalPages ? "-1" : "0")">
+                    <svg width="19" height="17" viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.44616 1L1 8.44616L8.44616 15.8923" stroke="@(Model.CurrentPage == Model.TotalPages ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M17.6874 1.00011L10.2412 8.44627L17.6874 15.8924" stroke="@(Model.CurrentPage == Model.TotalPages ? "#D1D1D1" : "#016D9E")" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}

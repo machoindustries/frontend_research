@@ -1,0 +1,20 @@
+.offerings {
+  margin: 2rem 6rem 1rem 6rem;
+  .offering-content {
+    font-size: 18px;
+    padding-left: 2rem;
+    padding-top: .4rem;
+    max-width: 80%;
+    line-height: 34px;
+    @media screen and (max-width: $medium) {
+      padding: 0;
+      width: 100%;
+    }
+  }
+  div {
+    padding: .75rem 0 .75rem 0;
+  }
+  @media screen and (max-width: $medium) {
+    margin: 0;
+  }
+}

@@ -1,0 +1,88 @@
+﻿@using ANA.Site.Models.ViewModels
+@model CheckoutViewModel
+@{
+    var saveCardAttributes = Model.RequireSavedCard ? " checked=\"checked\" disabled=\"disabled\"" : string.Empty;
+}
+<div class="c-checkout__section">
+    <h2 class="c-checkout__section-title">@Html.Translate("/CartCheckout/Payment/Heading")</h2>
+    @if (Model.IsPaymentSwitched)
+    {
+        <span style="font-size:small; font-weight:bold; color:red;">@Html.Translate("/CartCheckout/Payment/PaymentSwitched")</span>
+    }
+    <div class="e-payment-details grid" data-require="./src/views/payment-details-view">
+        <div class="e-payment-details__section grid__item one-whole large--three-quarters" data-checkout-payment-method-panel-saved="">
+            <label class="e-form__label e-form__label--select" for="@Html.IdFor(m => m.Token)" data-formfield="">
+                <span class="e-form__label-text">@Html.Translate("/CartCheckout/Payment/ChooseSavedCard")</span>
+                @Html.DropDownListFor(m => m.Token, Enumerable.Empty<SelectListItem>(), new { @class = "e-form__input e-form__input--select", placeholder = "MM", data_checkout_payment_method_select = "" })
+            </label>
+            <div class="grid">
+                <div class="grid__item one-whole large--one-half">
+                    <label class="e-payment-details__security e-form__label e-form__label--text" for="@Html.IdFor(m => m.TokenVerificationValue)" data-formfield="">
+                        <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/Placeholders/CardVerificationCode")</span>
+                        @Html.TextBoxFor(m => m.TokenVerificationValue, new { @class = "e-form__input e-form__input--text", data_formfield_text = "", maxlength = "4", data_validate = "", data_validate_required = "", title = "Security code", data_validate_regex = "^[0-9]{3,4}$", data_validate_message = "Please enter a valid security code" })
+                        <span class="e-payment-details__security-info" data-payment-details-security-info=""></span>
+                    </label>
+                    <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.TokenVerificationValue)"></div>
+                </div>
+            </div>
+            <a href="#" class="e-payment-details__action e-payment-details__action--add" data-checkout-payment-method-add="">
+                <span>+</span> @Html.Translate("/CartCheckout/Payment/AddNewCard")
+            </a>
+        </div>
+        <div class="e-payment-details__section grid__item one-whole large--three-quarters" data-checkout-payment-method-panel-add="" aria-expanded="false" style="display: none;">
+            <div class="e-payment-details__border-row e-payment-details__border-row--double">
+                <label for="@Html.IdFor(m => m.CardholderName)" class="e-form__label e-form__label--text" data-formfield="">
+                    <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/Placeholders/CardholderName")</span>
+                    @Html.TextBoxFor(m => m.CardholderName, new { @class = "e-form__input e-form__input--text", data_formfield_text = "", data_validate = "", data_validate_message = "", data_validate_required = "", title = "Cardholder's name", data_payment_method_cardholder = "", data_validate_ignore = "" })
+                </label>
+                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.CardholderName)"></div>
+                <label for="@Html.IdFor(m => m.CardNumber)" class="e-form__label e-form__label--text" data-formfield="">
+                    <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/Placeholders/CardNumber")</span>
+                    @Html.TextBoxFor(m => m.CardNumber, new { @class = "e-form__input e-form__input--text", inputmode = "numeric", autocomplete = "cc-number", data_formfield_text = "", data_validate = "", data_validate_required = "", title = "Credit card number", data_validate_digits = "", data_validate_minlength = "15", data_validate_maxlength = "16", data_payment_method_cardnumber = "", data_validate_ignore = "" })
+                </label>
+                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.CardNumber)"></div>
+            </div>
+            <div class="grid grid--full">
+                <div class="grid__item e-payment-details__border-row">
+                    <div class="grid">
+                        <div class="grid__item one-half medium--one-quarter">
+                            <label class="e-payment-details__vspaced e-form__label e-form__label--select" for="@Html.IdFor(m => m.ExpirationMonth)" data-formfield="" data-expiry-month="">
+                                <span class="e-form__label-text">@Html.Translate("/CartCheckout/Payment/ExpiryDate")</span>
+                                @Html.DropDownListFor(m => m.ExpirationMonth, Model.PaymentMonthOptions, new { @id = "data-expiry-month1", @class = "e-form__input e-form__input--select", placeholder = "MM", data_payment_method_expiry_month = "" })
+                            </label>
+                        </div>
+                        <div class="grid__item one-half medium--one-quarter">
+                            <label class="e-payment-details__vspaced e-form__label e-form__label--select" for="@Html.IdFor(m => m.ExpirationYear)" data-formfield="" data-expiry-year="">
+                                <span class="e-form__label-text"></span>
+                                @Html.DropDownListFor(m => m.ExpirationYear, Model.PaymentYearOptions, new { @id = "data-expiry-year1", @class = "e-form__input e-form__input--select", placeholder = "YY", data_payment_method_expiry_year = "" })
+                            </label>
+                        </div>
+                        <div class="grid__item one-whole medium--one-half">
+                            <label class="e-payment-details__vspaced e-payment-details__security e-form__label e-form__label--text" for="@Html.IdFor(m => m.CardVerificationValue)" data-formfield="">
+                                <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/Placeholders/CardVerificationCode")</span>
+                                @Html.TextBoxFor(m => m.CardVerificationValue, new { @class = "e-form__input e-form__input--text", data_formfield_text = "", maxlength = "4", data_validate = "", data_validate_required = "", title = "Security code", data_validate_regex = "^[0-9]{3,4}$", data_validate_message = "Please enter a valid security code", data_validate_ignore = "" })
+                                <span class="e-payment-details__security-info" data-payment-details-security-info=""></span>
+                            </label>
+                            <div class="e-form__validation-errors" data-validation-for="@Html.IdFor(m => m.CardVerificationValue)"></div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="grid__item one-whole medium--one-half">
+                            <div class="e-form__validation-errors" data-validation-error="" data-expiry-error="" data-validation-for="@Html.IdFor(m => m.ExpirationMonth)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="e-payment-details__border-row e-payment-details__border-row--save">
+                <label class="e-payment-details__checkbox e-form__label e-form__label--checkbox e-form__label--checkbox-left" for="@Html.IdFor(m => m.IsSavedAsToken)" data-formfield="">
+                    <span class="e-form__label-text">@Html.Translate("/CartCheckout/Payment/SaveCard")</span>
+                    <input type="checkbox" class="e-form__input e-form__input--checkbox" id="@Html.IdFor(m => m.IsSavedAsToken)" name="@Html.NameFor(m => m.IsSavedAsToken)" title="@Html.Translate("/CartCheckout/Payment/SaveCard")" value="true" data-save-payment-details="" data-payment-details-savedetails="" data-validate-ignore="" @Html.Raw(saveCardAttributes)>
+                    <span class="e-form__fake-checkbox"></span>
+                </label>
+            </div>
+            <a href="#" class="e-payment-details__action e-payment-details__action--saved" data-checkout-payment-method-saved="">
+                <span>+</span> @Html.Translate("/CartCheckout/Payment/UseSavedCard")
+            </a>
+        </div>
+    </div>
+</div>

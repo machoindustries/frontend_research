@@ -1,0 +1,99 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Pages.Category
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model CategoryPageViewModel
+@{
+    Layout = "~/Microsite/Views/Shared/Layouts/_Root.cshtml";
+    var coverImage = Model.CurrentPage.CoverImage ?? Model.Layout.DefaultCoverImage;
+    var coverImageData = coverImage != null ? coverImage.Get<ImageFile>() : null;
+    var featured = Model.BlogPages != null ? Model.BlogPages.Take(2) : null;
+    var more = Model.BlogPages != null ? Model.BlogPages.Skip(2) : null;
+}
+
+<div class="categorypage grid-x">
+    <div class="cell small-12 categorypage__banner">
+        @if (coverImageData != null)
+        {
+            <img class="categorypage__image" src="@coverImage.GetFriendlyUrl()" alt="@coverImageData.AltText" />
+        }
+        <div class="grid-x">
+            <div class="cell small-4 categorypage__title-container">
+                <h1 class="categorypage__title">@Html.PropertyFor(i => i.CurrentPage.Heading)</h1>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Layout.PreviousUrl != null)
+    {
+        <a href="@Model.Layout.PreviousUrl.ToString()" class="cell previous-page small-12">
+            <img alt="Previous" class="previous-page__image" src="@(Model.Layout.AssetPrefix)img/arrow-back.svg">
+            <span class="previous-page__text">Previous Page</span>
+        </a>
+    }
+
+    <div class="cell small-offset-2 small-8 medium-offset-0 medium-4 content-well__left">
+        @Html.PropertyFor(i => i.CurrentPage.SideArea, new { HasContainer = false, HasItemContainer = false })
+    </div>
+    <div class="cell small-12 medium-8 content-well__right">
+        @if (featured != null)
+        {
+            foreach (var blog in featured)
+            {
+                <div class="featured-post cell small-12 medium-8">
+                    @if (blog.CoverImage != null)
+                    {
+                        var blogCoverImage = blog.CoverImage.Get<ImageFile>();
+                        <img src="@blogCoverImage.ContentLink.GetFriendlyUrl()" alt="@blogCoverImage.AltText" />
+                    }
+                    <div class="featured-post__text-container">
+                        <h2 class="featured-post__title">
+                            @blog.Heading
+                        </h2>
+                        <div class="featured-post__lead-in">
+                            @blog.Description
+                        </div>
+                        <a href="@blog.GetFriendlyUrl()" class="featured-post__button"> continue reading</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @if (Model.CurrentPage.EnableSubscription)
+    {
+        <div class="grid-x call-to-action cell small-12">
+            <h2 class="small-offset-1 cell small-5 call-to-action__title">Subscribe To This Blog</h2>
+            <input class="cell small-5 medium-3" placeholder="Enter Your Email">
+            <span class="cell small-2 small-offset-6 medium-offset-0 call-to-action__button-container">
+                <a href="#" class="call-to-action__button">Subscribe</a>
+            </span>
+        </div>
+    }
+
+    @if (more != null && more.Any())
+    {
+        if (!string.IsNullOrEmpty(Model.CurrentPage.MoreSectionHeading))
+        {
+            <h2 class="section-header anim-waypoint cell small-12">
+                @Html.PropertyFor(i => i.CurrentPage.MoreSectionHeading)
+            </h2>
+        }
+
+        <div class="more-stories">
+            @foreach (var blog in more)
+            {
+                <a href="@blog.GetFriendlyUrl()" class="more-stories__story">
+                    @if (blog.CoverImage != null)
+                    {
+                        var blogCoverImage = blog.CoverImage.Get<ImageFile>();
+                        <img src="@blogCoverImage.ContentLink.GetFriendlyUrl()" alt="@blogCoverImage.AltText" class="more-stories__image" />
+                    }
+                    <h4 class="more-stories__lead-in">@blog.Heading</h4>
+                </a>
+            }
+        </div>
+    }
+</div>

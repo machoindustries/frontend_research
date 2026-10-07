@@ -1,0 +1,79 @@
+﻿@using ANA.Site.Models.Media
+@using Geta.Optimizely.Extensions;
+@using Global = ANA.Site.Global
+@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@if (Model != null && Model.Count > 0)
+{
+    <ul class="c-in-page-link-list__list">
+        @foreach (var link in Model)
+        {
+            var contentRef = link.ToContent();
+            var type = string.Empty;
+            var filesize = string.Empty;
+
+
+            var icon = link.Target == "_blank" ? "external-link" : "arrowfull-right";
+
+            if (contentRef != null)
+            {
+                var extension = System.IO.Path.GetExtension(contentRef.Name);
+
+                if (extension != null)
+                {
+                    type = extension.ToLower().Trim('.', ' ');
+                }
+
+                if (contentRef is GenericMedia)
+                {
+                    var file = contentRef as GenericMedia;
+                    if (!string.IsNullOrEmpty(file.FileExtention))
+                    {
+                        type = file.FileExtention.ToLower().Trim('.', ' ');
+                    }
+                    if (contentRef is PortableDocumentFormat)
+                    {
+                        type = "pdf";
+                    }
+                    icon = "file";
+                    filesize = file.FileSize ?? filesize;
+                }
+
+                if (contentRef is ImageFile || contentRef is ImageMediaData)
+                {
+                    icon = "image";
+                }
+                else if (contentRef is VideoFile)
+                {
+                    icon = "video";
+                }
+                else if (Global.FileExtensions.ExcelExtensions.Contains(type))
+                {
+                    icon = "file-xls";
+                }
+                else if (Global.FileExtensions.DocExtensions.Contains(type))
+                {
+                    icon = "file-doc";
+                }
+                else if (type == "pdf")
+                {
+                    icon = "file-pdf";
+                }
+                else if (type == "mp3")
+                {
+                    icon = "music";
+                }
+            }
+
+            <li class="e-download-cta__item">
+                <a href="@link.GetFriendlyUrl()" class="e-download-cta" target="@link.Target" label="@link.Text">
+                    <div class="e-download-cta__content">
+                        <div class="e-download-cta__heading">@link.Text</div>
+                        <span class="e-download-cta__file-type">@type @(string.IsNullOrEmpty(filesize) ? string.Empty : $"({filesize}MB)")</span>
+                        <span class="e-icon-list__item e-icon-list__item--icon-@icon icon icon--icon-@icon e-download-cta__file-icon"></span>
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+}

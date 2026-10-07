@@ -1,0 +1,47 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubFeaturedResourceCardContainerBlockViewModel
+
+<div class="recommended-container">
+    <div class="recommended-block">
+        <h3 class="title animate-text">@Model.CurrentBlock.Title</h3>
+        @if (Model.HubResourcePages != null && Model.HubResourcePages.Count > 0)
+        {
+            var featuredContent = Model.HubResourcePages.First();
+            <div class="content-wrapper">
+                <a href="@Url.ContentUrl(featuredContent.CurrentPage.ContentLink)" class="big-item">
+                    <img src="@featuredContent.FeaturedThumbnailImageUrl" alt="@featuredContent.FeaturedThumbnailImageAlt" class="image" />
+                    @if (!string.IsNullOrWhiteSpace(@featuredContent.CurrentPage.ReadWatchListenTime))
+                    {
+                        <div class="image-label">@featuredContent.CurrentPage.ReadWatchListenTime</div>
+                    }
+                    <div class="item-info-wrapper">
+                        <h4 class="item-title">@featuredContent.CurrentPage.Title</h4>
+                        <p class="item-text">
+                            @featuredContent.MediaType <span>@featuredContent.FormattedPublishedDate</span>
+                        </p>
+                    </div>
+                </a>
+
+                <div class="small-items-wrapper">
+                    @foreach (var item in Model.HubResourcePages.Skip(1))
+                    {
+                        <a href="@Url.ContentUrl(item.CurrentPage.ContentLink)" class="item">
+                            <div class="image-wrapper">
+                                <img src="@item.FeaturedThumbnailImageUrl" alt="@item.FeaturedThumbnailImageAlt" class="image" />
+                                @if (!string.IsNullOrWhiteSpace(item.CurrentPage.ReadWatchListenTime))
+                                {
+                                    <div class="image-label">@item.CurrentPage.ReadWatchListenTime</div>
+                                }
+                            </div>
+                            <div class="item-info-wrapper">
+                                <h4 class="item-title">@item.CurrentPage.Title</h4>
+                                <p class="item-text">@item.MediaType</p>
+                                <p class="item-date">@item.FormattedPublishedDate</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

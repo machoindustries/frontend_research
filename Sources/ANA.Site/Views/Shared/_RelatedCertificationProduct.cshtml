@@ -1,0 +1,160 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Business.Extensions
+@using EPiServer
+@using Geta.Optimizely.Extensions;
+@using Global = ANA.Site.Global
+@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@model ANA.Site.Models.ViewModels.ProductPartialViewModel
+@{    
+    var productType = "";
+    string contacthours = "0";   
+    var productIcon = Model.Product.GetIconClass();
+    var productGroup = Model.Product.ProductGroupBlock;
+    var learnProduct = Model.Product as LearnBase;
+    if (!string.IsNullOrEmpty(learnProduct?.ContactHour))
+    {
+        contacthours = learnProduct.ContactHour;
+    }
+
+    if (learnProduct != null)
+    {
+        Model.Classes.Add("c-product-detail--learn");
+        productType = learnProduct.Type;
+    }
+
+    var firstVariant = Model.VariantsModel.Where(x => x != null).OrderBy(x => x.DiscountedPrice).FirstOrDefault();
+
+    if (ViewData.ContainsKey("Carousel") && (bool)ViewData["Carousel"])
+    {
+        Model.Classes.Add("c-product-detail--carousel");
+    }
+
+    var gtmPrice = string.Empty;
+
+    if (firstVariant != null)
+    {
+        gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? firstVariant.DiscountedPrice.ToString() : firstVariant.PlacedPrice.ToString();
+
+        if (UserState.CurrentProfile.IsMember())
+        {
+            gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? firstVariant.DiscountedMemberPrice.ToString() : firstVariant.MemberPrice.ToString();
+        }
+    }
+
+        <article class="@string.Join(" ", Model.Classes)"
+                 data-product=""
+                 data-product-item_name="@(firstVariant?.DisplayName ?? string.Empty)"
+                 data-product-item_id="@(firstVariant?.Code ?? string.Empty)"
+                 data-product-price="@gtmPrice"
+                 data-product-item_brand="@Model.BannerText"
+                 data-product-item_category="@Model.Product.GetOriginalType().Name.Replace("Product", string.Empty)"
+                 data-product-item_variant="@(firstVariant?.Code ?? string.Empty)"
+                 data-product-position="@ViewBag.listingIndex"
+                 data-product-quantity="1"
+                 data-product-format="@(firstVariant?.VariantType ?? string.Empty)">
+            <div class="c-product-detail__wrapper">
+                <figure class="c-product-detail__figure" @Html.Raw(productGroup != null && string.IsNullOrEmpty(firstVariant.ImageUrl) ? $"style=\"background-color: {productGroup.Colour}\"" : string.Empty)>
+                    <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="c-product-detail__figure-link" data-product-detail-link>                        
+                            <span class="@productIcon c-product-detail__figure-icon" @Html.Raw(productGroup != null ? $"style=\"color: {productGroup.Colour}\"" : string.Empty)></span>                    
+                    </a>
+                    @if (Model.Product.GetOriginalType() != typeof(BookProduct))
+                    {
+                        <span class="c-product-detail__figure-info">
+                            @if (!String.IsNullOrWhiteSpace(productType))
+                            {
+                                <span class="c-product-detail__product-type">@productType</span>
+                            }
+                            <span class="c-product-detail__totalhours-description">
+                                @if (!string.IsNullOrEmpty(contacthours))
+                                {
+                                    <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span> <strong>@contacthours</strong> @Html.Translate("/productpartial/contacthours")
+                                }
+                                else
+                                {
+                                    <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span> @Html.Translate("/productpartial/nocontacthours")
+                                }
+                            </span>
+                        </span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.BannerText))
+                    {
+                        <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                            <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                            <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                        </div>
+                    }
+                </figure>
+                @if (productGroup != null)
+                {
+                    <div class="c-product-detail__group-name" style="color: @productGroup.Colour;">
+                        @productGroup.Name
+                    </div>
+                }
+                <div class="c-product-detail__info">
+                    @if (!String.IsNullOrWhiteSpace(productType))
+                    {
+                        <span class="c-product-detail__info-type">@productType</span>
+                    }
+                    <h3 class="c-product-detail__info-title">
+                        <a class="c-product-detail__info-link" href="@Model.Product.ContentLink.GetFriendlyUrl()" data-product-detail-link>
+                            @Model.Product.Heading
+                        </a>
+                    </h3>
+                </div>
+            </div>
+            <div class="c-product-detail__wrapper">
+                <div class="c-product-detail__info">
+                   
+                    @if (!string.IsNullOrWhiteSpace(productType))
+                    {
+                        <span class="c-product-detail__info-detail-1">
+                            @(Html.Raw(string.IsNullOrWhiteSpace(productType) ? "&nbsp;" : productType))
+                        </span>
+                    }
+                        @if (!string.IsNullOrEmpty(contacthours))
+                        {
+                            <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @contacthours</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @Html.Translate("/productpartial/nocontacthours")</span>
+                        } 
+                </div>
+                @{
+                    var gtmPriceNormal = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? @firstVariant.DiscountedPrice : @firstVariant.PlacedPrice;
+                    var gtmPriceMember = firstVariant.DiscountedMemberPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? @firstVariant.DiscountedMemberPrice : @firstVariant.MemberPrice;
+                }
+                <div class="c-product-detail__pricing" data-gtm-pricing-info="" data-gtm-price-normal="@gtmPriceNormal" data-gtm-price-member="@gtmPriceMember">
+                    <div class="c-product-detail__pricing-item">
+                        <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/pricefrom")</span>
+                        @if (firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m)
+                        {
+                            <span class="c-product-detail__pricing-price--old">@firstVariant.PlacedPrice</span>
+                            <span class="c-product-detail__pricing-price">@firstVariant.DiscountedPrice</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__pricing-price">@firstVariant.PlacedPrice</span>
+                        }
+                    </div>
+                    <div class="c-product-detail__pricing-item">
+                        <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/memberprice")</span>
+                        @if (firstVariant.DiscountedMemberPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m)
+                        {
+                            <span class="c-product-detail__pricing-price--old">@firstVariant.MemberPrice</span>
+                            <span class="c-product-detail__pricing-price">@firstVariant.DiscountedMemberPrice</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__pricing-price">@firstVariant.MemberPrice</span>
+                        }
+                    </div>
+                </div>
+                <div class="c-product-detail__controls c-product-detail__controls--line">
+                    <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="e-button e-button--submit e-button--white e-button c-product-detail__controls-button">More info</a>
+                </div>
+            </div>
+        </article>
+}

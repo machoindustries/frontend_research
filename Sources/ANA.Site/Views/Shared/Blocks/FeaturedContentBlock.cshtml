@@ -1,0 +1,33 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.FeaturedContentBlock
+
+@{
+    var url = Model.Image.GetFriendlyUrl();
+    url = url + (url.Contains("?") ? "&" : "?") + "width=278";
+
+    var gtmLabel = "";
+
+    if (Model.CTALink != null)
+    {
+        gtmLabel = Model.CTALink.GetFriendlyUrl();
+    }
+}
+
+<article class="c-featured-content" style="background-image: url(@url);" data-featured-content-item data-require="./src/views/featured-content-view" data-gtm-event-label="@gtmLabel">
+    <div class="c-featured-content__content">
+        <div class="c-featured-content__content-wrap">
+
+            <h3 class="c-featured-content__title">@Html.PropertyFor(m => m.Heading)</h3>
+
+            <p class="c-featured-content__copy"> @Html.PropertyFor(m => m.Content)</p>
+
+            @if (Model.CTALink != null)
+            {
+                <a href="@Model.CTALink.GetFriendlyUrl()" class="e-button e-button--anchor e-button--white e-button" data-featured-content-cta>
+                    @Html.PropertyFor(m => m.CTAText)
+                </a>
+            }
+
+        </div>
+    </div>
+</article>

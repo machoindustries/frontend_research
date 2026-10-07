@@ -1,0 +1,51 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.ViewModels.LogoBlockViewModel
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .link-edit {
+            display: none;
+        }
+
+        .preview-display .link-edit {
+            display: inline-block;
+            float: left;
+            font-size: 1.0rem;
+            height: 20px;
+            text-align: center;
+            width: 40px;
+            z-index: 999;
+        }
+
+        .preview-display .image-edit {
+            float: left;
+            margin-left: 10px;
+            min-height: 40px;
+        }
+    </style>
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <span class="clearfix">
+        <span class="link-edit" @Html.EditAttributes(m => m.CurrentBlock.Link)>Edit link</span>
+        <span @Html.EditAttributes(m => m.CurrentBlock.ImageSource) class="image-edit"><img src="@Url.ContentUrl(Model.CurrentBlock.ImageSource)" alt="@Model.CurrentBlock.AltText" class="img-responsive" /></span>
+    </span>
+}
+else
+{
+    if (Model.CurrentBlock.Link != null && !Model.CurrentBlock.Link.IsEmpty())
+    {
+        <a href="@Url.ContentUrl(Model.CurrentBlock.Link)" class="@Model.LinkClass">
+            <img src="@Url.ContentUrl(Model.CurrentBlock.ImageSource)" alt="@Model.CurrentBlock.AltText" class="img-responsive" />
+        </a>
+    }
+    else
+    {
+        <img src="@Url.ContentUrl(Model.CurrentBlock.ImageSource)" alt="@Model.CurrentBlock.AltText" class="img-responsive" />
+    }
+}

@@ -1,0 +1,14 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@if (Model.Layout.CDCHomePage == null || Model.Layout.CDCHomePage.GlobalLandingHero == null)
+{
+    return;
+}
+
+@{
+    var hero = Model.Layout.CDCHomePage.GlobalLandingHero.Get<CDCLandingHero>();
+}
+
+@await Html.PartialAsync("~/Views/CDC/Blocks/CDCLandingHero.cshtml", hero)

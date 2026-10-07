@@ -1,0 +1,170 @@
+﻿@using Brightfind.Helper
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing
+@using ANA_HNHN.Extensions
+@model ANA_HNHN.Models.Blocks.ContentBlock
+@{
+    var backgroundImage = MediaHelper.GetUrl(Model?.DesktopImages);
+    var placement = Model.Placement == "Right";
+    var FullWidthBackgroundImageAlignment = placement ? "cta-full-bg--right" : "";
+    var imageClass = placement ? "order-lg-1 pe-4 pe-lg-5" : "order-lg-2 ps-4 ps-lg-5";
+    var textClass = placement ? "order-lg-2" : "order-lg-1";
+    var background = @Model.Color;
+    if(background == "blue")
+    {
+        background = "light-blue";
+    }
+    var mobileImageUrl = MediaHelper.GetUrl(Model.MobileImages);
+    var hasBackgroundImage = !string.IsNullOrEmpty(backgroundImage);
+    var hasMobileImage = !string.IsNullOrEmpty(mobileImageUrl);
+    var altText = MediaHelper.GetImageAltText(Model?.DesktopImages);
+    var mobileAltText = MediaHelper.GetImageAltText(Model?.MobileImages);
+}
+@switch (Model.View)
+{
+    case "DescriptionOnly":
+        <section class="bg-@background">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+
+    case "HeadingAndDescription":
+        <section class="bg-@background">
+            <div class="container">
+                <div class="row align-items-center">
+                    @if (!string.IsNullOrEmpty(Model.Heading))
+                    {
+                        <div class="col-lg-4">
+                            <h2>@Model.Heading</h2>
+                        </div>
+                    }
+                    <div class="col-lg">
+                        @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+
+    case "CTAWithOptionalOverlapImage":
+        <section class="cta-overlap bg-@background section--no-gap section--squiggle">
+            @if (!String.IsNullOrEmpty(mobileImageUrl))
+            {
+                <img loading="lazy" class="cta-overlap__image desktop-image" src="@backgroundImage" alt="@altText">
+                <img loading="lazy" class="cta-overlap__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+            }
+            else
+            {
+                <img loading="lazy" class="cta-overlap__image" src="@backgroundImage" alt="@altText">
+            }
+            <div class="container">
+                <div class="row text-center">
+                    @if (!string.IsNullOrEmpty(Model.Heading))
+                    {
+                        <h3>@Model.Heading</h3>
+                    }
+                    @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                    @if (Model.ButtonLink != null && Model.ButtonLink.ButtonText != null && Model.ButtonLink.ButtonLink != null)
+                    {
+                        <p><a class="btn btn-primary" href="@Url.ContentUrl(Model.ButtonLink.ButtonLink)" target="@Model.ButtonLink.ButtonTarget">@Model.ButtonLink.ButtonText</a></p>
+                    }
+                </div>
+            </div>
+        </section>
+        break;
+
+    case "FullWidthBackgroundImage":
+        <section class="cta-full-bg @FullWidthBackgroundImageAlignment section--no-gap">
+            @if (!String.IsNullOrEmpty(mobileImageUrl))
+            {
+                <img loading="lazy" class="cta-full-bg__image desktop-image" src="@backgroundImage" alt="@altText">
+                <img loading="lazy" class="cta-full-bg__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText">
+            }
+            else
+            {
+                <img loading="lazy" class="cta-full-bg__image" src="@backgroundImage" alt="@altText">
+            }
+            <div class="cta-full-bg__text block-cut small" data-aos="fade-up" data-aos-once="true">
+                @if (!string.IsNullOrEmpty(Model.Heading))
+                {
+                    <h2>@Model.Heading</h2>
+                }
+                @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                @if (Model.ButtonLink != null && Model.ButtonLink.ButtonText != null && Model.ButtonLink.ButtonLink != null)
+                {
+                    <p><a href="@Url.ContentUrl(Model.ButtonLink.ButtonLink)" target="@Model.ButtonLink.ButtonTarget">@Model.ButtonLink.ButtonText</a></p>
+                }
+            </div>
+        </section>
+        break;
+
+    case "CTAWithImage":
+        <section class="cta-image bg-@background section--squiggle">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 @imageClass">
+                        @if (!String.IsNullOrEmpty(mobileImageUrl))
+                        {
+                            <img loading="lazy" class="cta-image__image desktop-image" src="@backgroundImage" alt="@altText">
+                            <img loading="lazy" class="cta-image__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+                        }
+                        else
+                        {
+                            <img loading="lazy" class="cta-image__image" src="@backgroundImage" alt="@altText">
+                        }
+                    </div>
+                    <div class="col-lg-6 @textClass">
+                        @if (!string.IsNullOrEmpty(Model.Heading))
+                        {
+                            <h2>@Model.Heading</h2>
+                        }
+                        @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                        <p class="button-group">
+                            @if (Model.Button != null && Model.Button.ButtonText != null && Model.Button.ButtonLink != null)
+                            {
+                                <a class="btn btn-primary" href="@Url.ContentUrl(Model.Button.ButtonLink)" target="@Model.Button.ButtonTarget">@Model.Button.ButtonText</a>
+                            }
+                            @if (Model.ButtonLink != null && Model.ButtonLink.ButtonText != null && Model.ButtonLink.ButtonLink != null)
+                            {
+                                <a class="btn btn-secondary" href="@Url.ContentUrl(Model.ButtonLink.ButtonLink)" target="@Model.ButtonLink.ButtonTarget">@Model.ButtonLink.ButtonText</a>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+    case "BackgroundImagewithContentOverlay":
+        <section class="cta-overlay cta-overlay--@background section--no-gap">
+            @if (!String.IsNullOrEmpty(mobileImageUrl))
+            {
+                <img loading="lazy" class="cta-overlay__image desktop-image" src="@backgroundImage" alt="@altText">
+                <img loading="lazy" class="cta-overlay__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+            }
+            else
+            {
+                <img loading="lazy" class="cta-overlay__image" src="@backgroundImage" alt="@altText">
+            }
+            <div class="cta-overlay__slant" aria-hidden="true"></div>
+            <div class="cta-overlay__text block-cut small" data-aos="fade-right" data-aos-once="true">
+                @if (!string.IsNullOrEmpty(Model.Heading))
+                {
+                    <h2>@Model.Heading</h2>
+                }
+                @Html.Raw(Model.Description.ToHtmlStringWithUrls())
+                <p>
+                    @if (Model.ButtonLink != null && Model.ButtonLink.ButtonText != null && Model.ButtonLink.ButtonLink != null)
+                    {
+                        <a href="@Url.ContentUrl(Model.ButtonLink.ButtonLink)" target="@Model.ButtonLink.ButtonTarget">@Model.ButtonLink.ButtonText</a>
+                    }
+                </p>
+            </div>
+        </section>
+        break;
+}

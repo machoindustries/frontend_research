@@ -1,0 +1,34 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Hero.HeroBlock
+
+<div class="homepage-hero grid-x">
+    <div class="homepage-hero__image-wrapper small-12 medium-6 cell">
+        @if (Model.CoverImage != null)
+        {
+            var coverImage = Model.CoverImage.Get<ImageFile>();
+            <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="homepage-hero__image" />
+        }
+    </div>
+    <div class="homepage-hero__card-container medium-6 cell">
+        <div class="homepage-hero__card">
+            <h2 class="homepage-hero__title">
+                @if (Model.OverlayImage != null)
+                {
+                    var overlayImage = Model.OverlayImage.Get<ImageFile>();
+                    <img src="@overlayImage.ContentLink.GetFriendlyUrl()" alt="@overlayImage.AltText" />
+                }
+            </h2>
+            <p class="homepage-hero__lead-in">
+                @Html.PropertyFor(m => m.Description)
+            </p>
+            <a class="homepage-hero__button button" href="@Model.ReadMoreLink.GetSafeFriendlyUrl()" id="@Model.ReadMoreLinkTrackId">
+                <span>Read More</span>
+            </a>
+        </div>
+    </div>
+</div>

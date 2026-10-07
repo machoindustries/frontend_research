@@ -1,0 +1,201 @@
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using ANA.Site.Models.CDC.Blocks
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing
+@using ANA.Site.Models.Media
+
+@model CDCNewsBlockViewModel
+
+@{
+    var style = Model != null && Model.NewsBlock != null && Model.NewsBlock.ColorTheme == CDCNewsBlock.FeaturedResourceBackgroundColor.Teal
+        ? "teal-theme"
+        : Model.NewsBlock.ColorTheme == CDCNewsBlock.FeaturedResourceBackgroundColor.Blue
+            ? "blue-theme"
+            : Model.NewsBlock.ColorTheme == CDCNewsBlock.FeaturedResourceBackgroundColor.Orange
+                ? "orange-theme"
+                : "lavender-theme";
+}
+
+@if (Model != null && Model.NewsBlock != null && Model.NewsViewModel != null)
+{
+    <section class="image-text-social-link-block small-12 grid-x @style @Model.GetCssClass()">
+        <div class="small-12 heading">@Model.NewsBlock.Heading</div>
+        <div class="small-12 large-5">
+            <div class="img-container show-for-large">
+                @{
+                    RenderImage();
+                }
+            </div>
+        </div>
+        <div class="small-0 large-7 content-container">
+            @if (Model.NewsViewModel != null)
+            {
+                RenderHeadline();
+                RenderDate();
+                <div class="content">@Model.NewsViewModel.Description</div>
+                await RenderTags();
+                <div class="reveal" id="share-resource@(Model.NewsViewModel.AssetUrl)" data-reveal>
+                    <div class="addthis_inline_share_toolbox_qrdc"></div>
+                    <button class="close-button" data-close aria-label="Close modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@functions {
+    private void RenderImage()
+    {
+        MediaData cardImage = null;
+        if (Model != null && Model.NewsViewModel != null)
+        {
+            if (!ContentReference.IsNullOrEmpty(Model.NewsViewModel.Image))
+            {
+                cardImage = EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(Model.NewsViewModel.Image);
+            }
+        }
+
+        if (cardImage != null && cardImage is ImageFile)
+        {
+            var image = (ImageFile)cardImage;
+
+            <img src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText">
+
+            //Render Overlay
+            if (Model.NewsViewModel.ResourceType == ResourceLinkType.EmbeddedContent)
+            {
+                if (!string.IsNullOrEmpty(Model.NewsViewModel.AssetUrl))
+                {
+                    <a href="@Model.NewsViewModel.AssetUrl" target="_blank"
+                       onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"
+                       data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.NewsViewModel.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                        <div class="overlay"></div>
+                    </a>
+                }
+                else
+                {
+                    <div class="overlay" onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"></div>
+                }
+            }
+            else if (Model.NewsViewModel.ResourceType == ResourceLinkType.Download)
+            {
+                <a href="@Model.NewsViewModel.AssetUrl" target="_blank" download onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());">
+                    <div class="overlay"></div>
+                </a>
+            }
+            else if (Model.NewsViewModel.ResourceType == ResourceLinkType.ExternalLink)
+            {
+                <a href="@Model.NewsViewModel.AssetUrl" target="_blank" onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());">
+                    <div class="overlay"></div>
+                </a>
+            }
+            else
+            {
+                <a href="@Model.NewsViewModel.AssetUrl" target="@Model.NewsViewModel.TargetFrame" onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());">
+                    <div class="overlay"></div>
+                </a>
+            }
+        }
+    }
+
+    private void RenderHeadline()
+    {
+        if (Model.NewsViewModel.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(Model.NewsViewModel.AssetUrl))
+            {
+                <a href="@Model.NewsViewModel.AssetUrl" target="_blank" class="headline"
+                   onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"
+                   data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.NewsViewModel.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                    @Model.NewsViewModel.Heading
+                </a>
+            }
+            else
+            {
+                <a class="headline" onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());">@Model.NewsViewModel.Heading</a>
+            }
+        }
+        else if (Model.NewsViewModel.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@Model.NewsViewModel.AssetUrl" target="_blank"
+               onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"
+               download class="headline">
+                @Model.NewsViewModel.Heading
+            </a>
+        }
+        else if (Model.NewsViewModel.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@Model.NewsViewModel.AssetUrl" target="_blank"
+               onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"
+               class="headline">
+                @Model.NewsViewModel.Heading
+            </a>
+        }
+        else
+        {
+            <a href="@Model.NewsViewModel.AssetUrl" target="@Model.NewsViewModel.TargetFrame"
+               onclick="dataLayer.push(@Model.NewsViewModel.GoogleTags.GetAssetClickEventData());"
+               class="headline">
+                @Model.NewsViewModel.Heading
+            </a>
+        }
+    }
+
+    private void RenderDate()
+    {
+        if (Model.NewsViewModel.Date != null)
+        {
+            DateTime date = (DateTime)Model.NewsViewModel.Date;
+            string formattedDate = date.ToString("MMM d, yyyy").ToUpper();
+            <div class="date"></div>
+            <div class="date">Updated <span>@formattedDate</span></div>
+        }
+    }
+
+    private async Task RenderTags()
+    {
+        CDCShareButtonViewModel shareButton = new CDCShareButtonViewModel(Model.NewsViewModel);
+
+        <ul>
+            <li>Tags:</li>
+            @if (Model.NewsViewModel.Taxonomy != null && Model.NewsViewModel.Taxonomy.Any())
+            {
+                var source = Model.NewsViewModel.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source).FirstOrDefault();
+                var topics = Model.NewsViewModel.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic);
+                List<CDCTaxonomyViewModel> tags = new List<CDCTaxonomyViewModel>();
+
+                if (source != null)
+                {
+                    RenderTag(source);
+                }
+                if (topics != null && topics.Any())
+                {
+                    foreach (CDCTaxonomyViewModel topic in topics)
+                    {
+                        RenderTag(topic);
+                    }
+                }
+            }
+
+            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCShareButton.cshtml", shareButton)
+        </ul>
+    }
+
+    private void RenderTag(CDCTaxonomyViewModel tag)
+    {
+        <li>@tag.Label</li>
+        if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                RenderTag(subTag);
+            }
+        }
+    }
+
+}
+

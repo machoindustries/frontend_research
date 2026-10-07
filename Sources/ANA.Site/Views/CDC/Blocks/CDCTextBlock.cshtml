@@ -1,0 +1,34 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCTextBlock
+
+@if (Model.EnableTopDivider)
+{
+    <div class="hr cell small-12 mt-1 mb-2"></div>
+}
+<div class="@Model.GetCssClass()">
+    @if (!string.IsNullOrEmpty(Model.Heading) || !string.IsNullOrEmpty(Model.HeadingAccentText))
+    {
+        <h2 class="head h@(Model.HeadingSize) color-font-dark-blue">
+            @Html.PropertyFor(i => i.Heading) <span class="accent-text">@Html.PropertyFor(i => i.HeadingAccentText)</span>
+        </h2>
+    }
+    @if (!string.IsNullOrEmpty(Model.Heading2))
+    {
+        <h3 class="subhead h@(Model.Heading2Size) color-font-light-blue">
+            @Html.PropertyFor(i => i.Heading2)
+        </h3>
+    }
+    @if (Model.Content != null)
+    {
+        <div class="copy">
+            @Html.PropertyFor(i => i.Content)
+        </div>
+    }
+    @if (Model.Buttons.HasContent())
+    {
+        <div class="links grid-x mt-1 mb-3 @(Model.EnableCenterText ? "justify-center" : "")">
+            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCButtonList.cshtml", Model.Buttons)
+        </div>
+    }
+</div>

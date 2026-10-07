@@ -1,0 +1,141 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using System.Configuration;
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+@{
+    var TableOfContentPageID = Model.Layout.TableOfContentPageID;
+    var tableOfContentPageID = 0;
+    if (@TableOfContentPageID != null)
+    {
+        tableOfContentPageID = Convert.ToInt32(TableOfContentPageID);
+    }
+}
+
+
+@if (Model != null)
+{
+    var cpContentID = Model.CurrentPage.ContentLink.ID;
+    var requestPageName = Model.CurrentPage.Name;
+    var volumelist = false;
+    <section class="pt-3 pt-md-4 mt-5">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="ojin-columns">
+
+                    @*All Details will go here e.g. Volume and Summary, Article, Columns etc.*@
+
+                    @if (Model.RelatedListingPage.Count > 0)
+                    {
+                        bool letterToEditorRenderCompleted = false;
+                        if (cpContentID != tableOfContentPageID)
+                        {
+                            List<string> docTypeGroupsSortOrder = new List<string>() {
+                                "Overview", "Article", "Column", "Letter"
+                              };
+                            var myfinalcontentlist = Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPID != tableOfContentPageID && x.CDPageHeading != null).OrderBy(r => r.CDPDocGroup);
+                            //var myfinalcontentlist = Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPName != "Table of Contents" && x.CDPageHeading != null).OrderBy(r => r.CDPDocGroup);
+                            var myContentGroup = myfinalcontentlist.GroupBy(r => new { r.CDPDocType, r.CDPDocHeading, r.CDPDocDataType }).ToList();
+                            myContentGroup = myContentGroup.OrderBy(x => docTypeGroupsSortOrder.IndexOf(x.Key.CDPDocType)).ToList();
+                            //var cnt =0;
+                            foreach (var contentgrp in myContentGroup)
+                            {
+                                if (contentgrp.Key.CDPDocType != "Letter")
+                                {
+                                    <div> <h2>@contentgrp.Key.CDPDocHeading </h2> </div>
+                                }
+                                <ul>
+                                    @foreach (var cdpdetails in myfinalcontentlist.Where(r => r.CDPDocType == contentgrp.Key.CDPDocType && r.CDPDocDataType == contentgrp.Key.CDPDocDataType && r.CDPDocHeading == contentgrp.Key.CDPDocHeading).OrderByDescending(r => r.CDPPubDate))
+                                    {
+                                        if (cdpdetails.CDPDocType == "Letter")
+                                        {
+                                            if (!letterToEditorRenderCompleted)
+                                            {
+                                                <div> <h2>@contentgrp.Key.CDPDocHeading </h2> </div>
+
+                                                foreach (var cdpParentdetails in Model.RelatedListingPage.Where(r => r.CDPDocType == "Letter" && r.LtrCategoryCDParentID > 0 && r.LtrCategoryCDChildID == 0).OrderByDescending(r => r.CDPPubDate).Distinct())
+                                                {
+                                                    <li class="grid-item">
+                                                        <div class="grid-item__content">
+                                                            <div class="grid-item__title">
+                                                                <a href="@Url.PageUrl(@cdpParentdetails.CDPPageUrl)">@cdpParentdetails.CDPPageTitle</a>
+                                                            </div>
+                                                            <div class="ojin-lettersList__editor">@(cdpParentdetails.CDPAuthors + "(" + @cdpParentdetails.CDPPubDate.Date.ToString("MMMM dd, yyyy") + ")" )</div>
+                                                        </div>
+                                                        @foreach (var cdpReplydetails in Model.RelatedListingPage.Where(r => r.LtrCategoryCDParentID == cdpParentdetails.LtrCategoryCDParentID && r.LtrCategoryCDChildID > 0).OrderByDescending(r => r.CDPPubDate))
+                                                        {
+                                                            <div class="ojin-lettersList__reply">
+                                                                <div class="grid-item__title">
+                                                                    <a href="@Url.PageUrl(@cdpReplydetails.CDPPageUrl)">@cdpReplydetails.CDPPageTitle</a>
+                                                                </div>
+                                                                <div class="ojin-lettersList__editor">@(cdpReplydetails.CDPAuthors + "(" + @cdpReplydetails.CDPPubDate.Date.ToString("MMMM dd, yyyy") + ")" ) </div>
+                                                            </div>
+                                                        }
+
+                                                    </li>
+                                                    letterToEditorRenderCompleted = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // Skip this letter, It is already rendered.
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <li class="grid-item twoCol">
+                                                @if (cdpdetails.ShowPageImage == true)
+                                                {
+                                                    if (cdpdetails.CDPDocHeading == "Articles" || cdpdetails.CDPDocHeading == "Columns")
+                                                    {
+                                                        <div class="grid-item__image order-md-1">
+                                                            <img src="@Url.ContentUrl(@cdpdetails.CDPPageImage)" alt="" class="lazyload" />
+                                                        </div>
+                                                    }
+                                                }
+                                                <div class="grid-item__content">
+                                                    <div class="grid-item__title">
+                                                        <p><a href="@Url.PageUrl(@cdpdetails.CDPPageUrl)">@cdpdetails.CDPPageTitle</a></p>
+                                                    </div>
+                                                    <div class="ojin-columns__editor" style="@(@cdpdetails.ShowAuthors == false ? "display:none" : "display:block")">@cdpdetails.CDPAuthors</div>
+                                                    @if (cdpdetails.CDPDocHeading == "Columns")
+                                                    {
+                                                        @*<div class="ojin-shareThis">  commented dated on 24-Mar-22(10620)
+                                                                <div class="ojin-share">
+                                                                    <a href="#"><img src="~/assets/Ojin/img/share-icon.svg" alt="share icon" class="lazyload" /></a>
+                                                                </div>
+                                                            </div>*@
+                                                    }
+                                                    <div class="ojin-columns__date" style="@(@cdpdetails.ShowPubDate == false ? "display:none" : "display:block")"> @cdpdetails.CDPPubDate.Date.ToString("MMMM dd, yyyy") </div>
+                                                </div>
+                                            </li>
+                                        }
+                                        //cnt++;
+                                        volumelist = true;
+                                    }
+                                </ul>
+
+                            }
+                        }
+
+                    }
+
+
+                </div>
+            </div>
+            @*Risplaying OJIN RightRail*@
+            @if (Model.RightRail != null && volumelist)
+            {
+                <div class="col-lg-3 ojin-advContainer">
+                    @{ await Html.RenderPartialAsync("Blocks/OJINTopicCategoryListingPageRightRail", Model.RightRail); }
+                </div>
+            }
+
+
+        </div>
+    </section>
+}
+
+

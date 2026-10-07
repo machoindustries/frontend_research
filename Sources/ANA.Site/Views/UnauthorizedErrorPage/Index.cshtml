@@ -1,0 +1,34 @@
+﻿@using ANA.Site.Business.Interfaces
+
+@model ANA.Site.Models.ViewModels.UnauthorizedErrorViewModel
+
+@inject IHttpContextAccessor _httpContextAccessor
+
+@if (!ContentHelper.PageIsInEditMode() && _httpContextAccessor.HttpContext != null)
+{
+    _httpContextAccessor.HttpContext.Response.StatusCode = 401;
+}
+
+@{
+    await Html.RenderPartialAsync("HeroArea", Model.CurrentPage as IHero);
+}
+
+@if (Model.CurrentPage.ShowIntro)
+{
+    <div class="grid-constraint b-vst--medium b-vsb--large">
+        <div class="grid grid--center">
+            <div class="grid__item one-whole">
+                <h1 class="c-container-block__heading c-container-block__heading--lines">
+                    <span>@Html.PropertyFor(x => x.CurrentPage.Heading)</span>
+                </h1>
+            </div>
+            <div class="c-container-block__intro grid__item one-whole medium--eight-twelfths">
+                <div class="e-richtext">
+                    @Html.PropertyFor(x => x.CurrentPage.IntroText)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@Html.PropertyFor(x => x.CurrentPage.Blocks, new { CssClass = "content-area" })

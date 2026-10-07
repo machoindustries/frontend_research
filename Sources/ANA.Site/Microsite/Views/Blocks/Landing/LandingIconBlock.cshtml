@@ -1,0 +1,56 @@
+﻿@using ANA.Site.Microsite.Models.Blocks.Landing
+@using ANA.Site.Models.Media
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model LandingIconBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-icon grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        @if (Model.IconStructure == IconStructure.Vertical)
+        {
+            <div class="cell small-12">
+                @{
+                    RenderIcon("ana-icon-two-col--icon");
+                }
+                <div class="ana-icon-three-col--content">
+                    @Html.PropertyFor(m => m.Text)
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="cell small-12 medium-4">
+                @{
+                    RenderIcon("ana-icon-three-col--icon");
+                }
+            </div>
+            <div class="cell small-12 medium-8">
+                <div class="ana-icon-two-col--content">
+                    @Html.PropertyFor(m => m.Text)
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+void RenderIcon(string cssclass)
+{
+    if (Model.Icon != null)
+    {
+        var coverImage = Model.Icon.Get<ImageFile>();
+
+            if (Model.IconLink != null)
+            {
+                @:<a href="@Model.IconLink.GetFriendlyUrl()">
+            }
+
+            <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="@cssclass" />
+
+        if (Model.IconLink != null)
+        {
+            @:</a>
+        }
+    }
+}
+}

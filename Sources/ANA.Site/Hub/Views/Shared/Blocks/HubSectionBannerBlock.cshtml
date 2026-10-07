@@ -1,0 +1,10 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubSectionBannerBlockViewModel
+
+<div class="becoming-container">
+    <h1 class="becoming-title animate-text">@Html.PropertyFor(m => m.Title)</h1>
+    <div class="becoming-label">
+        @Html.PropertyFor(m => m.Description)
+    </div>
+    <img src="@Html.PropertyFor(m => m.ImageUrl)" alt="@Html.PropertyFor(m => m.ImageAltText)" class="becoming-image" />
+</div>

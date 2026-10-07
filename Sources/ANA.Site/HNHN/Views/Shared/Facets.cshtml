@@ -1,0 +1,38 @@
+﻿@using ANA_HNHN.Models.Enums
+@using ANA_HNHN.Models.ViewModels
+@using ANA_HNHN.Services.Search.Models
+@model IEnumerable<ANA_HNHN.Services.Search.Models.FacetModel>
+@{
+    var criteria = (SearchCriteriaModel)ViewData["criteria"];
+    var categoryIndexer = 0;
+}
+
+<div class="d-lg-flex justify-content-between align-items-center mb-4">
+    <h3 class="search__filters-heading mb-3 mb-lg-0">@Html.Translate("/common/filters")</h3>
+    <a href="javascript:void(0)" id="clearAll" class="small" role="button">Clear All</a>
+</div>
+
+<a href="javascript:void(0)" class="search__filters-close d-block d-lg-none" aria-label="Close Search Facets"></a>
+
+@if (Model != null)
+{
+    foreach (var facet in Model)
+    {
+        if (facet != null)
+        {
+            <div class="facet-group">
+                <h3><a class="search__category-title" data-bs-toggle="collapse" href="#search__category-list-@categoryIndexer" role="button" aria-expanded="false" aria-controls="search__category-list-@categoryIndexer">@facet.Name</a></h3>
+                <div class="collapse show" id="search__category-list-@categoryIndexer">
+                    @foreach (var facetValue in facet.Values)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input category-filter" type="radio" name="search__category-item-@categoryIndexer" @(facetValue.Selected ? "checked" : string.Empty) value="@facetValue.Value" id="facet_@facetValue.Value">
+                            <label class="form-check-label" for="facet_@facetValue.Value">@facetValue.Text</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            categoryIndexer++;
+        }
+    }
+}

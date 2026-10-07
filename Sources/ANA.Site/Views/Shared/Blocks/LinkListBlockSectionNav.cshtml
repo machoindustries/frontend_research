@@ -1,0 +1,34 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.LinkListBlock
+
+<nav class="c-section-nav is--open" data-require="./src/views/section-nav-view">
+
+    <div class="grid-constraint">
+
+        <div class="grid">
+
+            <div class="grid__item one-whole">
+
+                @if (!string.IsNullOrEmpty(Model.Heading))
+                {
+                    if (Model.HeadingLink != null)
+                    {
+                        <h2 class="c-section-nav__title" data-dropdown-select>
+                            <a href="@Model.HeadingLink.GetFriendlyUrl()" target="@Model.TargetFrame">@Model.Heading</a>
+                        </h2>
+                    }
+                    else
+                    {
+                        <h2 class="c-section-nav__title" data-dropdown-select>@Model.Heading</h2>
+                    }
+                }
+
+                @Html.DisplayFor(x => Model.Links, "LinkItemCollectionSectionNav")
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

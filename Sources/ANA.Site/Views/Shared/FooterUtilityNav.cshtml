@@ -1,0 +1,39 @@
+﻿@using ANA.Site.Models.Pages
+@using EPiServer
+@using Geta.Optimizely.Extensions;
+@using StartPage = ANA.Site.Models.Pages.StartPage
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@if (Model != null && Model.Layout.FooterUtilityNavigation.Count > 0)
+{
+    <div class="c-footer__section c-footer__section--dark">
+        <section class="c-footer__content grid grid--full">
+            <div class="c-footer__content-item grid__item one-whole large--one-quarter">
+                <nav class="c-footer__entities-nav">
+                    <span class="c-footer__entities-nav-link">
+                        <img class="c-footer__entities-nav-logo" src="/assets/img/logos/ana-lockup-white.png" alt="ANA Logos">
+                    </span>
+                </nav>
+            </div>
+            <div class="c-footer__content-item grid__item one-whole large--one-half push--large--one-quarter">
+                
+                @if (!string.IsNullOrEmpty(Model.Layout.Copyright))
+                {
+                    <aside class="c-footer__copyright">
+                        @Model.Layout.Copyright
+                    </aside>
+                }
+                <nav class="c-footer__utility-nav">
+                    <ul class="c-footer__utility-nav-list">
+                        @foreach (var link in Model.Layout.FooterUtilityNavigation)
+                        {
+                            <li class="c-footer__utility-nav-item">
+                                <a class="c-footer__utility-nav-link" href="@(new Url(link.Href).GetFriendlyUrl())" target="@link.Target" data-footer-nav-link data-gtm-event-label="@link.Text">@link.Text</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </section>
+    </div>
+}

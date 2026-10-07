@@ -1,0 +1,220 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels
+@using ANA.Site.Business.Helpers
+@using Geta.Optimizely.Extensions
+@using System.Diagnostics
+@model CheckoutViewModel
+@inject IHttpContextAccessor _httpContextAccessor
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    var settingsPage = SettingsHelper.GetSettings();
+
+    var TACPageId = settingsPage.TACPageReference.ID;
+}
+
+<script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+
+<div data-require="./src/views/checkout-page-view" data-placeorder-error-message="@Html.Translate("/CartCheckout/Errors/PlaceOrderFailure")" data-placeorder-validation-lightbox-heading="@Html.Translate("/CartCheckout/Errors/ValidationLightboxHeading")">
+
+    <div class="e-notifications" data-require="./src/views/notifications-view">
+
+        <div class="grid-constraint">
+            <div class="grid">
+                <div class="grid__item one-whole">
+                    <div class="e-notifications__items" style="font-weight:bold;color:#000000;" data-notifications></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @{
+        await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+            {
+                AdditionalCssClass = "b-vst--medium b-vsb--small",
+                Heading = Model.CurrentPage.Heading,
+                HeadingAdditionalCssClass = "c-container-block__heading--large"
+            });
+    }
+
+    <div class="grid-constraint b-vsb--large">
+        <div class="grid">
+            <div class="grid__item one-whole">
+
+                @using (Html.BeginForm("Purchase", "Checkout", FormMethod.Post, new { @class = "c-checkout containerblock__content grid grid--full e-form", data_require = "./src/views/form-view", novalidate = "novalidate", data_checkout_form = "", data_ajax_form = "" }))
+                {
+                    <div class="grid">
+                        <div class="grid__item one-whole large--two-thirds">
+
+                            <div class="c-checkout__section">
+                                <h2 class="c-checkout__section-title">@Html.Translate("/CartCheckout/YourDetails/Heading")</h2>
+                                <div class="c-checkout__details-item">@Model.UserProfile.FirstName @Model.UserProfile.LastName</div>
+                                <div class="c-checkout__details-item">@Model.UserProfile.Email</div>
+                            </div>
+                            @{
+                                await Html.RenderPartialAsync("_BillingAddress", Model);
+                            }
+                            @{
+                                await Html.RenderPartialAsync("_ShippingAddress", Model);
+                            }
+                            @{
+                                await Html.RenderPartialAsync("_ShippingMethods", Model);
+                            }
+                            @if (Model.IsEFT)
+                            {
+                                { await Html.RenderPartialAsync("_EFTPayment", Model); }
+                            }
+                            else
+                            {
+                                { await Html.RenderPartialAsync("_Payment", Model); }
+                            }
+
+                        </div>
+                        <div class="grid__item one-whole large--one-third">
+
+                            @{
+                                await Html.RenderPartialAsync("_Summary", Model);
+                            }
+
+                            <div class="c-checkout__section">
+                                <label class="c-checkout__accept-terms e-form__label e-form__label--checkbox" for="accept-terms" data-formfield="">
+                                    <span class="e-form__label-text">@Html.Raw(string.Format(Html.Translate("/CartCheckout/CheckoutDisclaimer").ToString(), Model.CurrentPage.TermsUrl != null ? Model.CurrentPage.TermsUrl.GetFriendlyUrl() : "#"))</span>
+                                    <input type="checkbox" class="e-form__input e-form__input--checkbox" id="accept-terms" name="sgc" data-validate="" data-validate-required="" data-checkout-agree-terms>
+                                    <span class="e-form__fake-checkbox"></span>
+                                </label>
+                                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="sgc"></div>
+                            </div>
+                            <div class="c-checkout__section">
+                                <div class="g-recaptcha" data-sitekey="6LfQGAUbAAAAAFGSzA6jBMIhLwe9LWwKDoE5riqB" data-validate="" data-validate-required="" style="margin-left:26%;"> </div>
+                                <div class="c-checkout__place-order-error" data-checkout-recaptcha-invalid-error>
+                                    @Html.Translate("/CartCheckout/RecaptchaInvalidError")
+                                </div>
+                            </div>
+                            <div class="c-checkout__section">
+                                <input class="e-button e-button--submit e-button--blue e-button--full e-button" id="btnCheckout" type="submit" value="@Html.Translate("/CartCheckout/Labels/PlaceOrder")" data-checkout-place-order>
+                                <div class="c-checkout__place-order-error" data-checkout-shipping-invalid-error>
+                                    @Html.Translate("/CartCheckout/ShippingInvalidError")
+                                </div>
+                                <div class="c-checkout__place-order-error" data-checkout-generic-error>
+                                    @Html.Translate("/CartCheckout/UnablePlaceOrderError")
+                                </div>
+                                <div class="c-checkout__place-order-error" data-checkout-order-limit-exceeded>
+                                </div>
+                                <div class="c-checkout__contact-info">
+                                    @Html.Translate("/CartCheckout/BulkPurchase") <a class="c-checkout__contact-info-link" href="mailto:@Html.Translate("/CartCheckout/AnaSalesEmail")">@Html.Translate("/CartCheckout/AnaSalesEmail")</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+                <div class="e-lightbox-source">
+                    @Html.EditorFor(m => m.LightboxAddress)
+                    <div data-lightbox-src="securityInfo">
+                        <h3>@Html.Translate("/CartCheckout/CvvHelpHeading")</h3>
+                        <p>
+                            @Html.Translate("/CartCheckout/CvvHelpMessage") <a href="https://www.cvvnumber.com/" target="_blank">@Html.Translate("/CartCheckout/Labels/ReadMore")</a>
+                        </p>
+                        <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-modal-close="">@Html.Translate("/CartCheckout/Labels/Ok")</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        function checkRecaptcha() {
+            var response = grecaptcha.getResponse();
+            if (response.length == 0) {
+                //reCaptcha not verified
+                alert("no pass");
+            }
+            else {
+                //reCaptch verified
+                alert("pass");
+            }
+        }
+
+        // implement on the backend
+        function backend_API_challenge() {
+            var response = grecaptcha.getResponse();
+            $.ajax({
+                type: "POST",
+                url: 'https://www.google.com/recaptcha/api/siteverify',
+                data: { "secret": "(your-secret-key)", "response": response, "remoteip": "localhost" },
+                contentType: 'application/x-www-form-urlencoded',
+                success: function (data) { console.log(data); }
+            });
+        }
+    });
+</script>
+
+@if (_httpContextAccessor.HttpContext?.Session.GetInt32("SeenTAC") != null && _httpContextAccessor.HttpContext?.Session.GetInt32("SeenTAC") == 0)
+{
+    // Increment the session value for "SeenTAC"
+    int seenTAC = _httpContextAccessor.HttpContext.Session.GetInt32("SeenTAC").Value + 1;
+    _httpContextAccessor.HttpContext.Session.SetInt32("SeenTAC", seenTAC);
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $.getJSON('/userdata/gettachtml?tacpageid=' + @TACPageId, function (data) {
+                var source = data;
+
+                $.magnificPopup.open({
+                    items: {
+                        src: source
+                    },
+                    type: 'inline',
+                    modal: 'true',
+
+                    callbacks: {
+                        open: function () {
+                            var chackoutActions = [
+                                '<div><a href="#" id="magnific-close" class="e-button--blue">I accept the Terms &amp; Conditions</a></div>',
+                                '<div><a href="#" id="magnific-print" class="e-button--blue">Print</a></div>'
+                            ].join('');
+
+                            $('.mfp-container').before(chackoutActions);
+
+                            $("#magnific-print").click(function () {
+                                if (!!window.MSInputMethodContext && !!document.documentMode /* IE */) {
+                                    var divToPrint = document.getElementsByClassName('mfp-content')[0];
+                                    var newWin = window.open();
+                                    newWin.document.write(divToPrint.innerHTML);
+                                    newWin.document.close();
+                                    newWin.print();
+                                    newWin.close();
+                                }
+                                else {
+                                    var w = window.open('');
+
+                                    w.document.write($('.mfp-content').html());
+                                    w.print();
+                                    w.close();
+                                }
+
+                            });
+
+                            $("#magnific-close").click(function () {
+                                $('#accept-terms').prop('checked', true);
+                                $('#magnific-close').remove();
+                                $.magnificPopup.close();
+                            });
+
+                        }
+                    }
+
+                });
+
+            })
+
+        });
+    </script>
+}

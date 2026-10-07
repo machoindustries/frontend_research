@@ -1,0 +1,268 @@
+﻿@using System.Configuration
+@using System.Web
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.OJIN
+@using ANA.Site.Settings
+@using Geta.Optimizely.Extensions;
+@using Geta.Net.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+@inject IAppSettings _appSettings
+
+    <div class="c-header__grid-item c-header__nav-container c-header__nav-container--primary">
+        <a href="@Model.Layout.Logo.Link" class="e-site-logo">
+            <img class="e-site-logo__img" src="@Model.Layout.Logo.ImageUrl" alt="@Model.Layout.Logo.Alt" width="153" height="40" />
+        </a>
+        @if (!Model.Layout.IsHeaderSimpleVersion)
+        {
+            <a href="/sitemap/" class="e-nav-primary__button" data-nav-button>
+                <span class="e-nav-primary__menu-icon">
+                    <span class="sr-only">Open navigation</span>
+                </span>
+            </a>
+
+            <div class="e-nav-primary__search" data-require="./src/views/suggested-results-view" data-web-service="/web-api/search-box/search-suggestions">
+
+                <form class="e-header-search e-form" action="/search/" method="GET" data-require="./src/views/header-search-view">
+
+                    <button type="button" class="e-header-search__btn-trigger" data-search-trigger>
+                        <span class="e-header-search__btn-trigger-text">Open search</span>
+                    </button>
+
+                    <div class="e-header-search__controls grid" data-search-panel>
+
+                        <div class="e-header-search__controls-wrap" data-search-controls-wrapper>
+
+                            <div class="grid__item e-header-search__label-box">
+                                <label class="e-header-search__label" for="header-search-input">Search</label>
+                            </div>
+
+                            <div class="e-header-search__search-box grid__item one-whole">
+                                <div class="e-search-box e-search-box--header" data-require="./src/views/search-box-view" data-search-endpoint="/web-api/search-box/search-suggestions">
+                                    <input class="e-search-box__input" type="text" id="header-search-input" name="q" autocomplete="off" data-search-input />
+
+                                    <span class="e-search-box__fake-placeholder">
+                                        <span class="e-search-box__fake-placeholder-text">Search</span>
+                                    </span>
+
+                                    <button type="submit" class="e-search-box__btn-search">
+                                        <span class="e-search-box__btn-search-text">Search</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="e-header-search__results grid__item one-whole" data-search-results></div>
+                        </div>
+
+                        <div class="e-suggested-results">
+                            <div class="e-suggested-results__list section no-results" data-suggested-results>
+                                <div class="heading">Suggested</div>
+
+                                @* --TODO: data-list-type controlled by JSON/ options are "simple", "icon", "thumbnail" or "column"-- *@
+                                <ul class="list grid" data-list-type="simple" data-suggested-results-list>
+                                    @* --TODO: bolded text controlled with EM tag-- *@
+                                    @* --populated with JS-- *@
+                                @*<li class="grid__item one-whole">
+                                    <a href="#"><em>Cert</em>ification Requirements</a>
+                                </li>
+                                <li class="grid__item one-whole">
+                                    <a href="#"><em>Cert</em>ification Renewals</a>
+                                </li>
+                                <li class="grid__item one-whole">
+                                    <a href="#"><em>Cert</em>ification Policies</a>
+                                </li>
+                                <li class="grid__item one-whole">
+                                    <a href="#"><em>Cert</em>ification Test Prep</a>
+                                </li>*@
+
+                                </ul>
+                            </div>
+
+                            <div class="e-suggested-results__products section no-results" data-suggested-products>
+                                <div class="grid">
+                                    <div class="grid__item medium--one-half no-results" data-suggested-products-one>
+                                        <div class="heading" data-suggested-products-one-heading>
+                                            @* --populated with JS-- *@
+                                        </div>
+
+                                        @* --TODO: list style controlled with data-list-type attribute/options are "icon" or "thumbnail".
+                                        You can use "icon" as default if none specified.-- *@
+                                        <ul class="list" data-list-type="icon" data-suggested-products-one-list>
+
+                                            @* --TODO: icon controlled with class on link/options are "online", "webinar" or "workshop".
+                                            You can use "general" as default if no match -- *@
+                                            @* --populated with JS-- *@
+                                            @*<li>
+                                                <a href="#" class="online">
+                                                    <div class="icon"></div>
+                                                    <div class="info">
+                                                        <div class="course-category">Online Course</div>
+                                                        <div class="course-title">Adult-Gerontology Acute Care Nurse and this title is really long</div>
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="#" class="webinar">
+                                                    <div class="icon"></div>
+                                                    <div class="info">
+                                                        <div class="course-category">Webinar</div>
+                                                        <div class="course-title">Psychiatric-Mental Health Nurse...</div>
+                                                    </div>
+                                                </a>
+                                            </li>*@
+
+                                            </ul>
+                                        </div>
+
+                                    <div class="grid__item medium--one-half no-results" data-suggested-products-two>
+                                        <div class="heading" data-suggested-products-two-heading>
+                                            @* --populated with JS-- *@
+                                        </div>
+
+                                        <ul class="list" data-list-type="thumbnail" data-suggested-products-two-list>
+                                            @* --TODO: tag color controlled by class on "e-tag"/
+                                            options are "e-tag--orange", "e-tag--white" or "e-tag--blue"-- *@
+                                            @* --populated with JS-- *@
+                                        @*<li>
+                                            <a href="#">
+                                                <div class="thumbnail">
+                                                    <img src="../assets/img/content/7-steps-book.jpg" alt="7 Steps to Organizational">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="book-title">7 Steps to Organizational Leadership and more info</div>
+                                                    <div class="book-desc">Secondary Information</div>
+                                                </div>
+                                                <div class="tag">
+                                                    <div class="e-tag e-tag--orange">ANA</div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">
+                                                <div class="thumbnail">
+                                                    <img src="../assets/img/content/magnet-hospitals-book.jpg" alt="Magnet Hospitals Revisited">
+                                                </div>
+                                                <div class="info">
+                                                    <div class="book-title">Magnet Hospitals Revisited: Attr...</div>
+                                                    <div class="book-desc">Secondary Information</div>
+                                                </div>
+                                                <div class="tag">
+                                                    <div class="e-tag e-tag--blue">ANCC</div>
+                                                </div>
+                                            </a>
+                                        </li>*@
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="e-suggested-results__popular section no-results" data-suggested-popular>
+                                <div class="heading">Popular Searches</div>
+
+                                <ul class="list grid" data-list-type="column" data-suggested-popular-list>
+
+                                    @* --populated with JS-- *@
+                                    @*<li class="grid__item medium--one-third">
+                                        <a href="#">Primum igitur, quid est et dolore At magnum periculum adiit</a>
+                                    </li>
+                                    <li class="grid__item medium--one-third">
+                                        <a href="#">Sunt autem nusquam hoc tenebo Torquem detraxit hosti et</a>
+                                    </li>
+                                    <li class="grid__item medium--one-third">
+                                        <a href="#">Primum igitur, quid est et dolore At magnum periculum adiit</a>
+                                    </li>*@
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <nav class="e-nav-primary" data-require="./src/views/primary-nav-view">
+                <div class="e-nav-primary__wrap" data-primary-nav-wrap>
+
+                    <ul class="e-nav-primary__list e-nav-primary__list--primary" data-primary-nav-list>
+
+                        <li class="e-nav-primary__item e-nav-primary__item--home is--current" data-primary-nav-item data-primary-nav-root data-nav-level="0">
+                            <a href="@Model.Layout.StartPage.GetFriendlyUrl()" class="e-nav-primary__link" data-primary-nav-trigger data-primary-nav-link data-gtm-event-action="Home" data-gtm-event-label="Home">
+                                <span class="e-nav-primary__link-text">@Html.Translate("/header/home")</span>
+                            </a>
+                        </li>
+
+                        @{
+                            Html.RenderFilteredContentArea(Model.Layout.SettingsPage.PrimaryNavigation, ANA.Site.Global.ContentAreaTags.Navigation);
+                        }
+
+                        @if (Model.Layout.SettingsPage.AccountPageReference != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="e-nav-primary__item" data-primary-nav-item data-nav-level="1">
+                                <a href="@Model.Layout.SettingsPage.AccountPageReference.GetUri().ToString()" class="e-nav-primary__link e-nav-primary__link--my-account">@Html.Translate("/header/myaccount")</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var logOutUrl = $"/Logout?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true, true) + "?act=logout")}";
+                            <li class="e-nav-primary__item" data-primary-nav-item data-nav-level="1">
+                                <a class="e-nav-primary__link e-nav-primary__link--my-account"
+                                   href="@logOutUrl">  
+                                   @Html.Translate("/header/logout")
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                        var loginUrl = $"{_appSettings.SSOUrl}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true, true))}";
+                        <li class="e-nav-primary__item" data-primary-nav-item data-nav-level="1">
+                                <a class="e-nav-primary__link e-nav-primary__link--my-account"
+                                   href="@loginUrl">
+                                    @Html.Translate("/header/login")
+                                </a>
+                            </li>
+                        }
+
+                        @if (!Model.Layout.CtaText.IsNullOrEmpty() && Model.Layout.CtaUrl != null)
+                        {
+                            <li class="e-nav-primary__item">
+                                <a class="e-header-tools__link e-header-tools__link--cta e-header-tools__link--cta-mobile" href="@Url.ContentUrl(Model.Layout.CtaUrl)" target="@Model.Layout.CtaTarget" title="@Model.Layout.CtaText">
+                                    <span class="e-header-tools__link-label">@Model.Layout.CtaText</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+            <nav class="e-header-tools e-header-tools--mobile" data-require="./src/views/header-tools-view">
+                <ul class="e-header-tools__list">
+                    <li class="e-header-tools__item">
+                        <a class="e-header-tools__link e-header-tools__link--collapse e-header-tools__link--cart" href="@Model.Layout.SettingsPage.CartPageReference.GetUri().ToString()" title="@Model.Layout.CartItemCount" data-require="./src/views/mini-cart-view" data-header-tools-cta data-gtm-event-label="Cart">
+                            <span class="e-header-tools__cart-item-count" data-cart data-mini-cart-item-count>@Model.Layout.CartItemCount</span>
+                            <span class="sr-only">Cart</span>
+                        </a>
+                    </li>
+                    @if (Model.Layout.SettingsPage.AccountPageReference != null)
+                    {
+                        <li class="e-header-tools__item e-header-tools__item--account">
+                            <a class="e-header-tools__link e-header-tools__link--account" href="@Model.Layout.SettingsPage.AccountPageReference.GetUri().ToString()" title="My account" data-header-tools-cta>
+                                <span class="e-header-tools__link-label">My account</span>
+                            </a>
+                        </li>
+                    }
+                    @if (!Model.Layout.CtaText.IsNullOrEmpty() && Model.Layout.CtaUrl != null)
+                    {
+                        <li class="e-header-tools__item e-header-tools__item--cta">
+                            <a class="e-header-tools__link e-header-tools__link--cta" href="@Url.ContentUrl(Model.Layout.CtaUrl)" target="@Model.Layout.CtaTarget" title="@Model.Layout.CtaText" data-header-tools-cta>
+                                <span class="e-header-tools__link-label">@Model.Layout.CtaText</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>

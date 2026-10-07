@@ -1,0 +1,22 @@
+{{#each cta-banner.cta-banner-1}}
+<section class="cta-banner mt-2">
+  <img class="bkgr-img no-padding" src="{{background-image}}" alt1={{cta-1-alt}}>
+  <div class="overlay-content">
+    <!-- <img class="overlay-img" src="{{cta-overlay}}" alt2={{cta-2-alt}}> -->
+    <div class="logo">
+      <img src="./assets/img/logos/ANA-Project First Line Logo color no shield.svg" alt="Project FirstLine Logo" />
+      <img src="./assets/img/logos/ANA-Project First Line Logo color no shield.svg" alt="Project FirstLine Logo" />
+    </div>
+    <p>{{content}}</p>
+    <div class="cta-btn-container">
+      <a class="button-cta" href="#" data-open="modal-registration">
+        <div class="cta">
+          <div class="label">
+            {{button-cta}}
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+{{/each}}

@@ -1,0 +1,31 @@
+﻿@* 
+TODO, Compile time error on V11 code. TODO Upgrade    
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@model List<ANA.Site.Models.ViewModels.Ojin.OJINRelatedPageViewModel>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    var i = 0;
+    
+    foreach (var category in Model)
+    {
+        
+        if (i == 0)
+        {
+            <div class="ojin-advBlock pb-md-5">
+                <a href="@category.Name">              
+                </a>
+                <a href="@category.Summary">              
+                </a>
+            </div> 
+        }
+        else
+        {
+            
+        }
+        i= i+1;
+      }
+  } *@

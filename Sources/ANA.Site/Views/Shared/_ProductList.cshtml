@@ -1,0 +1,9 @@
+﻿@model IEnumerable<ANA.Site.Models.ViewModels.VariantsViewModel>
+<div class="product-row jsSearch container-fluid">
+    <div class="row">
+        @foreach (var productModel in Model)
+        {
+            await Html.RenderPartialAsync("_ProductTile", productModel);
+        }
+    </div>
+</div>

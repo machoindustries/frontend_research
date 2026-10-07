@@ -1,0 +1,38 @@
+﻿@using ANA.Site.Business.Helpers
+@using ANA.Site.Microsite.Models.Blocks.Landing
+@using EPiServer.Web.Mvc.Html
+
+@model LandingByTheNumberBlock
+
+<div class="@Model.GetWrapperClasses()" data-module-core="by-the-number">
+    <div class="ana-by-the-numbers grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="ana-by-the-numbers--block">
+            @if (Model.FirstNumber > 0 || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-by-the-numbers--first-num"
+                     data-number="@Model.FirstNumber" data-effect="@Model.FirstNumberEffect.ToString()">
+                    @string.Format("{0:#,0}", Model.FirstNumber)
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.FirstText) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-by-the-numbers--first-text">
+                    @Html.PropertyFor(m => m.FirstText)
+                </div>
+            }
+            @if (Model.SecondNumber > 0 || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-by-the-numbers--second-num"
+                     data-number="@Model.SecondNumber" data-effect="@Model.SecondNumberEffect.ToString()">
+                    @string.Format("{0:#,0}", Model.SecondNumber)
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.SecondText) || ContentHelper.PageIsInEditMode())
+            {
+                <div class="ana-by-the-numbers--second-text">
+                    @string.Format("{0:#,0}", Model.SecondText)
+                </div>
+            }
+        </div>
+    </div>
+</div>

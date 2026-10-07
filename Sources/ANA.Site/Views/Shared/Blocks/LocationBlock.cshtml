@@ -1,0 +1,13 @@
+﻿@model ANA.Site.Models.Blocks.LocationBlock
+
+<div class="c-address">
+    <ul class="c-address__address">
+        <li class="c-address__address-item" data-address-output-address-1="">@Html.PropertyFor(m => m.AddressLine1)</li>
+        <li class="c-address__address-item" data-address-output-address-2="">@Html.PropertyFor(m => m.AddressLine2)</li>
+        <li class="c-address__address-item" data-address-output-address-3="">@Html.PropertyFor(m => m.AddressLine3)</li>
+        <li class="c-address__address-item" data-address-output-city="">@Html.PropertyFor(m => m.City)</li>
+        <li class="c-address__address-item" data-address-output-state="">@Html.PropertyFor(m => m.State)</li>
+        <li class="c-address__address-item" data-address-output-zipcode="">@Html.PropertyFor(x => x.ZipCode)</li>
+        <li class="c-address__address-item" data-address-output-country="">@Html.PropertyFor(m => m.Country)</li>
+    </ul>
+</div>

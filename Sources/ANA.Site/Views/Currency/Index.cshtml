@@ -1,0 +1,5 @@
+﻿@model ANA.Site.Models.ViewModels.CurrencyViewModel
+@using (Html.BeginForm("Set", "Currency"))
+{
+    @Html.DropDownListFor(x => x.CurrencyCode, Model.Currencies, new { @class = "form-control input-sm jsCurrencySelector" })
+}

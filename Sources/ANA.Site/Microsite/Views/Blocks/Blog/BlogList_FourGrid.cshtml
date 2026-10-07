@@ -1,0 +1,82 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Blog.BlogListViewModel
+
+@if (!string.IsNullOrEmpty(Model.CurrentContent.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.CurrentContent.Heading)
+    </h2>
+}
+<div class="grid-x">
+    <ul class="cell ana-resources small-10 small-offset-1 medium-offset-1 grid-x">
+        @foreach (var blog in Model.BlogPages)
+        {
+            if (blog.EmbededVideo != null)
+            {
+                var video = blog.EmbededVideo.Get<EmbededVideoBlock>();
+                <div data-module-dynamic="modal-video-player" class="modal-video-player modal-video-player__hide">
+                    <div class="modal-video-player__close-button">
+                        <span>X</span>
+                    </div>
+                    <iframe src="@video.EmbededUrl"></iframe>
+                </div>
+            }
+    <li class="cell small-12 medium-6  large-3 ana-resources__card">
+        <a href="@blog.GetFriendlyUrl()">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        @if (blog.ListingImage != null)
+                        {
+                            var coverImage = blog.ListingImage.Get<ImageFile>();
+                            <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="ana-resources__image" />
+                        }
+                    </div>
+                    @if (blog.EmbededVideo != null)
+                    {
+                        <div class="modal-video-player__play-button-container">
+                            <div class="modal-video-player__play-button">
+                                <span>Play</span>
+                            </div>
+                        </div>
+                    }
+                    <div class="flip-card-back">
+                        <div class="ana-resources__text-container">
+                            @if (blog.ListingImageBack!= null)
+                            {
+                                var coverImage = blog.ListingImageBack.Get<ImageFile>();
+                                <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="ana-resources__image" />
+                            }
+                            @*@if (blog.FilterCategories != null && blog.FilterCategories.Any())
+        {
+            <h4 class="ana-resources__category">
+                @string.Join(", ", blog.FilterCategories)
+            </h4>
+        }
+        <h4 class="ana-resources__lead-in">@blog.Heading</h4>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+</li>
+        }
+    </ul>
+    <div class="cell small-10 small-offset-1 medium-offset-1 grid-x">
+
+        @foreach (var blog in Model.BlogPages)
+        {
+            <div class="small-12 medium-6 large-3 four-grid-introtext-padding">
+                <div>
+                    @Html.PropertyFor(i => blog.IntroText)
+                </div>
+            </div>
+        }
+    </div>
+        
+</div>

@@ -1,0 +1,8 @@
+---
+cta-banner-1:
+  - background-image: '/assets/img/nurseholdingtablet.jpg'
+    cta-1-alt: "background"
+    cta-overlay: "./assets/img/logos/ANA-Project First Line Logo color no shield.svg"
+    cta-2-alt: "overlay"
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Aliquam at porttitor sem. Aliquam erat volutpat. Donec placerat nisi magna, et faucibus arcu condimentum sed."
+    button-cta: "Stay Updated"

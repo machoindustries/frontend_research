@@ -1,0 +1,82 @@
+
+  <article  class="card small-12 medium-6 large-4 grid-x white-space media-content-social-links">
+    <!-- <div class="card-image cell small-12">  -->
+    <a href="{{cardUrl}}" class="img-content-container no-style-link">
+      <div class="card-img-container">
+        <img alt="{{alt}}" class="card-img" src="{{image}}">
+        <div class="card-img-overlay"></div>
+
+        <!-- if there is a video -->
+        <button data-open="video-modal-" class="button card-icon-container">
+          <img class="card-link-icon" src="/assets/img/youtube-1.svg" data-open="resource-modal" data-embeded-content="<iframe%20width=&quot;560&quot;%20height=&quot;315&quot;%20src=&quot;https://www.youtube.com/embed/q8f1gYIcuf4&quot;%20frameborder=&quot;0&quot;%20allow=&quot;accelerometer;%20autoplay;%20clipboard-write;%20encrypted-media;%20gyroscope;%20picture-in-picture&quot;%20allowfullscreen></iframe>" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+        </button>
+        <div class="reveal open-modal" id="video-modal-" data-reveal data-reset-on-close="true"
+          data-animation-in="fade-in" data-animation-out="fade-out">
+          <iframe class="open-modal__video" allowfullscreen src="{{iconUrl}}">
+          </iframe>
+          <button class="close-button close-button-custom" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- if download link -->
+  
+        <!-- <a href="{{iconUrl}}" download data-open="video-modal-" class=" resource-icon-container">
+        <img class='resource-link-icon' src="" alt="Icon">
+      </a>   -->
+
+        <!-- if external link -->
+        <!-- <a href="{{iconUrl}}" class=" resource-icon-container">
+          <img class='resource-link-icon' src="" alt="Icond">
+        </a>  -->
+      </div>
+      <!-- </div>  -->
+
+      <div class="card-content">
+        <h4>{{title}}</h4>
+        <p>{{content}}</p>
+      </div>
+    </a>
+    <!-- //BE the 'card-topics' element is necessary for the card -->
+    <div class="card-topics">
+      <div class="card-ANA">{{source}}</div>
+      <div>{{topic}}</div>
+      <div>{{subTopic}}</div>
+
+      {{> share-button }}
+
+      <div class="reveal" id="share-resource" data-reveal>
+
+        <div class="addthis_inline_share_toolbox_qrdc"></div>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    {{#if article-source}}
+    <div>
+      <div class="date-source">
+        <div class="date">{{article-source.date}}</div>
+        <div class="source">{{article-source.source}}</div>
+      </div>
+      {{#if article-source.tags}}
+      <div class="tags-container">
+        <ul>
+          <div>tags:</div>
+          {{#each article-source.tags}}
+          <li>{{tag}}<span>,</span></li>
+          {{/each}}
+        </ul>
+        {{> share-button }}
+        <div class="reveal" id="share-resource" data-reveal>
+          <div class="addthis_inline_share_toolbox_qrdc"></div>
+          <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+  </article>
+

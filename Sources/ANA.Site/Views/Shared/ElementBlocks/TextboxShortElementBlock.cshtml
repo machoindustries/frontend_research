@@ -1,0 +1,37 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+
+@model TextboxElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var helpText = Model.GetHelpText();
+    var context = ServiceLocator.Current.GetInstance<IHttpContextAccessor>();
+    
+}
+
+<div class="@Model.GetGridCssClass() medium--one-half">
+
+    <div class="Form__Element FormTextbox @Model.GetValidationCssClasses() @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" data-epiforms-element-name="@formElement.ElementName">
+
+        <label for="@formElement.Guid" class="Form__Element__Caption">@labelText</label>
+        <input name="@formElement.ElementName" id="@formElement.Guid" type="text" class="FormTextbox__Input"
+               placeholder="@Model.PlaceHolder" value="@(String.IsNullOrEmpty(context.HttpContext?.Request.Form[Model.Content.Name]) ? Model.GetSubmittedOrDefaultValue() : context.HttpContext?.Request.Form[Model.Content.Name])" @Html @Html.Raw(Model.AttributesString) />
+
+        @Model.RenderDataList()
+
+        <span data-epiforms-linked-name="@formElement.ElementName" class="Form__Element__ValidationError" style="display: none;">@Model.GetGenericErrorMessage()</span>
+
+    </div>
+
+</div>
+    
+@if (!string.IsNullOrWhiteSpace(helpText))
+{
+    <div class="@Model.GetGridCssClass() medium--one-half">
+        <p class="Form__HelpText Form__HelpText--half">@helpText</p>
+    </div>
+}

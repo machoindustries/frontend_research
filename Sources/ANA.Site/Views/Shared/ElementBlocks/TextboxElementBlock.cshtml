@@ -1,0 +1,35 @@
+﻿@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using System.IO; 
+@using Microsoft.AspNetCore.Html;
+
+@model TextboxElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var helpText = Model.GetHelpText();
+    var errorMessage = Model.GetErrorMessage();
+    var context = ServiceLocator.Current.GetInstance<IHttpContextAccessor>();
+    var formValue = context.HttpContext?.GetFormValue(Model.Content.Name);
+}
+
+<label for="@formElement.Guid" class="e-form__label e-form__label--text" data-formfield>
+    <span class="e-form__label-text" data-fake-placeholder>@Model.PlaceHolder</span>
+    <input type="text" name="@formElement.ElementName" class="e-form__input e-form__input--text @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" title="@labelText" value="@(string.IsNullOrEmpty(formValue) ? Model.GetSubmittedOrDefaultValue() : formValue)" @Html.Raw(Model.AttributesString) data-formfield-text @Model.GetValidationAttributes()>
+</label>
+
+@if (!string.IsNullOrWhiteSpace(helpText))
+{
+    <p class="Form__HelpText">@helpText</p>
+}
+
+@Model.RenderDataList()
+
+<div class="e-form__validation-errors" data-validation-error="" data-validation-for="@formElement.ElementName">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div id="@formElement.ElementName-error" class="error-msg">@errorMessage</div>
+    }
+</div>

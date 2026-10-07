@@ -1,0 +1,1 @@
+import{r as l}from"./foundation.esm-55saE8sc.js";var s=class{constructor(s){this.el=s,this.$el=$(s),this.modal=new l(this.$el)}unload(){this.$el.html("Dynamic Example Module unloaded")}};export{s as default};

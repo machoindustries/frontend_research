@@ -1,0 +1,33 @@
+.filter-resources{
+
+    &__sub-heading{
+        font-weight: 700;
+        font-size: 2rem;
+        line-height: 1.5rem;
+        color: $font-dark-blue2
+    }
+}
+
+.browse-modules{
+    line-height: 1.75rem;
+    color: $media-content-social-card-link-background;
+    width: 200px;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    text-decoration: underline;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+
+    @media(min-width: 1023px){
+        padding-left: .5rem;
+    }
+}
+
+.flip-filter-icon {
+  transform: rotate(180deg);
+}
+
+.hide-filter-accordion {
+  display: none;
+}

@@ -1,0 +1,144 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using Geta.Optimizely.Extensions;
+@model CDCResourceSearchPageViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_CDCContent.cshtml";
+}
+
+<div class="grid-container">
+    <div class="grid-x">
+        <header class="small-12 cell">
+            <h1>@Model.CurrentPage.Heading</h1>
+        </header>
+        <div class="small-12 cell grid-x">
+            <div class="cell small-12 large-3">
+                @{
+                    await RenderSearchFilters(Model.SearchFilters);
+                }
+            </div>
+            <div id="resource-results" data-pageid="@Model.PageId" data-p="@Model.Paging.PageNumber.ToString()" data-size="@Model.PageSize.ToString()" class="cell small-12 large-9">
+                @if (Model.Resources.Any())
+                {
+                    <div class="cell small-12 filter-count-results">
+                        <div class="card-results">
+                            <div>
+                                Showing
+                                <span class="filter-results__number">@Model.Paging.ResultStartItemIndex - @Model.Paging.ResultEndItemIndex </span>
+                                of
+                                <span class="filter-results__number">@Model.TotalMatching</span>
+                                results
+                            </div>
+                        </div>
+                    </div>
+                }
+                <section class="grid-x grid-margin-x cell small-12 large-9 three-across-cards">
+                    @if (Model.Resources.Any())
+                    {
+                        foreach (var resourceCard in Model.Resources)
+                        {
+                            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCResourceTopicsCard.cshtml", resourceCard)
+                        }
+                        RenderHiddenSpacerCards(Model.Resources.Count() % 3);
+                    }
+                    else
+                    {
+                        RenderHiddenSpacerCards(3);
+
+                    }
+                </section>
+                @await Html.PartialAsync("~/Views/CDC/Partials/_CDCPagination.cshtml", Model.Paging)
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+void RenderHiddenSpacerCards(int remainder)
+{
+    if (remainder == 1)
+    {
+        <article class="spacer-1 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.1</article>
+        <article class="spacer-2 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+    }
+    else if (remainder == 2)
+    {
+        <article class="spacer-1 card  small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 2</article>
+    }
+    else if (remainder == 3)
+    {
+        <article class="spacer-1 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.1</article>
+        <article class="spacer-2 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+        <article class="spacer-3 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+    }
+}
+
+// NOTE: Disabling warning for this known razor issue: https://github.com/dotnet/razor/issues/7049
+#pragma warning disable 1998
+async Task RenderSearchFilters(CDCSearchFiltersViewModel searchFilters)
+{
+    var placeHolder = !string.IsNullOrEmpty(searchFilters.SearchPlaceholder) ? searchFilters.SearchPlaceholder : "Search by Keyword";
+    var searchValue = Model.Paging != null && !string.IsNullOrEmpty(Model.Paging.Query) ? Model.Paging.Query : string.Empty;
+
+    <section class="cell small-12 large-3">
+        <div class="search-accordion hide-for-large" id="api-search" name="cdc-resource-search">
+            <div class="search-title-mobile">
+                @searchFilters.SearchBoxLabel
+                <span>
+                    <span class="search-title-mobile__icon chevron" aria-hidden="true"></span>
+                </span>
+            </div>
+            <div id="search-box" class="search__box hide-search-accordion">
+                <input id="resource-search__mobile" type="text" placeholder="@placeHolder" value="@searchValue" class="search__box__input ">
+                <div id="resource-search__mobile__icon" class="resource-search__box__icon search__box__icon">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.5 0C8.22391 0 9.87721 0.684819 11.0962 1.90381C12.3152 3.12279 13 4.77609 13 6.5C13 8.11 12.41 9.59 11.44 10.73L11.71 11H12.5L17.5 16L16 17.5L11 12.5V11.71L10.73 11.44C9.59 12.41 8.11 13 6.5 13C4.77609 13 3.12279 12.3152 1.90381 11.0962C0.684819 9.87721 0 8.22391 0 6.5C0 4.77609 0.684819 3.12279 1.90381 1.90381C3.12279 0.684819 4.77609 0 6.5 0ZM6.5 2C4 2 2 4 2 6.5C2 9 4 11 6.5 11C9 11 11 9 11 6.5C11 4 9 2 6.5 2Z" fill="black"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <form class="search cell small-12 show-for-large">
+            <label class="search__title">@searchFilters.SearchBoxLabel</label>
+            <div class="search__box">
+                <input id="resource-search__desktop" type="text" placeholder="@placeHolder" value="@searchValue" class="search__box__input">
+                <div id="resource-search__desktop__icon" class="resource-search__box__icon search__box__icon">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.5 0C8.22391 0 9.87721 0.684819 11.0962 1.90381C12.3152 3.12279 13 4.77609 13 6.5C13 8.11 12.41 9.59 11.44 10.73L11.71 11H12.5L17.5 16L16 17.5L11 12.5V11.71L10.73 11.44C9.59 12.41 8.11 13 6.5 13C4.77609 13 3.12279 12.3152 1.90381 11.0962C0.684819 9.87721 0 8.22391 0 6.5C0 4.77609 0.684819 3.12279 1.90381 1.90381C3.12279 0.684819 4.77609 0 6.5 0ZM6.5 2C4 2 2 4 2 6.5C2 9 4 11 6.5 11C9 11 11 9 11 6.5C11 4 9 2 6.5 2Z" fill="black"></path>
+                    </svg>
+                </div>
+            </div>
+        </form>
+        @if (searchFilters.FilterSets.Any(i => i.ShouldDisplayInFacetPanel))
+        {
+            var filterSetCount = 0;
+            <div class="filters-resources">
+                <div id="filter-title-mobile" class="filter-title-mobile hide-for-large">
+                    @searchFilters.FiltersListLabel
+                    <span id="filter-title-mobile__icon" class="toggle-icon hide-for-large chevron" aria-hidden="true"></span>
+
+                </div>
+                <div class="filter-title show-for-large">@searchFilters.FiltersListLabel</div>
+                <ul id="filter-accordion" class="filter-accordion show-for-large" data-accordion="do27r1-accordion" role="tablist">
+                    @foreach (var filterSet in searchFilters.FilterSets.Where(i => i.ShouldDisplayInFacetPanel))
+                    {
+                        filterSetCount++;
+                        @await Html.PartialAsync("~/Views/CDC/Partials/_CDCFilterSet.cshtml", filterSet)
+
+                        if (filterSetCount < searchFilters.FilterSets.Count())
+                        {
+                            <hr class="filter-line" />
+                        }
+                    }
+                </ul>
+            </div>
+        }
+        @foreach (ButtonBlock button in searchFilters.Buttons)
+        {
+            <button href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame" title="@button.Text" class="browse-modules">@button.Text</button>
+        }
+    </section>
+}
+#pragma warning restore 1998
+}

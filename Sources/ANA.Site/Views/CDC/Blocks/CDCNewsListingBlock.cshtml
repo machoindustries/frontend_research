@@ -1,0 +1,51 @@
+﻿@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using Geta.Optimizely.Extensions;
+@model CDCNewsListingBlockViewModel
+
+<div class="related-news-component @Model.Block.GetCssClass()">
+    <h5 class="mb-2">@Html.PropertyFor(i => i.Block.Heading)</h5>
+
+    <div class="grid-x grid-margin-x">
+        <div class="@Model.Block.GetMainColumnCssClass()">
+            <div class="grid-x grid-margin-x align-justify">
+                @foreach (var news in Model.News)
+                {
+                    var url = news.GetFriendlyUrl();
+                    var target = news.GetTargetFrame();
+                    <div class="@Model.Block.GetNewCssClass()">
+                        <article class="related-news-card-container cell small-12 large-4">
+                            <div class="card related-news-card mb-1">
+                                <a href="@url" target="@target">
+                                    @if (!news.ListingImage.IsNullOrEmpty())
+                                    {
+                                        @Html.PropertyFor(i => news.ListingImage)
+                                    }
+                                    else
+                                    {
+                                        @Html.PropertyFor(i => news.Image)
+                                    }
+                                </a>
+                                <h5>@Html.PropertyFor(i => news.Heading) </h5>
+                                <a class="cell shrink" href="@url" target="@target">Go to link</a>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+            @if (Model.Block.SeeAllUrl != null)
+            {
+                <div>
+                    <a class="see-all" href="@Model.Block.SeeAllUrl.GetFriendlyUrl()"><h5>See all</h5></a>
+                </div>
+            }
+        </div>
+        @if (Model.Block.EnableSidebar)
+        {
+            <div class="cell small-12 large-4 grid-x">
+                <div class="grid-x grid-margin-x">
+                    @Html.PropertyFor(i => i.Block.Sidebar, new { HasContainer = false, HasItemContainer = false })
+                </div>
+            </div>
+        }
+    </div>
+</div>

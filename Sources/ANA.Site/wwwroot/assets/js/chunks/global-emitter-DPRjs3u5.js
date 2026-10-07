@@ -1,0 +1,1 @@
+import{t}from"./eventemitter3-CKbO9so4.js";var e=new t;export{e as t};

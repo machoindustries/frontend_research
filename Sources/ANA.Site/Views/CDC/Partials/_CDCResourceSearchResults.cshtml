@@ -1,0 +1,57 @@
+﻿@using ANA.Site.Models.CDC.Pages.ViewModels
+@model CDCResourceSearchPageViewModel
+
+
+@if (this.Model != null)
+{
+    if (Model.Resources.Any())
+    {
+        <div class="cell small-12 filter-count-results">
+            <div class="card-results">
+                <div>
+                    Showing
+                    <span class="filter-results__number">@Model.Paging.ResultStartItemIndex - @Model.Paging.ResultEndItemIndex </span>
+                    of
+                    <span class="filter-results__number">@Model.TotalMatching</span>
+                    results
+                </div>
+            </div>
+        </div>
+    }
+    <section class="grid-x grid-margin-x cell small-12 large-9 three-across-cards">
+        @if (Model.Resources.Any())
+        {
+            foreach (var resourceCard in Model.Resources)
+            {
+                @await Html.PartialAsync("~/Views/CDC/Partials/_CDCResourceTopicsCard.cshtml", resourceCard)
+            }
+            RenderHiddenSpacerCards(Model.Resources.Count() % 3);
+        }
+        else
+        {
+            RenderHiddenSpacerCards(3);
+        }
+    </section>
+    @await Html.PartialAsync("~/Views/CDC/Partials/_CDCPagination.cshtml", Model.Paging)
+}
+
+@functions {
+void RenderHiddenSpacerCards(int remainder)
+{
+    if (remainder == 1)
+    {
+        <article class="spacer-1 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.1</article>
+        <article class="spacer-2 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+    }
+    else if (remainder == 2)
+    {
+        <article class="spacer-1 card  small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 2</article>
+    }
+    else if (remainder == 3)
+    {
+        <article class="spacer-1 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.1</article>
+        <article class="spacer-2 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+        <article class="spacer-3 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+    }
+}
+}

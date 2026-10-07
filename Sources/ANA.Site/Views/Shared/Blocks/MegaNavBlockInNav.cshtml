@@ -1,0 +1,69 @@
+﻿@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.MegaNavBlock
+
+@{
+    var hasChildren = Model.Column1 != null && Model.Column1.FilteredItems.Any() ||
+                                      Model.Column2 != null && Model.Column2.FilteredItems.Any() ||
+                                      Model.Column3 != null && Model.Column3.FilteredItems.Any() ||
+                                      Model.Column4 != null && Model.Column4.FilteredItems.Any();
+
+    ViewData["megaNavPrimaryHeading"] = Model.SectionName;
+}
+
+<li class="e-nav-primary__item@(hasChildren ? " e-nav-primary__item--has-children" : "")"
+    data-primary-nav-item
+    data-nav-level="1">
+
+    @if (Model.SectionLink == null)
+    {
+        <span class="e-nav-primary__link" @(hasChildren ? " data-primary-nav-trigger" : "") data-primary-nav-link data-gtm-event-action="@Model.SectionName" data-gtm-event-label="@Model.SectionName">
+            <span class="e-nav-primary__link-text">@Model.SectionName</span>
+            <div class="jhtest"
+                 data-model-sectionlink="@Model.SectionLink.ToString()" 
+                 data-model-sectionname="@Model.SectionName.ToString()"
+            ></div>
+        </span>
+    }
+    else
+    {
+        <a href="@Model.SectionLink.GetFriendlyUrl()" class="e-nav-primary__link" @(hasChildren ? " data-primary-nav-trigger" : "") data-primary-nav-link data-gtm-event-action="@Model.SectionName" data-gtm-event-label="@Model.SectionName">
+            <span class="e-nav-primary__link-text">@Model.SectionName</span>
+            <div class="jhtest"
+                 data-model-sectionlink="@Model.SectionLink.ToString()"
+                 data-model-sectionname="@Model.SectionName.ToString()"></div>
+        </a>
+    }
+
+    @if (hasChildren)
+    {
+        <div class="e-nav-primary__panel" data-primary-nav-tray data-primary-nav-panel>
+            <div class="e-nav-primary__grid-constraint">
+                <ul class="e-nav-primary__list e-nav-primary__list--secondary">
+                    @{
+                        await RenderColumn(Model.Column1);
+                        await RenderColumn(Model.Column2);
+                        await RenderColumn(Model.Column3);
+                        await RenderColumn(Model.Column4);
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+</li>
+
+@functions {
+
+    async Task RenderColumn(ContentArea contentArea)
+{
+    if (contentArea != null && contentArea.FilteredItems.Any())
+    {
+        <li class="e-nav-primary__col">
+            @foreach (var navItem in contentArea.FilteredItems.Select(item => item.LoadContent()).OfType<LinkListBlock>())
+            {
+                { await Html.RenderPartialAsync("MegaNavItem", navItem, ViewData); }
+            }
+        </li>
+    }
+}
+}

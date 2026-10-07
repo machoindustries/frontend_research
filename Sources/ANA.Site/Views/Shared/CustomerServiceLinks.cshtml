@@ -1,0 +1,42 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Business.Interfaces.ICustomerServiceLinks
+
+<nav class="c-cslinks">
+
+    <div class="grid-constraint">
+        <div class="grid grid--center">
+            <div class="grid__item one-whole">
+
+                <ul class="c-cslinks__list" >
+
+                    @if (Model.HelpUrl != null)
+                    {
+                        <li class="c-cslinks__item">
+                            <a class="c-cslinks__link c-cslinks__link--help" href="@Model.HelpUrl.GetFriendlyUrl()" itemprop="item" title="@Html.Translate("/CustServiceLinks/Help")">
+                                <span itemprop="name">@Html.Translate("/CustServiceLinks/Help")</span>
+                            </a>
+                        </li>
+                    }
+                    
+                    @if(Model.PhoneLink != null){
+                        <li class="c-cslinks__item">
+                            <a class="c-cslinks__link c-cslinks__link--phone" href="@Model.PhoneLink" itemprop="item" title="@Html.Translate("/CustServiceLinks/Phone")">
+                                <span itemprop="name">@Html.Translate("/CustServiceLinks/Phone")</span>
+                            </a>
+                        </li>
+                    }
+                    
+                    @if(Model.EmailLink != null) {
+                        <li class="c-cslinks__item">
+                            <a class="c-cslinks__link c-cslinks__link--email" href="@Model.EmailLink" itemprop="item" title="@Html.Translate("/CustServiceLinks/Email")">
+                                <span itemprop="name">@Html.Translate("/CustServiceLinks/Email")</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+</nav>

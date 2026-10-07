@@ -1,0 +1,30 @@
+---
+data:
+  -
+    id: "aasdfe"
+    category: "Type"
+    openOnLoad: "is-active"
+    subA: "Topic A-training"
+    subB: "Topic B-training"
+    subC: "Topic C-training"
+  -
+    id: "badsfa"
+    category: "Topic"
+    openOnLoad: ""
+    subA: "Topic-training"
+    subB: "Topic-traininga"
+    subC: "Topic-trainingb"
+  -
+    id: "cvasd"
+    category: "Source"
+    openOnLoad: ""
+    subA: "Topic-trainingc"
+    subB: "Topic-trainingd"
+    subC: "Topic-traininge"
+  -
+    id: "mpoui"
+    category: "CNE Credit"
+    openOnLoad: ""
+    subA: "Topic-trainingf"
+    subB: "Topic-trainingg"
+    subC: "Topic-traininge"

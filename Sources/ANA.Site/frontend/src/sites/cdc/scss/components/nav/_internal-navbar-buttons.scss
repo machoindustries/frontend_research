@@ -1,0 +1,200 @@
+.internal-nav-container-update {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    @media screen and (min-width: $large) {
+      flex-direction: row;
+    }
+  }
+  
+  .internal-nav-update {
+
+    @media screen and (max-width: $large ) {
+      & > .grid-x {
+        flex-direction: column;
+        justify-content: space-between;
+      }
+  
+      .cell a {
+        line-height: 1;
+        text-decoration: none;
+        display: block;
+        padding: 0.7rem 1rem;
+        color: #222222;
+  
+        &:hover {
+          font-family: $font-header;
+          color: #cf4520;
+        }
+      }
+    }
+  
+    @media screen and (min-width: $large) {
+      display: block !important;
+      font-family: "MontserratRegular";
+      max-width: $max-container-width;
+      margin: 0 auto;
+      color: $font-dark-blue;
+      font-size: 20px;
+      font-weight: 700;
+  
+      & > .grid-x {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        border-bottom: 3px solid #123E67;
+        padding: .5rem 0rem;
+        justify-content: space-between;
+
+
+        .links{
+            display: flex;
+            flex-flow: row wrap;
+
+            div {
+                padding: 0rem  1rem 0 0;
+                margin-top: .5rem;
+
+                a {
+                    text-decoration: none;
+                    font-size: 1rem;
+                    line-height: 1.5rem;
+                    letter-spacing: .5px;
+                    color: #318FBA;
+                    padding: 0rem 1rem 0 0;
+                }
+            }
+        }
+
+        .btn-container {
+            display: flex ;
+            flex-direction: column ;
+          
+          
+            @media (min-width: $large) {
+                flex-direction: row;
+                justify-content: flex-end;
+                min-width: 300px;
+                
+            }
+
+        }
+      }
+
+    }
+  }
+
+  .btn-container {
+    display: flex ;
+    flex-direction: column ;
+    max-width: 10.9375rem;
+  
+  
+    @media (min-width: $large) {
+        max-width: none;
+        flex-direction: row;
+        justify-content: space-around;
+        min-width: 18.75rem;
+        
+    }
+
+    .email-us-btn {
+      background-color: transparent;
+      border-color: #123e67;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      letter-spacing: .5px;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      height: 2.5rem;
+      color: #123e67;
+
+      &:hover {
+        background-color: $media-content-social-card-link-background;
+        color: $white;
+        border-color: transparent;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+
+    .button-hollow-blue {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        letter-spacing: .5px;
+        padding: .5rem 1rem;
+        margin-top: .5rem;
+        height: 2.5rem;
+        color: $media-content-social-card-font;
+
+
+        &:hover {
+          color: $white !important;
+          a{
+            color: $white; 
+          }
+        }
+
+        &:last-child {
+          margin-left: 2rem;
+        }
+        
+        a {
+          color: $media-content-social-card-font;
+          background-color: transparent;
+        }
+
+
+        &:last-child a,
+        &:last-child a:visited,
+        a:visited,
+
+        &:last-child {
+            background-color: $media-content-social-card-font;
+            color: $white;
+
+            a{
+              color: $white;
+            }
+
+            &:hover {
+                background-color: $media-content-social-card-link-background;
+                border-color: transparent;
+
+                a {
+                  background-color: transparent;
+                }
+            }
+        }
+    }
+}
+
+.links{
+    display: flex;
+    flex-direction: column;
+
+    @media(min-width: $large) {
+        flex-flow: row wrap;
+    }
+
+    div {
+        padding: 0rem .5rem 0 0;
+        margin-top: .5rem;
+
+        a {
+            text-decoration: none;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            letter-spacing: .5px;
+            color: #318FBA;
+            padding: 0rem 1rem 0rem 0rem;
+
+            @media(min-width: $large) {
+                padding: 0rem 1rem;
+            }
+        }
+    }
+}
+  

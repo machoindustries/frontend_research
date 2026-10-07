@@ -1,0 +1,179 @@
+.three-across-cards {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    justify-content: center;
+    min-height: 450px;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .spacer-1, 
+    .spacer-2,
+    .spacer-3 {
+        visibility: hidden;
+
+        @media (max-width: $medium){
+            display: none;
+        }
+    }
+
+    .no-mobile-spacer {
+        display: none;
+
+        @media (min-width: $large){
+            display: flex;
+        }
+    }        
+
+    .spacer-3 {
+        display: flex;
+        visibility: hidden;
+    }
+
+    &.news-articles {
+        @media print, screen and (min-width: 64em) {
+        width: 100%;
+        }
+
+        .media-content-social-links {
+            background-color: #AFDCF3;
+
+            .img-content-container {
+                min-height: 400px;
+
+                button,
+                a.card-icon-container {
+                    background-color: #123E67;
+                }
+
+                // .card-img-overlay {
+                //     background-color: #FAAA51;
+
+                //     &:hover {
+                
+                //         .card-img-overlay {
+                //             animation: fade .4s ease-in-out 0s 1 normal;
+                //             animation-fill-mode: forwards;
+                //             @keyframes fade {
+                //                 from {opacity: 0;}
+                //                 to {opacity: .5;}
+                //             }
+                //             cursor: pointer;
+                //         }
+                //     }
+                // }
+
+                .card-content{
+                    background-color: #AFDCF3;
+                    cursor: pointer;
+
+                    &.teal-background {
+                        background-color: #67BACA;
+                    }
+                    
+                    a {
+                        text-decoration: none;
+                    }
+
+                    h4 {
+                        color: black;
+                        margin-bottom: 0;
+                        cursor: pointer;
+                    }
+
+                    p {
+                        display: none;
+                   }
+                }
+    
+            }
+    
+            .card-topics {
+                display: none;
+            }
+    
+        }
+
+        .date-source {
+            padding: 0rem 1rem .25rem 1rem;
+            display: flex;
+            flex-direction: row;
+            font-size: 0.75rem;
+            line-height: 0.9375rem;
+            letter-spacing: 0.0313rem;
+            text-transform: uppercase;
+
+            .date:after {
+                border-right: 1px solid;
+                content: "";
+                padding-left: .25rem;
+            }
+
+            .source {
+                padding-left: .25rem;
+            }
+        }
+
+        .tags-container {
+            position: relative;
+            margin-bottom: 1rem;
+
+            ul {
+                display: flex;
+                flex-flow: row wrap;
+                list-style: none;
+                font-size: 0.75rem;
+                line-height: 0.9375rem;
+                letter-spacing: 0.0313rem;
+                text-transform: uppercase;
+                align-items: center;
+                margin-bottom: 0;
+                padding: 0 1.75rem 0 1rem;
+                
+                li {
+                    padding: 0rem .25rem;
+                    font-weight: 600;
+                }
+
+                li:last-child > span {
+                    display: none;
+                }
+            };
+    
+        }
+
+        svg {
+            height: 1.125rem;
+            width: 1.375rem;
+            position: absolute;
+            right: 5px;
+            bottom: 0;
+
+            &:hover path {
+                fill: $media-content-social-card-link-background
+            }
+        }
+
+     
+
+    }
+
+    @media (min-width: $large){
+        justify-content: start;
+    }
+}
+
+.three-across-cards.news-articles.teal-background {
+
+    .media-content-social-links {
+        background-color: #67BACA;
+
+        .img-content-container {
+            .card-content {
+                background-color: #67BACA;
+            }
+        }
+    }
+}

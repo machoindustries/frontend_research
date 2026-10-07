@@ -1,0 +1,39 @@
+@using ANA.Site.Business.Extensions
+@using ANA.Site
+@using EPiServer.Editor
+@using Geta.Optimizely.Extensions
+
+@model ANA.Site.Models.Blocks.AccordionItemBlock
+
+@{
+    var collapsePanel = Model.IsOpen ? "false" : "true";
+    var currentPage = Model.GetCurrentPage();
+    var gtmEvent = "";
+
+    if (currentPage != null)
+    {
+        gtmEvent = currentPage.ContentLink.GetFriendlyUrl();
+    }
+}
+
+<section class="e-accordion__item"
+         data-require="./src/views/accordion-item-view"
+         data-collapse-panel="@collapsePanel"
+         data-gtm-event-action="@gtmEvent"
+         data-gtm-event-label="@Model.Heading"
+>
+    <a class="e-accordion__toggle" href="#" data-accordion-toggle>
+        <h2 class="e-accordion__toggle-title">@Model.Heading</h2>
+    </a>
+    <div class="e-accordion__item-content" data-accordion-content>
+        <div class="e-richtext">
+            @Html.PropertyFor(m => m.Content)
+        </div>
+        @if ((Model.Blocks?.FilteredItems != null && Model.Blocks.FilteredItems.Any()) || ContentHelper.PageIsInEditMode())
+        {
+            <div class="e-accordion__blocks">
+                @Html.PropertyFor(x => x.Blocks)
+            </div>
+        }
+    </div>
+</section>

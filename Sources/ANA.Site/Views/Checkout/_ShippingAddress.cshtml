@@ -1,0 +1,26 @@
+﻿@using ANA.Site.Models.ViewModels
+
+@model CheckoutViewModel
+
+<div class="c-checkout__section">
+    <h2 class="c-checkout__section-title">@Html.Translate("/Shared/Address/ShippingHeading")</h2>
+    <section class="e-checkout-address" data-require="./src/views/checkout-address-view" data-address-type="shipping">
+        <label class="e-checkout-address__addresses-same e-form__label e-form__label--checkbox e-form__label--checkbox--left" for="@Html.IdFor(m => m.IsBillingAddressUsedForShipping)" data-formfield="">  
+            <span class="e-form__label-text e-checkout-address__select-text">@Html.Translate("/Shared/Address/BillingShippingMatch")</span>          
+            <input type="checkbox" class="e-form__input e-form__input--checkbox" id="@Html.IdFor(m => m.IsBillingAddressUsedForShipping)" name="@Html.NameFor(m => m.IsBillingAddressUsedForShipping)" title="@Html.Translate("/Shared/Address/BillingShippingMatch")" data-addresses-same="">            
+            <span class="e-form__fake-checkbox"></span>
+        </label>
+        <div class="e-checkout-address__content" data-address-panel="">
+            <label class="e-checkout-address__select e-form__label e-form__label--select" for="@Html.IdFor(m => m.ShippingAddressId)" data-formfield="" style="display: none;">
+                <span class="e-form__label-text">@Html.Translate("/Shared/Address/ChooseSavedAddress")</span>
+                @Html.DropDownListFor(m => m.ShippingAddressId, Enumerable.Empty<SelectListItem>(), new { @class = "e-form__input e-form__input--select", data_address_select = "", placeholder = Html.Translate("/Shared/Address/PleaseSelect") })
+            </label>
+            <a href="#" class="e-checkout-address__action e-checkout-address__action--add" data-address-add="" data-lightbox-title="@Html.Translate("/Shared/Address/Form/Label/AddShippingAddress")">
+                <span>+</span> @Html.Translate("/Shared/Address/AddNewAddress")
+            </a>
+            @{ await Html.RenderPartialAsync("_AddressDisplay"); }
+            <a href="#" class="e-checkout-address__action" data-address-edit=""  data-lightbox-title="@Html.Translate("/Shared/Address/Form/Label/EditShippingAddress")"></a>            
+            <a class="e-checkout-address__action" href="#" data-address-edit-confirm="">@Html.Translate("/Shared/Address/EditAddress")</a>
+        </div>
+    </section>
+</div>

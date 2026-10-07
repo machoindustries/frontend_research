@@ -1,0 +1,28 @@
+﻿@using ANA.Site.Models.OJIN.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Models.OJIN.Blocks.ViewModels
+@model CardBlockViewModel
+@using System.Text.RegularExpressions
+
+@{
+    Regex regex = new Regex("[!@#$%^()_=+;\\\\/:*?\"|&']");
+}
+
+<div class="col-md-4">
+    <div class="ojin-currentTopic__card">
+        @if (Model.Image != null)
+        {
+            <img src="@Url.ContentUrl(Model.Image)" class="lazyload" />
+        } 
+        <div class="ojin-currentTopic__desc">
+            <div class="ojin-currentTopic__category">@Html.PropertyFor(m => m.ARPageContentType)</div>
+            <h3 class="ojin-currentTopic__title">
+                <a href="@Html.PropertyFor(m => m.ARUrl)">@Html.PropertyFor(m => m.ARTitle)</a>
+            </h3>
+            <div class="ojin-currentTopic__subTitle text-uppercase">@Html.PropertyFor(m => m.ARAuthor)</div>
+            <p>@Html.PropertyFor(m => m.ARTeaserText)</p>
+            <div class="ojin-currentTopic__date">@((Model.ARPublicationDate.Date != null && Model.ARPublicationDate.Date.Year != 0001 ) ? Model.ARPublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+        </div>
+    </div>
+</div>

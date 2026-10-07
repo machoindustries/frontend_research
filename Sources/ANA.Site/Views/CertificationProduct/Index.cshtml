@@ -1,0 +1,223 @@
+﻿@using ANA.Site.Models.ViewModels
+@using EPiServer
+@using EPiServer.Editor
+@using ANA.Site.Business.Extensions;
+@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@using Geta.Optimizely.Extensions
+
+@model ProductViewModel<ANA.Site.Models.Commerce.Products.CertificationProduct>
+
+@{
+    Layout = "~/Views/Shared/Layouts/_ProductLayout.cshtml";
+
+    var hasSponsor = !string.IsNullOrEmpty(Model.CurrentPage.SponsorHeading) || !string.IsNullOrEmpty(Model.CurrentPage.SponsorIntroText);
+
+    var firstVariant = Model.VariantsModel.FirstOrDefault();
+
+    var gtmPrice = string.Empty;
+
+    if (firstVariant != null)
+    {
+        gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? firstVariant.DiscountedPrice.ToString() : firstVariant.PlacedPrice.ToString();
+
+        if (UserState.CurrentProfile.IsMember())
+        {
+            gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? firstVariant.DiscountedMemberPrice.ToString() : firstVariant.MemberPrice.ToString();
+        }
+    }
+    var productGroup = Model.CurrentPage.ProductGroupBlock;
+}
+
+@section ProductDetail
+{
+    <div class="c-product-page-detail grid"
+        data-require="./src/views/product-detail-view"
+        data-product=""
+        data-product-item_name="@(firstVariant?.DisplayName ?? string.Empty)"
+        data-product-item_id="@(firstVariant?.Code ?? string.Empty)"
+        data-product-price="@gtmPrice"
+        data-product-item_brand="@Model.BannerText"
+        data-product-item_category="@Model.GetOriginalType().Name.Replace("Product", string.Empty)"
+        data-product-item_variant="@(firstVariant?.Code ?? string.Empty)"
+        data-product-format="@(firstVariant?.VariantType ?? string.Empty)"
+    >
+
+        <div class="grid__item one-whole medium--eight-twelfths push--medium--four-twelfths">
+
+            <div class="grid">
+
+                <h1 class="grid__item one-whole c-product-page-detail__title">
+                    @Html.PropertyFor(x => x.CurrentPage.Heading)
+                </h1>
+
+                @if (hasSponsor)
+                {
+                    <div class="grid__item one-whole c-product-page-detail__section">
+
+                        <div class="grid">
+
+                            <div class="grid__item one-whole large--one-half">
+
+                                @{ await Html.RenderPartialAsync("_ProductAffiliate", new ProductAffiliateViewModel
+                                   {
+                                       SponsorImageUrl = Model.CurrentPage.SponsorImageUrl,
+                                       Heading = Model.CurrentPage.Heading,
+                                       SponsorHeading = Model.CurrentPage.SponsorHeading,
+                                       SponsorUrl = Model.CurrentPage.SponsorUrl,
+                                       SponsorIntroText = Model.CurrentPage.SponsorIntroText,
+                                       SponsorLogoWide = Model.CurrentPage.SponsorLogoWide
+                                   });
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+                <div class="grid__item one-whole medium--one-half pull--medium--one-half c-product-page-detail__media">
+                    <figure class="c-product-page-detail__image-wrapper c-product-page-detail__totalhours" @Html.Raw(productGroup != null && string.IsNullOrEmpty(firstVariant.ImageUrl) ? $"style=\"background-color: {productGroup.Colour}\"" : string.Empty)>
+                        <span class="icon--icon-cert c-product-page-detail__totalhours-workshop"></span>
+                        @if (!string.IsNullOrEmpty(Model.BannerText))
+                        {
+                            <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                                <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                                <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                            </div>
+                        }
+                    </figure>
+                    @if (productGroup != null)
+                    {
+                    <div class="c-product-detail__group-name c-product-detail__group-name--noline" style="color: @productGroup.Colour;">
+                        @if (productGroup != null){@productGroup.Name}
+                    </div>
+                    }
+                </div>
+
+                @if (Model.CurrentPage.IntroText != null && Model.CurrentPage.IntroText.Fragments.Count > 0
+                    || ContentHelper.PageIsInEditMode())
+                {
+                    <div class="grid__item one-whole c-product-page-detail__section">
+                        <div class="c-product-page-detail__description">
+                            <div class="e-richtext">
+                                @Html.PropertyFor(x => x.CurrentPage.IntroText)
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (!Model.CurrentPage.CEExpiry.Equals(DateTime.MinValue))
+                {
+                    <div class="grid__item one-whole c-product-page-detail__section">
+                        <span class="c-product-page-detail__event-detail"><strong>Course & ANCC CNE Credit Expiration:</strong> @Model.CurrentPage.CEExpiry.ToString("MM/dd/yyyy")</span>
+                    </div>
+                }
+
+                @if (Model.CurrentPage.CtaLink != null && !string.IsNullOrEmpty(Model.CurrentPage.CtaText))
+                {
+                    <div class="c-add-to-cart">
+                        <div class="c-product-page-detail__section grid__item one-whole">
+                            <div class="grid__item one-whole medium--one-half push--medium--one-half">
+                                <p>
+                                    <a href="@Model.CurrentPage.CtaLink.GetFriendlyUrl()" class="e-button e-button--button e-button--blue e-button c-add-to-cart__button" data-tracked-cta>@Model.CurrentPage.CtaText</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Adverts
+{
+    @Html.PropertyFor(x => x.CurrentPage.Adverts, new { CssClass = "content-area" })
+}
+
+@section Tabs
+{
+    <div class="c-tab-control">
+        <div class="c-tab-control__section" data-require="./src/views/tab-control-view" data-collapse-panel="false">
+            
+            <h2 class="e-tab-toggle" data-tab-control-toggle>
+                <span class="e-tab-toggle__text">@Html.PropertyFor(x => x.CurrentPage.ApplyTabTitle)</span>
+            </h2>
+            
+            <div class="c-tab-control__content" data-tab-control-content>
+                
+                <div class="e-product-detail grid">
+
+                    <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row">
+                        <div class="e-richtext">
+                            <h4>@Html.PropertyFor(x => x.CurrentPage.ApplyHeader)</h4>
+                            @Html.PropertyFor(x => x.CurrentPage.ApplyDescriptionHtml)
+                        </div>
+                    </div>
+
+                </div>
+                
+                @Html.PropertyFor(x => x.CurrentPage.ApplyContent, new
+                {
+                    CssClass = "content-area content-area--last-child-no-margin b-vst--small grid", 
+                    Tag = ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator +
+                          ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator
+                })
+
+            </div>
+
+        </div>
+
+        <div class="c-tab-control__section" data-require="./src/views/tab-control-view" data-collapse-panel="true">
+            
+            <h2 class="e-tab-toggle" data-tab-control-toggle>
+                <span class="e-tab-toggle__text">@Html.PropertyFor(x => x.CurrentPage.MaintainTabTitle)</span>
+            </h2>
+            
+            <div class="c-tab-control__content" data-tab-control-content>
+                
+                <div class="e-product-detail grid">
+                
+                    <div class="one-whole large--two-thirds pad--large--one-third e-product-detail__row">
+                        <div class="e-richtext">
+                            <h4>@Html.PropertyFor(x => x.CurrentPage.MaintainHeader)</h4>
+                            @Html.PropertyFor(x => x.CurrentPage.MaintainDescriptionHtml)
+                        </div>
+                    </div>
+
+                </div>
+                
+                @Html.PropertyFor(x => x.CurrentPage.MaintainContent, new
+                {
+                    CssClass = "content-area content-area--last-child-no-margin b-vst--small grid", 
+                    Tag = ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator +
+                          ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator
+                })
+
+            </div>
+
+        </div>
+    </div>
+}
+
+@section ContentArea
+{
+    @Html.PropertyFor(x => x.CurrentPage.Blocks, new { CssClass = "content-area", Tag = ANA.Site.Global.StringConstants.TagProduct })
+    
+    @{  
+       await Html.RenderPartialAsync("_RelatedProducts", new RelatedProductsViewModel
+       {
+           Heading = Html.Translate("/BookPage/Related").ToString(),
+           RelatedProducts = Model.RelatedProducts.Select(p => new ProductPartialViewModel
+           {
+               Product = p.Product,
+               VariantsModel = new List<VariantsViewModel> { p },
+               BannerText = p.Product.EntityBanner
+           }).ToList()
+       });
+    }
+    
+}

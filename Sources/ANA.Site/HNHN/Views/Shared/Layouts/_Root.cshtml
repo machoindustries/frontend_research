@@ -1,0 +1,146 @@
+@using ANA.Site.HNHN.Helpers
+@using ANA_HNHN.Models.Enums
+@using ANA_HNHN.Models.Pages.Base
+@using EPiServer
+@using EPiServer.ServiceLocation
+@using Microsoft.Extensions.DependencyInjection
+@inherits ANA_HNHN.Views.AlloyPageBase<ANA_HNHN.Models.ViewModels.IPageViewModel<BasePageData>>
+@model ANA_HNHN.Models.ViewModels.IPageViewModel<BasePageData>
+@{
+    var ogImage = String.Empty;
+    var urlResolver = ServiceLocator.Current.GetService<IUrlResolver>();
+    var pageRouteHelper = ServiceLocator.Current.GetService<IPageRouteHelper>();
+    var isHomePage = pageRouteHelper.ContentLink == SiteDefinition.Current.StartPage;
+    if (Model.CurrentPage.PageImage != null)
+    {
+        ogImage = UriSupport.AbsoluteUrlBySettings(urlResolver.GetUrl(Model.CurrentPage.PageImage));
+    }
+    var title = Model.CurrentPage.Name;
+    if (!string.IsNullOrWhiteSpace(Model.CurrentPage.MetaTitle))
+    {
+        title = Model.CurrentPage.MetaTitle;
+
+    }
+    else if (!string.IsNullOrEmpty(Model.CurrentPage.Title))
+    {
+        title = Model.CurrentPage.Title;
+    }
+    if (!string.IsNullOrWhiteSpace(Model.Layout.TabName))
+    {
+        title += " | " + Model.Layout.TabName;
+    }
+
+    var noindexNoFollow = String.Empty;
+    if (Model.CurrentPage.DisableIndexing)
+    {
+        noindexNoFollow = "noindex";
+    }
+    if (Model.CurrentPage.EnableNoFollow)
+    {
+        if (string.IsNullOrEmpty(noindexNoFollow))
+        {
+            noindexNoFollow = "nofollow";
+        }
+        else
+        {
+            noindexNoFollow += ", nofollow";
+        }
+    }
+}
+<!DOCTYPE html>
+<html lang="@(Model.CurrentPage.Language)">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.Title))
+    {
+        <meta property="og:title" content="@Model.CurrentPage.Title" />
+    }
+    @if (!string.IsNullOrEmpty(ogImage))
+    {
+        <meta property="og:image" content="@ogImage" />
+    }
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.OgContentType))
+    {
+        <meta property="og:type" content="@Model.CurrentPage.OgContentType" />
+    }
+    @if (!string.IsNullOrEmpty(noindexNoFollow))
+    {
+        <meta name="robots" content="@noindexNoFollow" />
+    }
+    <title>@title</title>
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.MetaTitle))
+    {
+        <meta name="title" content="@Model.CurrentPage.MetaTitle" />
+    }
+    @if (Model.CurrentPage.MetaKeywords is { Length: > 0 })
+    {
+        <meta name="keywords" content="@string.Join(",", Model.CurrentPage.MetaKeywords)" />
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.MetaDescription))
+    {
+        <meta name="description" content="@Model.CurrentPage.MetaDescription" />
+    }
+    @Html.CanonicalLink()
+    @Html.AlternateLinks()
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hurricane&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" defer href="/assets/hnhn/css/bootstrap.min.css" />
+    <link rel="stylesheet" defer href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="/assets/hnhn/css/swiper-bundle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" defer href="/assets/hnhn/css/aos.css" />
+    <link rel="stylesheet" defer href="/assets/hnhn/css/hnhn.css" />
+    <required-client-resources area="Header" />
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.Favicon))
+    {
+        <link rel="icon" href="@Model.Layout.Favicon" />
+    }
+    @Html.Raw(Model.Layout.HeaderScripts)
+    @if (Model.CurrentPage.DisplaySocialShare)
+    {
+        @Html.Raw(Model.Layout.SocialShareScript)
+    }
+    @Html.RenderTrackingScripts(Model.Layout.TrackingScripts, ScriptPlacement.BeforeClosingHeadTag, "NotificationCookieAlertModelcookieConsent")
+</head>
+
+<body>
+    @Html.RenderTrackingScripts(Model.Layout.TrackingScripts, ScriptPlacement.AfterOpeningBodyTag, "NotificationCookieAlertModelcookieConsent")
+    <a class="skip-link" href="#main-content" tabindex="0">Skip to main content</a>
+    @Model.Layout.BodyScripts
+
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+
+    @Html.FullRefreshPropertiesMetaData()
+
+    @{
+        await Html.RenderPartialAsync("~/HNHN/Views/Shared/Header.cshtml", Model);
+    }
+
+    @*@if (!isHomePage)
+    {
+    await Html.RenderPartialAsync("Breadcrumbs");
+    }*@
+
+    <main id="main-content">
+        @RenderBody()
+
+        <div epi-property="@Model.CurrentPage.CakeLayer">
+            <div epi-property-item class="block" epi-on-item-rendered="OnItemRendered" />
+        </div>
+    </main>
+
+    @{
+        await Html.RenderPartialAsync("~/HNHN/Views/Shared/Footer.cshtml", Model);
+    }
+    <required-client-resources area="Footer" />
+    <script src="/assets/hnhn/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/hnhn/js/swiper-bundle.min.js"></script>
+    <script src="/assets/hnhn/js/aos.js"></script>
+    <script src="/assets/hnhn/js/hnhn-scripts.js"></script>
+    @Html.Raw(Model.Layout.FooterScripts)
+    @Html.RenderTrackingScripts(Model.Layout.TrackingScripts, ScriptPlacement.BeforeClosingBodyTag, "NotificationCookieAlertModelcookieConsent")
+</body>
+</html>

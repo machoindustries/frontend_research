@@ -1,0 +1,51 @@
+﻿@model ANA.Site.Models.ViewModels.ProfessionalPresentationLightBox
+
+<div data-lightbox-src="presentationedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.ProfessionalDevPresentationsId, new { data_pd_presentation_input_id = "" })
+        <label for="@Html.IdFor(m => m.Subject)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Presentations/Subject")</span>
+            @Html.TextBoxFor(m => m.Subject, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Presentations/Subject"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_presentation_input_subject = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Subject)"></div>
+        
+        <label for="@Html.IdFor(m => m.Sponsor)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Presentations/Sponsors")</span>
+            @Html.TextBoxFor(m => m.Sponsor, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Presentations/Sponsors"), data_formfield_text = "", data_pd_presentation_input_sponsor = "" })
+        </label>
+        
+        <label for="@Html.IdFor(m => m.Date)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Presentations/LbDate")</span>
+            @Html.TextBoxFor(m => m.Date, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Presentations/LbDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Presentations/LbDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_presentation_input_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Date)"></div>
+        
+        <label for="@Html.IdFor(m => m.Audience)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Presentations/Audience")</span>
+            @Html.TextBoxFor(m => m.Audience, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Presentations/Audience"), data_formfield_text = "", data_validate = "", data_pd_presentation_input_audience = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Audience)"></div>
+
+
+
+        <label for="@Html.IdFor(m => m.ClockHrs)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="0">@Html.Translate("/ProfessionalDevelopment/Presentations/LbClockHrs")</span>
+            @Html.TextBoxFor(m => m.ClockHrs, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Presentations/ClockHrs"), data_formfield_text = "", data_validate = "", data_pd_presentation_input_clockhrs = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.ClockHrs)"></div>
+
+
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/ProfessionalDevelopment/Presentations/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>
+
+<div data-lightbox-src="presentationconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you would like to remove this entry?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>

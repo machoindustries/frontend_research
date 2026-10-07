@@ -1,0 +1,31 @@
+---
+sub-nav:
+  -
+    title: "Home"
+    url: "/index.html"
+  -
+    title: "About"
+    url: "/learn-more.html"
+  -
+    title: "News"
+    url: "/news.html"
+  -
+    title: "On-the-Go Resources"
+    url: "/on-the-go.html"
+  -
+    title: "On-the-Go Resources"
+    url: "/on-the-go.html"
+  -
+    title: "Training"
+    url: "#"
+  -
+    title: "Project ECHO"
+    url: "#"
+
+btn-url: "#"
+  # -
+  #   title: "Grant Program"
+  #   url: "#"
+  # -
+  #   title: "Partnerships"
+  #   url: "#"

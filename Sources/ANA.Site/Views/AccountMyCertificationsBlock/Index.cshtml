@@ -1,0 +1,104 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.CustomerAccountModels
+@using EPiServer.ServiceLocation
+@using EPiServer
+@using Mediachase.Commerce.Catalog
+@using EPiServer.Web.Routing
+@using EPiServer.Commerce.Catalog.ContentTypes
+@model ANA.Site.Models.ViewModels.AccountMyCertificationsViewModel
+@{
+    var contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
+    var referenceConverter = ServiceLocator.Current.GetInstance<ReferenceConverter>();
+
+}
+<div class="c-account__section">
+    <h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+    <p class="c-account__text">@Html.PropertyFor(m => m.Description)</p>
+    <div class="c-account__summary">
+        <a href="@Model.ApplyUrl" id="myCertificationsTop" class="c-account__cta--add-new" title="@Html.Translate("/MyAccount/Certification/New")">@Html.Translate("/MyAccount/Certification/New")</a>
+    </div>
+    @if (Model.Certifications != null && Model.Certifications.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>@Html.Translate("/MyAccount/Certification/Name")</th>
+                    <th>@Html.Translate("/MyAccount/Certification/DateStarted")</th>
+                    <th>@Html.Translate("/MyAccount/Certification/Status")</th>
+                    <th>@Html.Translate("/MyAccount/Certification/action")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Certifications)
+                {
+                    var productLink = referenceConverter.GetContentLink(item.CertificationCode);
+                    CatalogContentBase productContent = null;
+                    var productPageUrl = string.Empty;
+                    if (productLink != null && productLink.ID != 0)
+                    {
+                        productContent = contentLoader.Get<CatalogContentBase>(productLink);
+                        var urlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+                        if (productContent != null)
+                        {
+                            productPageUrl = urlResolver.GetUrl(productContent);
+                        }
+
+                    }
+
+                    <tr>
+                        @if (!string.IsNullOrEmpty(productPageUrl))
+                        {
+                            <td><a href="@productPageUrl">@item.Name</a></td>
+                        }
+                        else
+                        {
+                            <td>@item.Name</td>
+                        }
+                        <td>@DateTime.Parse(item.ApplicationDate).ToAnaFormatString()</td>
+                        <td>@item.Status</td>
+
+                        <td>
+                            @if (item.Status.Equals("INCOMPLETE", StringComparison.CurrentCultureIgnoreCase) || item.Status.Equals("PENDING", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                <a href="@string.Format(Model.EditUrl, item.CertificationCode)">@Html.Translate("/MyAccount/Certification/Edit")</a>
+
+                                <br />
+                                if (!string.IsNullOrEmpty(item.RenewalCode))
+                                {
+                                    @Html.Raw("/")
+                                }
+                            }
+                            @if (item.Status.Equals("CERTIFIED", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                <a href="/Certapps/PrintWallet?OrderNo=@(item.OrderNumber)&MasterCustomerID=@(item.CustomerId)" target="_blank">@Html.Translate("/MyAccount/Certification/print")</a>
+                                <br />
+                            }
+
+                            @if (!string.IsNullOrEmpty(item.RenewalCode))
+                            {
+                                <a href="/Certapps/?certcode=@(item.RenewalCode)">@Html.Translate("/MyAccount/Certification/Renew")</a>
+                                <br />
+                            }
+                            @if (item.AllowVerification())
+                            {
+                                <a href="@Model.VerifyUrl">@Html.Translate("/MyAccount/Certification/Verify")</a>
+                                
+                            }
+                             
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a href="#myCertificationsTop" title="Back to top">back to top</a>
+    }
+    else
+    {
+        <div class="c-account__no-results">@Html.Translate("/MyAccount/Certification/NoResults")</div>
+    }
+    <div class="e-lightbox-source">
+
+    </div>
+</div>
+

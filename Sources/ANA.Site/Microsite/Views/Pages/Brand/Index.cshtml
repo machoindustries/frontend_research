@@ -1,0 +1,7 @@
+@using ANA.Site.Microsite.Models.Pages.Brand
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.DefaultMicrositePageViewModel<BrandHomePage>
+@{
+    Layout = "~/Microsite/Views/Shared/Layouts/_BrandRoot.cshtml";
+}
+@Html.PropertyFor(m => m.CurrentPage.ContentArea, new { HasContainer = false, HasItemContainer = false })

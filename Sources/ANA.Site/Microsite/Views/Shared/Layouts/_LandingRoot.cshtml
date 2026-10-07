@@ -1,0 +1,106 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Microsite.Models.Pages.Landing
+@using ANA.Site.Microsite.Extensions
+@using ANA.Site.Models.Media
+@using ANA.Site.Business.Helpers
+@using Microsoft.AspNetCore.Hosting
+
+@inject IWebHostEnvironment WebHostEnvironment
+
+@model ANA.Site.Microsite.Models.IMicrositePageViewModel<LandingPage>
+
+@{
+    var canonicalUrl = SiteDefinition.Current.SiteUrl.ToString().TrimEnd('/') + Model.CurrentPage.ContentLink.GetFriendlyUrl(false, true); ;
+    var imageData = Model.Layout.SocialImage != null ? Model.Layout.SocialImage.Get<ImageFile>() : null;
+}
+
+<!DOCTYPE html>
+<html class="no-js loading" lang="@Model.Layout.Culture.Name">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2, user-scalable=yes">
+    <meta name="target_country" content="@Model.Layout.Region.TwoLetterISORegionName">
+    <title>@(Model.CurrentPage.MetaTitle ?? (Model.CurrentPage.Heading ?? string.Empty + " | " + Model.Layout.SiteName ?? string.Empty))</title>
+    <link rel="canonical" href="@canonicalUrl" />
+    <meta name="description" content="@(Model.CurrentPage.MetaDescription ?? Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+    <meta property="og:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta property="og:locale" content="@Model.Layout.Culture.Name">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:site_name" content="@Model.Layout.SiteName" />
+    <meta property="og:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+    <meta property="article:published_time" content="@Model.CurrentPage.StartPublish.Value.ToString("s")" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@("@" + (Model.Layout.TwitterSite ?? "ananursingworld"))" />
+    <meta name="twitter:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta name="twitter:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+
+    @if (imageData != null)
+    {
+        <meta property="og:image" content="@imageData.GetCroppedImageUrl(1200, 630, true)" />
+        <meta property="og:image:type" content="@imageData.MimeType" />
+        <meta name="twitter:image" content="@imageData.GetCroppedImageUrl(300, 300, true)" />
+    }
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.DisableIndexing))
+    {
+        <meta name="robots" content="@Model.CurrentPage.DisableIndexing" />
+    }
+
+    <script src="@(Model.Layout.AssetPrefix)js/app.js" type="text/javascript" async></script>
+    <link href="@(Model.Layout.AssetPrefix)css/app.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="@(Model.Layout.AssetPrefix)favicons/favicon.ico">
+    @if (Model.Layout.Favicon != null)
+    {
+        <link rel="icon" type="image/png" href="@(Model.Layout.Favicon.GetFriendlyUrl())" />
+    }
+    <link rel="manifest" href="@(Model.Layout.AssetPrefix)favicons/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#fff">
+    <meta name="application-name" content="@Model.Layout.SiteName">
+
+    <style>
+        .grid-container.ana-component-wrapper {
+            --ana-theme-color-primary: @Model.CurrentPage.PrimaryColor !important;
+            --ana-theme-color-secondary: @Model.CurrentPage.SecondaryColor !important;
+            --ana-theme-color-tertiary: @Model.CurrentPage.TertiaryColor !important;
+        }
+    </style>
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.HeadScripts))
+    {
+        @Html.Raw(Model.CurrentPage.HeadScripts)
+    }
+</head>
+<body>
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.BodyScripts))
+    {
+        @Html.Raw(Model.CurrentPage.BodyScripts)
+    }
+
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.FullRefreshPropertiesMetaData()
+
+    <div class="grid-container ana-component-wrapper">
+        <div class="grid-x">
+            @RenderBody()
+        </div>
+    </div>
+    <div class="svg-sprite-sheet hide" aria-hidden="true">
+        @{
+            var iconsFilePath = System.IO.Path.Combine(WebHostEnvironment.WebRootPath, "Microsite/assets/landing/icons/icons.svg");
+        }
+        @Html.Raw(GeneralExtensions.ReadAllText(iconsFilePath))
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.FooterScripts))
+    {
+        @Html.Raw(Model.CurrentPage.FooterScripts)
+    }
+    @* @if (!string.IsNullOrEmpty(Model.Layout.AddThisKey))
+    {
+        Go to www.addthis.com/dashboard to customize your tools
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=@Model.Layout.AddThisKey"></script>
+    } *@
+</body>
+</html>

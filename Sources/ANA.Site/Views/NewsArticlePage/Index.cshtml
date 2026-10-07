@@ -1,0 +1,75 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.Pages
+@using ANA.Site.Models.ViewModels
+@using EPiServer.Find.Helpers
+@using EPiServer.Web.Mvc.Html
+@model PageViewModel<NewsArticlePage>
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+    var theImageReference = ServiceLocator.Current.GetInstance<IUrlResolver>();
+    string ImageURL = theImageReference.GetUrl(Model.CurrentPage.ListingImage);
+}
+
+<article>
+    <header class="grid-constraint">
+        <div class="grid">
+            <div class="grid__item one-whole pad--medium--two-twelfths medium--eight-twelfths">
+                <div class="c-news-detail">
+                    <h1 class="c-news-detail__title">
+                        @Html.PropertyFor(x => x.CurrentPage.Heading)
+                    </h1>
+                    <h3 class="c-news-detail__subtitle">
+                        @Html.PropertyFor(x => x.CurrentPage.SubHeading)
+                    </h3>
+                    @if (Model.CurrentPage.ListingImage != null)
+                    {
+                        <div>
+                            <img src="@ImageURL" />
+                        </div>
+                    }                                    
+                    @if(Model.CurrentPage.StartPublish != null)
+                    {
+                        <time class="c-news-detail__date"  datetime="@Model.CurrentPage.StartPublish.Value.ToISO8601UTCString()">
+                            @Model.CurrentPage.StartPublish.Value.ToAnaFormatString()
+                        </time>
+                    }
+                   
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="grid-constraint b-vsb--small">
+        <div class="block">
+            <div class="grid">
+                <div class="grid__item one-whole pad--medium--two-twelfths medium--eight-twelfths">
+                    <div class="e-richtext">
+                        @Html.PropertyFor(x => x.CurrentPage.MainBody)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="b-vsb--medium">
+
+        @Html.PropertyFor(x => x.CurrentPage.Blocks)
+        @Html.PropertyFor(x => x.CurrentPage.Authors, new { Tag = ANA.Site.Global.ContentAreaTags.AboutTheAuthor })
+
+        @if (Model.CurrentPage.FeaturedArticles != null)
+        {
+            <div class="grid">
+                <div class="grid__item one-whole">
+                    <div class="grid__item one-whole">
+                        <h2 class="containerblock__heading">
+                            <span>You might also like</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            @Html.PropertyFor(x => x.CurrentPage.FeaturedArticles)
+        }
+
+    </section>
+</article>

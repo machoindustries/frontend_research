@@ -1,0 +1,41 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Models.Blocks
+
+@model ANA.Site.HNHN.Models.ViewModels.BasePageViewModel<ANA.Site.HNHN.Models.Pages.StandardContentPage>
+
+<div class="container">
+    @{
+        await Html.RenderPartialAsync("_Breadcrumb", Model);
+    }
+</div>
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    @Html.BeginEditSection("div", m => m.CurrentPage.ContentSections)
+}
+@if (Model.CurrentPage.ContentSections != null)
+{
+    foreach (var section in Model.CurrentPage.ContentSections.FilteredItems.GetContentItems<BaseBlockData>().Select((value, i) => new { i, value }))
+    {
+        string sectionClass = "";
+        string tag = "";
+        if (Model.CurrentPage.AlternateRowBackgrounds)
+        {
+            sectionClass += (section.i%2 > 0 ? " section--light-bg" : "");
+        }
+        if (section.value is FeaturedContentSectionBlock)
+        {
+            sectionClass += " partners";
+            tag = "TwoRowFeaturedContent";
+        }
+        
+        @Html.DisplayFor(m => section.value, new { SectionClass = sectionClass, Tag = tag })
+    }
+}
+@if (ContentHelper.PageIsInEditMode())
+{
+    @Html.EndEditSection("div")
+}

@@ -1,0 +1,40 @@
+﻿@using EPiServer.Forms
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using EPiServer.Forms.Helpers.Internal
+
+@model CaptchaElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var helpText = Model.GetHelpText();
+    var errorMessage = Model.GetErrorMessage();
+}
+
+<div class="Form__Element FormCaptcha ValidationRequired @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" data-epiforms-element-name="@formElement.ElementName">
+    <label for="@formElement.Guid" class="e-form__label e-form__label--text" data-formfield>
+        <span class="e-form__label-text" data-fake-placeholder>@labelText</span>
+    </label>
+    <button name="submit" type="submit" data-epiforms-captcha-image-handler="@formElement.Guid" value="@SubmitButtonType.RefreshCaptcha.ToString()"
+            class="FormExcludeDataRebind FormCaptcha__Refresh e-button e-button--button e-button--white e-form__captcha-refresh">
+        @Html.Translate("/episerver/forms/viewmode/refreshcaptcha")
+    </button>
+    <div class="FormCaptcha__Image-Wrap">
+        <img src="@Model.CaptchaImageHandler" class="FormCaptcha__Image" />
+    </div>
+    <div class="one-half medium--one-third">
+        <input id="@formElement.Guid" name="@formElement.ElementName" type="text" class="e-form__input e-form__input--text FormHideInSummarized" />
+    </div>
+    @if (!string.IsNullOrWhiteSpace(helpText))
+    {
+        <p class="Form__HelpText">@helpText</p>
+    }
+    <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@formElement.ElementName">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div id="@formElement.ElementName-error" class="error-msg">@errorMessage</div>
+        }
+    </div>
+</div>

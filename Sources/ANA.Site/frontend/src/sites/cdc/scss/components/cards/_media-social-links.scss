@@ -1,0 +1,199 @@
+.media-social-links {
+    max-width: 30rem;
+    padding: 2rem 1rem 1rem 1rem;
+    text-decoration: none;
+
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    &:hover {
+        h4 {
+            text-decoration: underline;
+        }
+
+        .card-img-overlay {
+            animation: fade .4s ease-in-out 0s 1 normal;
+            animation-fill-mode: forwards;
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                    background-color: #009CDE;
+                }
+
+                to {
+                    opacity: .5;
+                    background-color: #009CDE;
+                }
+            }
+
+            cursor: pointer;
+        }
+
+        .card-header-link {
+            text-decoration: underline;
+            h4 {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .card-image {
+
+        .card-img-container {
+            width: 100%;
+            height: 0;
+            padding-top: 66%;
+            position: relative;
+
+            .card-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0
+            }
+
+            .card-img-overlay {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                z-index: 5;
+            }
+        }
+
+        .card-icon-container {
+            position: absolute;
+            border-radius: 50%;
+            bottom: 92%;
+            left: 3%;
+            width: 34px;
+            height: 34px;
+            z-index: 5;
+            background-color: #009CDE;
+            cursor: pointer;
+            padding: 7px;
+            border: none;
+
+            .card-link-icon {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .taxonomy {
+            background-color: #cf4520bf;
+            max-width: 13.4375rem;
+            display: inline;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            line-height: 1.75rem;
+            letter-spacing: 0.0313rem;
+            z-index: 10;
+            color: $white;
+            font-weight: 600;
+            padding: .5rem;
+            cursor: pointer;
+        }
+    }
+
+    .card-header {
+        font-size: 1.5rem;
+        line-height: 1.875rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 1.25rem 0rem 0rem 0rem;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .card-header-link {
+        font-size: 1.5rem;
+        line-height: 1.875rem;
+        font-weight: 500;
+        font-family: $font-main;
+        color: #0a0a0a;
+        letter-spacing: 0.03125rem;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+
+            h4 {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    a.card-header-link:visited { 
+        color: #0a0a0a; 
+    }    
+}
+
+.three-across-card-padded.blue-background-orange-hover .featured-resource.media-social-links {
+
+    &:hover {
+        h4 {
+            text-decoration: underline;
+        }
+
+        .card-img-overlay {
+            animation: fade .4s ease-in-out 0s 1 normal;
+            animation-fill-mode: forwards;
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                    background-color: #FAAA51;
+                }
+
+                to {
+                    opacity: .5;
+                    background-color: #FAAA51;
+                }
+            }
+
+            cursor: pointer;
+        }
+    }
+
+    .card-header-link {
+        color: #fefefe;
+    }
+
+    a.card-header-link:visited { 
+        color: #fefefe;
+    }  
+}
+
+.three-across-card-padded.gold-background-blue-hover .featured-resource.media-social-links {
+    
+    &:hover {
+        h4 {
+            text-decoration: underline;
+        }
+
+        .card-img-overlay {
+            animation: fade .4s ease-in-out 0s 1 normal;
+            animation-fill-mode: forwards;
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                    background-color: #009CDE;
+                }
+
+                to {
+                    opacity: .5;
+                    background-color: #009CDE;
+                }
+            }
+
+            cursor: pointer;
+        }
+    }
+}

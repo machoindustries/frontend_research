@@ -1,0 +1,20 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCPlainTextBlock
+
+@* <div class="plain-text @Model.GetCssClass()">
+ *@
+<div class="plain-text">
+
+    @if (!string.IsNullOrEmpty(Model.Heading))
+    {
+        <h2 class="head">
+            @Html.PropertyFor(i => i.Heading)
+        </h2>
+    }
+    @if (!string.IsNullOrEmpty(Model.Content))
+    {
+        <div class="copy">
+            @Html.PropertyFor(i => i.Content)
+        </div>
+    }
+</div>

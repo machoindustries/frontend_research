@@ -1,0 +1,73 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using Geta.Optimizely.Extensions
+
+@model ANA.Site.Models.ViewModels.VariantsViewModel
+
+@{
+    var settingsPage = SettingsHelper.GetSettings();
+    var memburl = settingsPage.MembershipPortalUrl != null ? settingsPage.MembershipPortalUrl.GetFriendlyUrl() : "/Mbrapps";
+    var tooltiptext = settingsPage.MembershipToolTipText;
+    var tooltipicon = settingsPage.MembershipToolTipHoverIcon;
+    ImageFile imageData = null;
+    if (tooltipicon != null)
+    {
+        imageData = tooltipicon.Get<ImageFile>();
+    }
+}
+<div class="c-product-page-detail__pricing">
+
+    <div class="c-product-page-detail__pricing-item">
+        <span class="c-product-page-detail__pricing-label">
+            @Html.Translate("/BookPage/RegularPrice")
+        </span>
+
+        @if (Model.DiscountedPrice != null && Model.DiscountedPrice.Value.Amount > 0.0m)
+        {
+            <span class="c-product-page-detail__pricing-price--old">@Model.PlacedPrice</span>
+            <span class="c-product-page-detail__pricing-price--new">@Model.DiscountedPrice</span>
+        }
+        else
+        {
+            <span class="c-product-page-detail__pricing-price">@Model.PlacedPrice</span>
+        }
+    </div>
+    @if (Model.DiscountedMemberPrice != null && Model.DiscountedMemberPrice.Value.Amount > 0.0m)
+    {
+    <div class="c-product-page-detail__pricing-item">
+        <span class="c-product-page-detail__pricing-label">@Html.Translate("/BookPage/MemberPrice")</span>
+        @{ if (tooltiptext != null && !string.IsNullOrWhiteSpace(tooltiptext) && (imageData != null))
+        {
+            <a href="javascript:;" class="tooltip">
+                <img class="show_info" alt="@imageData.AltText" src="@imageData.ContentLink.GetFriendlyUrl()" />
+                <span class="tooltiptext">@tooltiptext</span>
+            </a>
+    }
+        }
+        <span class="c-product-page-detail__pricing-price--old">@Model.MemberPrice</span>
+        <span class="c-product-page-detail__pricing-price--new">@Model.DiscountedMemberPrice</span>
+    </div>
+    }
+    else
+    {
+    <div class="c-product-page-detail__pricing-item">
+        <span class="c-product-page-detail__pricing-label">@Html.Translate("/BookPage/MemberPrice")</span>
+        @{ if (tooltiptext != null && !string.IsNullOrWhiteSpace(tooltiptext) && (imageData != null))
+        {
+            <a href="javascript:;" class="tooltip">
+                <img class="show_info" alt="@imageData.AltText" src="@imageData.ContentLink.GetFriendlyUrl()" />
+                <span class="tooltiptext">@tooltiptext</span>
+            </a>
+    }
+        }
+        <span class="c-product-page-detail__pricing-price">@Model.MemberPrice</span>
+    </div>
+    }
+
+    <div class="c-product-page-detail__pricing-item c-product-page-detail__pricing-item--small">
+        <a href="@memburl" class="c-product-page-detail__pricing-label">@Html.Translate("/BookPage/Join")</a>
+        <span class="c-product-page-detail__pricing-salenote">@Model.PromotionName</span>
+    </div>
+
+</div>

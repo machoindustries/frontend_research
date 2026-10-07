@@ -1,0 +1,20 @@
+---
+  promos:
+  -
+    grid-size: 'small-12 large-12'
+    hastopmargin: false
+    hasborder: true
+    heading: 'Promotion/CTA dolor'
+    heading-size: '5'
+    heading-color: 'color-font-dark-blue'
+    copy: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at portitor sem. Aliquam erat volutpat.</p>
+      <p><a href="#">Go to link</a></p>'
+  -
+    grid-size: 'small-12 large-12'
+    hastopmargin: false
+    hasborder: true
+    heading: 'Promotion/CTA adipiscing elit'
+    heading-size: '5'
+    heading-color: 'color-font-dark-blue'
+    copy: '<p>Consectetur adipiscing elit. Aliquam at portitor sem. Aliquam erat volutpat.</p>
+      <p><a href="#">Go to link</a></p>'

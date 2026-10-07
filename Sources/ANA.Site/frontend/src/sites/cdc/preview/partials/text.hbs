@@ -1,0 +1,15 @@
+<!-- TEXT BLOCK -->
+<div class="tri-text-block cell {{grid-size}}
+{{#if hastopmargin}}mt-2{{/if}}
+{{#if hasborder}}block-border{{/if}}
+{{#if centertext}}justify-center text-center{{/if}}">
+  {{#if heading}}
+  <h2 class="head h{{heading-size}} {{heading-color}} {{heading-weight}}">{{heading}}</h2>
+  {{/if}}
+  {{#if sub-heading}}
+  <h3 class="subhead h{{sub-heading-size}} {{sub-heading-color}} {{sub-heading-weight}}">{{sub-heading}}</h3>
+  {{/if}}
+  {{#if copy}}
+  <div class="copy">{{{copy}}}</div>
+  {{/if}}
+</div>

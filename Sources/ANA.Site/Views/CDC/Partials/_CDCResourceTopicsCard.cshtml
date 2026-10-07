@@ -1,0 +1,145 @@
+﻿@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using EPiServer
+@using EPiServer.Web.Routing;
+@using ANA.Site.Models.Media;
+@using System.Linq
+
+@model CDCResourceViewModel
+
+<article class="card small-12 medium-6 large-4 grid-x white-space media-content-social-links">
+    @if (Model.ResourceType == ResourceLinkType.EmbeddedContent)
+    {
+        if (!string.IsNullOrEmpty(Model.AssetUrl))
+        {
+            <a class="img-content-container no-style-link"
+               onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());"
+               data-open="resource-modal"
+               data-embeded-content="@Model.AssetUrl"
+               aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                @{
+                    Content();
+                }
+            </a>
+        }
+        else
+        {
+            <a class="img-content-container no-style-link"
+               onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                @{
+                    Content();
+                }
+            </a>
+        }
+    }
+    else
+    {
+        <a href="@Model.AssetUrl"
+           onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());"
+           target="@Model.TargetFrame"
+        @(Model.ResourceType == ResourceLinkType.Download ? "download" : null)
+           class="img-content-container no-style-link">
+            @{
+                Content();
+            }
+        </a>
+    }
+    @{
+        await RenderTags();
+    }
+</article>
+
+
+@functions {
+    private void Content()
+    {
+        string iconSrc = "";
+        switch (Model.ResourceType)
+        {
+            case ResourceLinkType.Download:
+                iconSrc = "/assets/img/download-icon.svg";
+                break;
+            case ResourceLinkType.EmbeddedContent:
+                iconSrc = "/assets/img/youtube-1.svg";
+                break;
+            case ResourceLinkType.Link:
+                iconSrc = "/assets/img/external-link.svg";
+                break;
+            default:
+                iconSrc = "/assets/img/external-link.svg";
+                break;
+        }
+        var image = (!ContentReference.IsNullOrEmpty(Model.Image) ? ServiceLocator.Current.GetInstance<IContentLoader>().Get<MediaData>(Model.Image) : null) as ImageFile;
+
+        <div class="card-img-container">
+            @if (image != null)
+            {
+                <img class="card-img" alt="@image.AltText"
+                     src="@UrlResolver.Current.GetUrl(image.ContentLink)" />
+            }
+            <div class="card-img-overlay"></div>
+            <button class="button card-icon-container">
+                <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+            </button>
+        </div>
+        <div class="card-content">
+            <h4>@Model.Heading</h4>
+            <p>@Model.Description</p>
+        </div>
+    }
+
+    private async Task RenderTags()
+    {
+        CDCShareButtonViewModel shareButton = new CDCShareButtonViewModel(Model);
+
+        <div class="card-topics">
+            @if (Model.Taxonomy != null && Model.Taxonomy.Any())
+            {
+                if (Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source).Any())
+                {
+                    foreach (var source in Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source))
+                    {
+                        RenderSource(source);
+                    }
+                }
+                if (Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic).Any())
+                {
+                    var topics = Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic).Take(2);
+
+                    foreach (var topic in topics)
+                    {
+                        RenderTag(topic);
+                    }
+                }
+            }
+
+            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCShareButton.cshtml", shareButton)
+        </div>
+    }
+
+    private void RenderSource(CDCTaxonomyViewModel tag)
+    {
+        <div class="card-ANA">@tag.Label</div>
+        if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                RenderSource(subTag);
+            }
+        }
+    }
+
+    private void RenderTag(CDCTaxonomyViewModel tag)
+    {
+        <div>@tag.Label</div>
+        if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                RenderTag(subTag);
+            }
+        }
+    }
+}
+

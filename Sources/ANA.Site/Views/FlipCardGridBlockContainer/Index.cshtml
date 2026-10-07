@@ -1,0 +1,33 @@
+﻿@model ANA.Site.Models.ViewModels.FlipCardGrid.FlipCardGridBlockContainerViewModel
+
+<div class="grid-constraint">
+    <div class="grid grid--full">
+        <div class="grid__item one-whole">
+            <div class="c-flip-card-grid">
+                <div class="intro">
+                    @if (this.Model.HasHeading)
+                    {
+                        <h2 class="title">@Model.Heading</h2>
+                    }
+
+                    @if (Model.HasSectionIntro)
+                    {
+                        <p class="desc">@Model.SectionIntro</p>
+                    }
+
+                </div>
+
+                @if (Model.HasAllFlipCardGridBlocks)
+                {
+                    <ul class="flip-cards">
+                        @foreach (var item in Model.FlipCardGridBlocks)
+                        {
+                            await Html.RenderPartialAsync("~/views/shared/_FlipCardGridBlock.cshtml", item); 
+                        }
+                    </ul>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.Blocks.Callouts.BioCallout
+
+<div class="testimonial-block ">
+    <div class="testimonial-block__quote">
+        <p>@Html.PropertyFor(m => m.Summary)</p>
+    </div>
+    <footer class="testimonial-block__footer">
+        <div class="testimonial-block_image" @Html.EditAttributes(m => m.Image)>
+            <img src="@Url.ContentUrl(Model.Image)" alt="@Model.Title" />
+        </div>
+        <p class="testimonial-block__name" @Html.EditAttributes(m => m.Title)>@Model.Title</p>
+        @if (!string.IsNullOrEmpty(Model.Workplace) || ContentHelper.PageIsInEditMode())
+        {
+            <p class="testimonial-block__work-place" @Html.EditAttributes(m => m.Workplace)>@Model.Workplace</p>
+        }
+        <p class="testimonial-block__state">
+            @Html.PropertyFor(m => m.City, new { CustomTag = "span" })
+            @if (!string.IsNullOrWhiteSpace(Model.City) && !string.IsNullOrWhiteSpace(Model.State)) { 
+                <text>, </text>
+            }
+            @Html.PropertyFor(m => m.State, new { CustomTag = "span" })
+        </p>
+    </footer>
+</div>

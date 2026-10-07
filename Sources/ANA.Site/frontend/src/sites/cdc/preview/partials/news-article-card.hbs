@@ -1,0 +1,22 @@
+<article href="#" class="news-article-card">
+  <img src="{{img-src}}" alt="{{img-alt}}">
+  <div class="short-content">
+    <h3>{{heading}}</h3>
+    <p>{{short-content}}</p>
+  </div>
+  <div class="short-overlay"></div>
+
+  {{> share-button}}
+
+  <div class="reveal" id="share-resource-{{id}}" data-reveal>
+    <div class="addthis_inline_share_toolbox_qrdc"></div>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="long-overlay"></div>
+  <div class="long-content">
+    <h3>{{heading}}</h3>
+    <p>{{long-content}}</p>
+  </div>
+</article>

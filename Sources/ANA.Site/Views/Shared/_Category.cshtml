@@ -1,0 +1,6 @@
+﻿@model IEnumerable<ANA.Site.Models.ViewModels.VariantsViewModel>
+
+@foreach (var productModel in Model)
+{
+    await Html.RenderPartialAsync("_ProductTile", productModel);
+}

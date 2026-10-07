@@ -1,0 +1,69 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Helpers
+@model ANA.Site.Models.Blocks.TestimonialBlock
+
+@{
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+    var tag = (Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string) ?? string.Empty;
+
+    var gridClass = "";
+
+    if (displayOption != ANA.Site.Global.DisplayOptions.TestimonialFullWidth)
+    {
+        if (Model.BackgroundImage != null)
+        {
+            gridClass = $"{ ANA.Site.Global.StringConstants.GridClass }";
+        }
+        else if (tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator) && Model.BackgroundImage == null)
+        {
+            gridClass = $"{ ANA.Site.Global.StringConstants.GridClass } { ANA.Site.Global.StringConstants.GridClass8ColRight }";
+        }
+        else if (Model.BackgroundImage == null)
+        {
+            gridClass = $"{ ANA.Site.Global.StringConstants.GridClass } { ANA.Site.Global.StringConstants.GridClass8ColCentre }";
+        }
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(gridClass))
+{
+    @:<div class="grid-constraint">
+        @:<div class="grid">
+            @:<div class="@gridClass">
+            }
+<div class="c-testimonial">
+
+    <div class="thumb">
+        @if (Model.BackgroundImage != null)
+        {
+            <img src="@Model.BackgroundImage.GetCroppedImageUrl(500, 500)" alt="@(String.IsNullOrWhiteSpace(Model.Name) ? "" : Model.Name)">
+        }
+    </div>
+
+    <div class="details">
+        <blockquote>
+            <cite>
+                @if (!String.IsNullOrWhiteSpace(Model.Name))
+                {
+                    <span class="name">@Model.Name</span>
+                }
+                @if (!String.IsNullOrWhiteSpace(Model.JobTitle))
+                {
+                    <span class="role">@Model.JobTitle</span>
+                }
+            </cite>
+            @if (!String.IsNullOrWhiteSpace(Model.Quotation))
+            {
+                <div class="quote">
+                    @Model.Quotation
+                </div>
+            }
+        </blockquote>
+    </div>
+</div>
+@if (!string.IsNullOrWhiteSpace(gridClass))
+{
+@:</div>
+@:</div>
+@:</div>
+}

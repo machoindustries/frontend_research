@@ -1,0 +1,52 @@
+﻿@using ANA.Site.Models.ViewModels
+@using ANA.Site.Business.CustomPromotion;
+@using ANA.Site.Business.Extensions
+@using Geta.Optimizely.Extensions;
+@using EPiServer
+@using ANA.Site.Models.Commerce.Products
+
+@model ProductPartialViewModel
+@{
+    var productIcon = Model.Product.GetIconClass();
+    var productGroup = Model.Product.ProductGroupBlock;
+    var firstVariant = Model.VariantsModel.FirstOrDefault();
+
+}
+
+<div class="c-product-detail__image">
+    <figure class="c-product-detail__figure" @Html.Raw(productGroup != null && string.IsNullOrEmpty(firstVariant.ImageUrl) ? $"style=\"background-color: {productGroup.Colour}\"" : string.Empty)>
+        <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="c-product-detail__figure-link" data-product-detail-link>
+            @if (!string.IsNullOrEmpty(firstVariant.ImageUrl))
+            {
+                <img src="@firstVariant.ImageUrl?width=150" alt="@firstVariant.DisplayName" class="c-product-detail__image" />
+            }
+            else
+            {
+                <span class="@productIcon c-product-detail__figure-icon" @Html.Raw(productGroup != null ? $"style=\"color: {productGroup.Colour}\"" : string.Empty)></span>
+            }
+
+        </a>
+        
+        @if (!string.IsNullOrEmpty(Model.BannerText))
+        {
+            <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+            </div>
+        }
+    </figure>
+    @if (productGroup != null)
+    {
+        <div class="c-product-detail__group-name" style="color: @productGroup.Colour;">
+            @productGroup.Name
+        </div>
+    }
+    <div class="c-product-detail__info">
+        <h3 class="c-product-detail__info-title">
+            <a class="c-product-detail__info-link" href="@Model.Product.ContentLink.GetFriendlyUrl()">
+                @Model.Product.Heading
+            </a>
+        </h3>
+    </div>
+
+</div>

@@ -1,0 +1,127 @@
+﻿@using ANA.Site.Models.CDC.Pages
+@using Geta.Optimizely.Extensions;
+
+@model CDCResource
+
+@if (!string.IsNullOrEmpty(Model.EmbededContent))
+{
+    <div class="webinar-container" data-open="resource-modal"
+         data-embeded-content="@WebUtility.UrlEncode(Model.EmbededContent)"
+         aria-controls="Model-modal" aria-haspopup="true">
+        <div class="video-container">
+            <a class="video-link">
+                <div class="video-img">
+                    @{
+                        Image();
+                    }
+                </div>
+                <div class="action-icon">
+                    <img src="/assets/img/black-video-arrow.svg" />
+                </div>
+                @{
+                    Label();
+                }
+            </a>
+            <div class="b600 mb-1">@Html.PropertyFor(i => Model.Heading)</div>
+            <fig-caption class="webinar-caption">
+                @Html.PropertyFor(i => Model.Description)
+            </fig-caption>
+        </div>
+    </div>
+}
+else if (Model.FileToDownload != null)
+{
+    <div class="webinar-container">
+        <div class="video-container">
+            <a class="video-link" target="_blank" href="@Model.FileToDownload.GetFriendlyUrl()">
+                <div class="video-img">
+                    @{
+                        Image();
+                    }
+                </div>
+                <div class="action-icon">
+                    <img src="/assets/img/download-webinar.svg" />
+                </div>
+                @{
+                    Label();
+                }
+            </a>
+            <div class="b600 mb-1">@Html.PropertyFor(i => Model.Heading)</div>
+            <fig-caption class="webinar-caption">
+                @Html.PropertyFor(i => Model.Description)
+            </fig-caption>
+        </div>
+    </div>
+}
+else if (Model.LinkType == PageShortcutType.External)
+{
+    <div class="webinar-container">
+        <div class="video-container">
+            <a class="video-link" href="@Model.GetFriendlyUrl()" target="@Model.GetTargetFrame()">
+                <div class="video-img">
+                    @{
+                        Image();
+                    }
+                </div>
+                <div class="action-icon">
+                    <img src="/assets/img/black-external-link.svg" />
+                </div>
+                @{
+                    Label();
+                }
+            </a>
+            <div class="b600 mb-1">@Html.PropertyFor(i => Model.Heading)</div>
+            <fig-caption class="webinar-caption">
+                @Html.PropertyFor(i => Model.Description)
+            </fig-caption>
+        </div>
+    </div>
+}
+else
+{
+    <div class="webinar-container">
+        <div class="video-container">
+            <a class="video-link" href="@Model.GetFriendlyUrl()" target="@Model.GetTargetFrame()">
+                <div class="video-img">
+                    @{
+                        Image();
+                    }
+                </div>
+                @{
+                    Label();
+                }
+            </a>
+            <div class="b600 mb-1">@Html.PropertyFor(i => Model.Heading)</div>
+            <fig-caption class="webinar-caption">
+                @Html.PropertyFor(i => Model.Description)
+            </fig-caption>
+        </div>
+    </div>
+}
+
+
+@functions {
+void Label()
+{
+    if (Model.Label == ResourceLabel.New)
+    {
+        <div class="new">New</div>
+    }
+    else if (Model.Label == ResourceLabel.Popular)
+    {
+        <div class="popular">Popular</div>
+    }
+}
+
+void Image()
+{
+    if (Model.ListingImage != null)
+    {
+        @Html.PropertyFor(i => Model.ListingImage)
+    }
+    else
+    {
+        @Html.PropertyFor(i => Model.Image)
+    }
+}
+}

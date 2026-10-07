@@ -1,0 +1,81 @@
+﻿
+@using ANA.Site.Models.OJIN.Blocks.ViewModels
+@using ANA.Site.Models.OJIN.Blocks
+@using ANA.Site.Models.ViewModels.Ojin
+
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+@if (Model.CurrentPage.CakeLayerAdditionalInformation.Count > 0)
+{
+
+    <section class="ojin-additionalItems">
+        <div class="container">
+            <h3 class="ojin-additionalItems__title">@Html.PropertyFor(x => x.CurrentPage.CakeLayerAdditionalInformationTitle)</h3>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        @foreach (var item in Model.ListingPageCakeLayerAdditionalInformaiton)
+                        {
+                            if (item is CakeLayerCardBlock)
+                            {
+                                var cakeItem = OJINBlockHelper.PopulateCakeLayer(item as CakeLayerCardBlock);
+                                if (cakeItem != null)
+                                {
+                                    <div class="col-md-3">
+                                        <div class="ojin-currentTopic__card orange" style="background-color:@cakeItem.BackgroundColor; color:@cakeItem.TextColor" !important>
+                                            @if (cakeItem.Url != null)
+                                            {
+                                                <img src="@Url.ContentUrl(cakeItem.Url)" class="lazyload" />
+                                            }
+                                            <div class="ojin-currentTopic__desc">
+                                                <h3 class="ojin-currentTopic__title">
+                                                    @cakeItem.Heading
+                                                </h3>
+                                                <p>@Html.Raw(@cakeItem.TeaserText)</p>
+                                                <div class="ojin-currentTopic__btnCon">
+                                                    @if (cakeItem.ButtonTarget == "Same Window")
+                                                    {
+                                                        <a href="@Url.PageUrl(@cakeItem.ButtonLink)" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                                    }
+                                                    @if (cakeItem.ButtonTarget == "New Window")
+                                                    {
+                                                        <a href="@Url.PageUrl(@cakeItem.ButtonLink)" target="_new" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else if (item is CardBlock)
+                            {
+                                var cardItem = OJINBlockHelper.PopulateCardBlock(item as CardBlock);
+                                if (cardItem != null)
+                                {
+                                    <div class="col-md-3">
+                                        <div class="ojin-currentTopic__card">
+                                            @if (cardItem.Image != null)
+                                            {
+                                                <img src="@Url.ContentUrl(cardItem.Image)" class="lazyload" />
+                                            }
+                                            <div class="ojin-currentTopic__desc">
+                                                <div class="ojin-currentTopic__category">@cardItem.ARPageContentType</div>
+                                                <h3 class="ojin-currentTopic__title">
+                                                    <a href="@Url.PageUrl(@cardItem.ARUrl)">@cardItem.ARTitle</a>
+                                                </h3>
+                                                <div class="ojin-currentTopic__subTitle text-uppercase">@cardItem.ARAuthor</div>
+                                                <p>@Html.Raw(@cardItem.ARTeaserText)</p>
+                                                <div class="ojin-currentTopic__date">@((@cardItem.ARPublicationDate.Date != null && @cardItem.ARPublicationDate.Date.Year != 0001) ? @cardItem.ARPublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

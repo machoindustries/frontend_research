@@ -1,0 +1,56 @@
+.button-cta {
+  display: inline-block;
+  padding: 0;
+  text-decoration: none;
+  white-space: nowrap;
+
+  .cta {
+    margin: 0 0.4rem;
+    transform: skew(-14deg);
+    border-radius: rem-calc(11) rem-calc(4) rem-calc(14) rem-calc(2);
+    filter: drop-shadow(8px 8px 6px #cccccc);
+    background-image: linear-gradient(
+      to right,
+      $orange-button-outter,
+      $orange-button-inner,
+      $orange-button-inner,
+      $orange-button-outter2
+    );
+
+    &:hover {
+      background-image: linear-gradient(
+        to right,
+        $orange-button-outter2,
+        $orange-button-outter,
+        $orange-button-outter,
+        $orange-secondary
+      );
+
+      transition: background-image 0.5s ease-in-out;
+    }
+
+    .label {
+      margin: 0.4rem;
+      padding: 1rem 1.5rem;
+      text-transform: uppercase;
+      color: white;
+      font-family: "MontserratSemiBold";
+      font-size: rem-calc(13);
+      font-weight: 700;
+      transform: skew(14deg);
+      letter-spacing: rem-calc(1);
+
+      &:before {
+        content: "";
+        display: inline-block;
+        margin-right: 0.6rem;
+        width: 0;
+        height: 0;
+        border-top: 0.25rem solid transparent;
+        border-left: 0.5rem solid white;
+        border-bottom: 0.25rem solid transparent;
+      }
+    }
+  }
+}
+

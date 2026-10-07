@@ -1,0 +1,90 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.ViewModels
+@inject IHttpContextAccessor _httpContextAccessor 
+@model CartViewModel
+
+@* DT2-808 Hide PAC donation option on Cart page for State Only membership *@
+@foreach (var cartItem in Model.Shipment.CartItems)
+{
+    if (cartItem.DisplayName != null && cartItem.DisplayName.Contains("State Only"))
+    {
+        Model.IsPacDonationAvailable = false;
+    }
+}
+
+
+<div class="c-cart-summary__donation grid">
+
+    @if (Model.IsFoundationDonationAvailable && Model.FoundationDonationOptions.Any())
+    {
+        <div class="grid__item one-whole" data-require="./src/views/donations-view" data-donation-type="foundation">
+            <div class="grid">
+                <div class="c-cart-summary__donation-desc grid__item one-whole e-richtext">
+                    @if (Model.CurrentPage.FoundationDonationIntro != null)
+                    {
+                        @Html.PropertyFor(m => m.CurrentPage.FoundationDonationIntro)
+                    }
+                    else
+                    {
+                        <p>@Html.PropertyFor(m => m.CurrentPage.FoundationDonationText)</p>
+                    }
+                </div>
+                @foreach (var donationOption in Model.FoundationDonationOptions)
+                {
+                    var activeClass = donationOption.IsSelected ? "is--active" : "";
+                    <div class="grid__item one-whole small--one-third">
+                        <button data-donation-code="@donationOption.Code" class="e-button e-button--anchor e-button--white-light e-button c-cart-summary__button c-cart-summary__button--donate @activeClass" data-donation-amount-button>
+                            @donationOption.Amount.ToString()
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.IsPacDonationAvailable && Model.PacDonationOptions.Any())
+    {
+        <div class="grid__item one-whole b-vst--small" data-require="./src/views/donations-view" data-donation-type="pac">
+            <div class="grid">
+                <div class="c-cart-summary__donation-desc grid__item one-whole e-richtext">
+                    @if (Model.CurrentPage.PacDonationText != null)
+                    {
+                        <p>@Html.PropertyFor(m => m.CurrentPage.PacDonationText) <a href="#" id="clickhere" data-click-here-button><i>Click here</i> </a>for terms.</p>
+                    }
+                </div>
+                @foreach (var donationOption in Model.PacDonationOptions)
+                {
+                    var activeClass = donationOption.IsSelected ? "is--active" : "";
+                    <div class="grid__item one-whole small--one-third">
+                        <button data-donation-code="@donationOption.Code" class="e-button e-button--anchor e-button--white-light e-button c-cart-summary__button c-cart-summary__button--donate @activeClass" data-donation-amount-button>
+                            @donationOption.Amount.ToString()
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="e-lightbox-source">
+        <div data-lightbox-src="pactermsconditions">
+            <p>@Html.PropertyFor(m => m.CurrentPage.PacDonationIntro)</p>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button pacdonationpopupaccept" data-accept-terms data-modal-close>Yes, I confirm</a>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-decline-terms>Cancel and remove donation</a>
+        </div>
+    </div>
+
+    <div class="e-lightbox-source">
+        <div data-lightbox-src="pactermsconditionsreadonly">
+            <p>@Html.PropertyFor(m => m.CurrentPage.PacDonationIntro)</p>
+            <a href="#" class="e-button e-button--anchor e-button--blue e-button pacdonationpopupclose" data-accept-terms data-modal-close>Close</a>
+        </div>
+    </div>
+
+</div>
+
+@{
+    string seenPACTAC = _httpContextAccessor.HttpContext?.Session.GetString("SeenPACTAC");
+    <input type="hidden" value="@seenPACTAC" id='sessionvalue' class='sessionvalue'>
+}
+

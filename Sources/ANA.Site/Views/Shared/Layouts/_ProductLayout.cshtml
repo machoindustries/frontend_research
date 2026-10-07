@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+<article class="b-vst--medium b-vsb--large">
+    <div class="grid-constraint">
+        <div class="grid">
+            <div class="grid__item one-whole">
+                @RenderSection("ProductDetail")
+            </div>
+        </div>
+    </div>
+    
+    @if (IsSectionDefined("Adverts"))
+    {
+        @RenderSection("Adverts")
+    }
+            
+    <div class="grid-constraint">
+        <div class="grid">
+            <div class="grid__item one-whole">
+                @RenderSection("Tabs")
+            </div>
+        </div>
+    </div>
+</article>
+
+@if (IsSectionDefined("ContentArea"))
+{
+    @RenderSection("ContentArea")
+}

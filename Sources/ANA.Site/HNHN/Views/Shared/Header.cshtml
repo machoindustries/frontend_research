@@ -1,0 +1,155 @@
+﻿@using ANA_HNHN.Models.Pages.Base
+@using Brightfind.Helper
+@using ANA_HNHN.Extensions
+@model ANA_HNHN.Models.ViewModels.IPageViewModel<BasePageData>
+@{
+    var buttonBlock = Model.Layout.Logo;
+}
+
+<input type="hidden" id="autoSearchActionUrl" name="name" value="@Model.Layout.SearchActionUrl" />
+@if (Model.Layout.EnableGdprDialog)
+{
+    <div class="c-notification-bar" id="cookieConsent">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    @Html.Raw(Model.Layout.CookieText)
+                    <button class="btn btn-primary accept" type="button">Accept</button>
+                    <button class="btn btn-secondary decline" type="button">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<header class="main-header">
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-auto d-flex d-xl-none">
+                <a class="main-header__mobile-btn" href="javascript:void(0)" aria-label="Open Main Navigation" role="button"></a>
+            </div>
+            @if (buttonBlock != null)
+            {
+                var clickableImageButton = buttonBlock.Button;
+                var imageUrl = MediaHelper.GetUrl(buttonBlock?.Image);
+                var altText = MediaHelper.GetImageAltText(buttonBlock?.Image);
+                <div class="col col-xl-auto">
+                    <a href="@Url.ContentUrl(clickableImageButton.ButtonLink)" aria-label="@clickableImageButton.ButtonText"><img src="@imageUrl" alt="@altText"></a>
+                </div>
+            }
+            <div class="col-auto main_header__btn d-flex d-xl-none">
+                @if (Model.Layout.HeaderCta != null && Model.Layout.HeaderCta.Any())
+                {
+                    foreach (var headerCta in Model.Layout.HeaderCta)
+                    {
+                        if (headerCta != null && headerCta.ButtonLink != null && !headerCta.ButtonLink.IsEmpty())
+                        {
+                            @Html.UrlLink(headerCta.ButtonLink, headerCta.ButtonText, new Dictionary<string, object> { { "class", "btn btn-primary" }, { "target", headerCta.ButtonTarget } })
+                        }
+                    }
+                }
+            </div>
+            <div class="col main-header-wrap">
+                <div class="main-header__eyebrow">
+                    <ul>
+                        @if (Model.Layout.LoggedIn)
+                        {
+                            <li>
+                                @Model.Layout.WelcomeLabel <strong>@Model.Layout.UserName</strong>
+                            </li>
+                            <li>
+                                <a href="@Model.Layout.LogOutUrl">@Html.Translate("/common/logout")</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="@Model.Layout.LoginUrl">@Html.Translate("/common/login")</a>
+                            </li>
+                        }
+                        @if (Model.Layout.HeaderLinks != null && Model.Layout.HeaderLinks.Any())
+                        {
+                            @foreach (var menuItem in Model.Layout.HeaderLinks)
+                            {
+                                <li>
+                                    <a href="@menuItem.Href" target="@menuItem.Target">@menuItem.Text</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="main-header__bottom">
+                    <nav class="main-header__nav" role="navigation" aria-label="Main Navigation">
+                        <ul>
+                            @if (Model.Layout.MainNavigation != null && Model.Layout.MainNavigation.Any())
+                            {
+                                @foreach (var menuItem in Model.Layout.MainNavigation)
+                                {
+                                    <li class="dropdown">
+                                        @if (menuItem.SubItems != null && menuItem.SubItems.Any())
+                                        {
+                                            <a class="nav-item" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown" href="javascript:void(0)" role="button">@menuItem.Text</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="nav-item" aria-haspopup="false" aria-expanded="false" href="@menuItem.Href" target="@menuItem.Target">@menuItem.Text</a>
+                                        }
+                                        @if (menuItem.SubItems != null && menuItem.SubItems.Any())
+                                        {
+                                            <div class="main-header__sub-nav dropdown-menu">
+                                                @if (menuItem.MenuItemDescription != null)
+                                                {
+                                                    <div class="main-header_sub-nav__intro">
+                                                        @Html.Raw(menuItem.MenuItemDescription.ToHtmlStringWithUrls())
+                                                    </div>
+                                                }
+                                                <ul>
+                                                    @foreach (var child in menuItem.SubItems)
+                                                    {
+                                                        <li>
+
+                                                            @if (child.Icon != null)
+                                                            {
+                                                                <img class="main-header_sub-nav__icon" src="@child.Icon" />
+                                                            }
+                                                            <a href="@child.Href" target="@child.Target">@child.Text</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </nav>
+                    <div class="main_header__btn">
+                        @if (Model.Layout.HeaderCta != null && Model.Layout.HeaderCta.Any())
+                        {
+                            foreach (var headerCta in Model.Layout.HeaderCta)
+                            {
+                                if (headerCta != null && headerCta.ButtonLink != null && !headerCta.ButtonLink.IsEmpty())
+                                {
+                                    @Html.UrlLink(headerCta.ButtonLink, headerCta.ButtonText, new Dictionary<string, object> { { "class", "btn btn-primary" }, { "target", headerCta.ButtonTarget } })
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="main-header__search">
+                        <div class="main-header__search-wrap"></div>
+                        <a class="main-header__search-btn" href="javascript:void(0)" aria-label="Open Search" role="button"></a>
+                        <div class="main-header__search-bar">
+                            <div>
+                                <div class="input-group--main-search">
+                                    <input type="search" class="form-control" placeholder="Search" aria-label="Search the Website" id="searchBox" , autocomplete="off">
+                                    <ul id="suggestionBox" style="display: none;"></ul>
+                                    <button class="btn" type="button" id="searchButton">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<script src="/assets/hnhn/js/auto-complete.js"></script>

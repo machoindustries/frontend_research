@@ -1,0 +1,81 @@
+﻿@model ANA.Site.Models.ViewModels.MembershipLightboxViewModel
+
+<div data-lightbox-src="membershipedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        <label for="@Html.IdFor(m => m.Association)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Membership/Form/Label/Association")</span>
+            @Html.DropDownListFor(m => m.Association, Model.MembershipTypes, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/Membership/Form/Label/Association"), data_validate = "", data_validate_required = "", data_membership_input_association = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Association)"></div>
+        <label for="@Html.IdFor(m => m.MembershipId)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Membership/Form/Label/MembershipId")</span>
+            @Html.TextBoxFor(m => m.MembershipId, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Membership/Form/Label/MembershipId"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_membership_input_id = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.MembershipId)"></div>
+        <label for="@Html.IdFor(m => m.StartDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Membership/Form/Label/LbStartDate")</span>
+            @Html.TextBoxFor(m => m.StartDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/MyAccount/Membership/Form/Label/StartDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/MyAccount/Membership/Form/Label/LbStartDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_membership_input_start_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.StartDate)"></div>
+        <label for="@Html.IdFor(m => m.EndDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Membership/Form/Label/LbEndDate")</span>
+            @Html.TextBoxFor(m => m.EndDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/MyAccount/Membership/Form/Label/EndDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/MyAccount/Membership/Form/Label/LbStartDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_membership_input_end_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.EndDate)"></div>
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/Membership/Form/Label/Submit")" data-submit-membership>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script> 
+</div>
+
+<div data-lightbox-src="membershipconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you want to remove "{AssociationDescription}" membership from your account?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>
+
+<div data-lightbox-src="membershipcancel">
+    <h3 data-lightbox-heading>Cancel My Membership</h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        <label for="@Html.IdFor(m => m.Description)" class="e-form__label e-form__label" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder=""><strong>@Html.Translate("/MyAccount/Membership/Form/Label/Description")</strong></span>
+            <span class="e-form__label" data_membership_description> </span>
+        </label>
+        <label for="@Html.IdFor(m => m.EndDate)" class="e-form__label e-form__label" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder=""><strong>@Html.Translate("/MyAccount/Membership/Form/Label/RenewalDate")</strong></span>
+            <span class="e-form__label" data_membership_renewaldate> </span>
+        </label>
+        <label for="@Html.IdFor(m => m.OrderTotal)" class="e-form__label e-form__label" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder=""><strong>@Html.Translate("/MyAccount/Membership/Form/Label/RenewalAmount")</strong></span>
+            <span class="e-form__label" data_membership_renewalamount></span>
+        </label>
+
+        <label for="@Html.IdFor(m => m.Association)" class="e-form__label e-form__label--radio" data-formfield="">
+            <p><span class="e-form__label-text" data-fake-placeholder=""><strong>@Html.Translate("/MyAccount/Membership/Form/Label/CancelReason")</strong></span></p>
+            <p>
+                @foreach (var item in Model.CancelReasons)
+                {
+                    @Html.RadioButton("cancelreason", item.Value, false, new { @class = "radio", title = Html.Translate("/MyAccount/Membership/Form/Label/CancelReason"), data_validate = "", data_validate_required = "", data_validate_required_message = "Please select reason for cancelling Membership.", data_validate_message = "Please select reason for cancelling Membership.", data_membership_input_cancelreason = "" })
+                    <span> @item.Text</span>
+                    <br />
+                }
+            </p>
+        </label>
+        <div class="e-form__validation-errors" data-validation-error-cancelreason="" data-validation-error="" data-validation-for="LightboxMembership.cancelreason"></div>
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/Membership/Form/Label/Submit")" data-submit-membership-cancel>
+    </form>
+    <script src="~/Scripts/js/adddate.js"></script> 
+</div> 
+<div data-lightbox-src="membershipconfirmcancel">
+    <h3>Cancel My Membership</h3>
+    <p>Sorry to see you go.</p>
+    <p>Did you know ANA members receive access to the ANA mentorship program?</p>
+    <p>Did you know ANA members receive steep discounts on ANCC certifications?</p>
+    <p>Did you know ANA members have access to ANA journals such as The American Nurse?</p>
+    <p><strong>Do you still want to cancel your membership?</strong></p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-cancel-no>No</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-cancel-yes>Yes</a>
+</div>

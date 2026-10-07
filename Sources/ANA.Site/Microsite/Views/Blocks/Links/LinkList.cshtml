@@ -1,0 +1,25 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Links.LinkListBlock
+
+@if (!string.IsNullOrEmpty(Model.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.Heading)
+    </h2>
+}
+<div class="grid-container ">
+    <div class=" grid-x partners">
+        <div class="grid-x grid-margin-x grid-margin-y cell small-offset-1 small-10">
+            @foreach (var link in Model.Links ?? new EPiServer.SpecializedProperties.LinkItemCollection())
+            {
+                <div class="partners__partner cell small-5 medium-3">
+                    <span class="partners__name">@Html.PropertyFor(i => link)</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

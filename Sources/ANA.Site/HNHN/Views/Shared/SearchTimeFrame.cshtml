@@ -1,0 +1,33 @@
+﻿@using ANA_HNHN.Models.Enums
+@model ANA_HNHN.Services.Search.Models.SearchCriteriaModel
+
+<h3><a class="search__category-title" data-bs-toggle="collapse" href="#search__time-list" role="button" aria-expanded="false" aria-controls="search__time-list">@Html.Translate("/common/timeframe")</a></h3>
+<div class="collapse show" id="search__time-list">
+    <div class="form-check">
+        <input class="form-check-input time-filter" type="radio" name="timeFrame" value="@((int)TimeFrame.PastDay)" id="pastDay" @(Html.Raw(Model.TimeFrame.HasValue && ((int)Model.TimeFrame).Equals((int)TimeFrame.PastDay) ? "checked=\"checked\"" : ""))>
+        <label class="form-check-label" for="pastDay">@Html.Translate("/property/enum/TimeFrame/PastDay")</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input time-filter" type="radio" name="timeFrame" value="@((int)TimeFrame.PastWeek)" id="pastWeek" @(Html.Raw(Model.TimeFrame.HasValue && ((int)Model.TimeFrame).Equals((int)TimeFrame.PastWeek) ? "checked=\"checked\"" : ""))>
+        <label class="form-check-label" for="pastWeek">@Html.Translate("/property/enum/TimeFrame/PastWeek")</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input time-filter" type="radio" name="timeFrame" value="@((int)TimeFrame.PastMonth)" id="pastMonth" @(Html.Raw(Model.TimeFrame.HasValue && ((int)Model.TimeFrame).Equals((int)TimeFrame.PastMonth) ? "checked=\"checked\"" : ""))>
+        <label class="form-check-label" for="pastMonth">@Html.Translate("/property/enum/TimeFrame/PastMonth")</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input time-filter" type="radio" name="timeFrame" value="@((int)TimeFrame.PastYear)" id="pastYear" @(Html.Raw(Model.TimeFrame.HasValue && ((int)Model.TimeFrame).Equals((int)TimeFrame.PastYear) ? "checked=\"checked\"" : ""))>
+        <label class="form-check-label" for="pastYear">@Html.Translate("/property/enum/TimeFrame/PastYear")</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="timeFrame" value="@((int)TimeFrame.DateRange)" id="dateRangeFilter" @(Html.Raw(Model.TimeFrame.HasValue && ((int)Model.TimeFrame).Equals((int)TimeFrame.DateRange) ? "checked=\"checked\"" : ""))>
+        <label class="form-check-label" for="dateRangeFilter">@Html.Translate("/property/enum/TimeFrame/DateRange")</label>
+    </div>
+
+    <div id="dateRangePicker" style="display: none;">
+        <label for="startDate">@Html.Translate("/common/startdate")</label>
+        <input type="date" onchange="onDateChange()" id="startDate">
+        <label for="endDate">@Html.Translate("/common/enddate")</label>
+        <input type="date" onchange="onDateChange()" id="endDate">
+    </div>
+</div>

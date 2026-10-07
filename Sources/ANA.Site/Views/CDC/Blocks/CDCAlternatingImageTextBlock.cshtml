@@ -1,0 +1,44 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@using EPiServer.Web.Routing;
+@using ANA.Site.Models.Media;
+@model CDCAlternatingImageTextBlock
+
+@{
+    var url = Model.Link == null ? null : Model.Link.GetFriendlyUrl();
+    var mirror = Model.FlipComponent ? "atb-mirror" : string.Empty;
+
+    var cardImage = !ContentReference.IsNullOrEmpty(Model.Image)
+        ? EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(Model.Image)
+        : null;
+
+    /* BE There are two classes for the color theme 1. orange-background-blue-hover 2. blue-background-orange-hover
+       BE if there is an external link, pass in _blank for the link target */
+    var style = Model.ColorTheme == CDCAlternatingImageTextBlock.FeaturedResourcesBackgroundColor.Gold
+        ? "orange-background-blue-hover"
+        : "blue-background-orange-hover";
+}
+
+<section class="alternating-text-block small-12 grid-x @style @mirror @Model.GetCssClass()">
+    <div class="photo-block show-for-large large-4">
+        <div class="img-container">
+            @if (cardImage is ImageFile)
+            {
+                var image = (ImageFile)cardImage;
+                <img src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+            }
+        </div>
+    </div>
+    <div class="content-block small-12 large-8">
+        <div>
+            <h2>@Model.Title</h2>
+            <div>@Html.Raw(Model.Text)</div>
+            @if (Model.Link != null && !Model.Link.IsEmpty() && !string.IsNullOrEmpty(Model.LinkLabel))
+            {
+                <button>
+                    <a href="@Model.Link" target="@Model.TargetFrame">@Model.LinkLabel</a>
+                </button>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,43 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.LinkListBlock
+
+@{
+    var noChildLinks = Model.Links == null || Model.Links.Count == 0;
+}
+
+<nav class="c-in-page-link-list c-in-page-link-list--sitemap@(noChildLinks ? " c-in-page-link-list--empty" : "")" data-require="./src/views/accordion-item-view" data-collapse-panel="true" data-disable-at-breakpoint="768">
+
+    <h2 class="c-in-page-link-list__title">
+        @if (noChildLinks && Model.HeadingLink != null)
+        {
+            @:<a href="@Model.HeadingLink.GetFriendlyUrl()">
+        }
+        <span class="c-in-page-link-list__accordion-toggle" data-accordion-toggle></span>
+          
+        @if (noChildLinks && Model.HeadingLink != null)
+        {
+            @:</a>
+        }
+        
+        @if (Model.HeadingLink == null)
+        {
+            @Model.Heading
+        }
+        else
+        {
+            <a href="@Model.HeadingLink.GetFriendlyUrl()" class="c-in-page-link__title-link">@Model.Heading</a>
+        }
+    </h2>
+
+    @if (Model.Links != null && Model.Links.Count > 0)
+    {
+        <ul class="c-in-page-link-list__list e-accordion__item-content-wrapper" data-accordion-content>
+            @foreach (var link in Model.Links)
+            {
+                <li class="c-in-page-link-list__item">
+                    <a href="@link.GetFriendlyUrl()" class="c-in-page-link-list__item-link" target="@link.Target">@link.Text<span class="c-in-page-list-list__item-icon"></span></a>
+                </li>
+            }
+        </ul>
+    }
+</nav>

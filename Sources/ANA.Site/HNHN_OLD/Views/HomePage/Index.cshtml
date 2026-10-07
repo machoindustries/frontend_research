@@ -1,0 +1,154 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Models.Blocks
+@using ANA.Site.HNHN.Business
+@using EPiServer.Editor
+@model ANA.Site.HNHN.Models.ViewModels.BasePageViewModel<ANA.Site.HNHN.Models.Pages.HNHNHomePage>
+@{
+    Layout = "~/HNHN_OLD/Views/Shared/Layouts/_Root.cshtml";
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .hero-edit {
+            margin-left: auto;
+            margin-right: auto;
+            width: 99%;
+        }
+         .sponsor-edit {
+             position: absolute;
+             bottom: 0;
+             left: 0;
+             right: 0;
+             margin-left: auto;
+             margin-right: auto;
+             width: 99%;
+         }
+        .sponsor-edit .sponsored-by {
+            position: relative;
+        }
+    </style>
+}
+
+<div class="hero__wrapper">
+    @Html.PropertyFor(m => m.CurrentPage.MainHero, new { CssClass = "hero-edit" })
+
+    @Html.PropertyFor(m => m.CurrentPage.SponsorBar, new { CssClass = "sponsor-edit" })
+
+    @*<div class="hero__background-image ">
+            <img src="/static/images/hero-background-image-1.jpg" alt="Lorem ipsum dolor.">
+        </div>
+        <div class="hero__content container ">
+            <div class="row">
+                <div class=" col-md-6 col-lg-5 col-lg-offset-1">
+                    <div class="hero__content__image">
+                        <img src="/static/images/hero-nurse-image-1.png" class="img-responsive" alt="Lorem ipsum.">
+                    </div>
+                </div>
+                <div class="col-md-6 hero__content__text">
+                    <h1 class="hero__title ">
+                        <div class="hero__higlight--lg">
+                            Healthy Nurse Healthy Nation <span> Grand Challenge</span>
+                        </div>
+                    </h1>
+
+                    <p class="hero__text">
+                        3.6 million Registered Nurses Leading the Nation's Journey to Better Health
+                    </p>
+
+                    <h3>
+                        <div class="hero__higlight--sm">
+                            Join the challenge
+                        </div>
+                    </h3>
+
+
+
+
+                    <div class="btn-groups">
+
+                        <div class="btns-wrap">
+
+                            <a href="#" class="btn btn-primary btn-hnhn">I'm an Individual</a>
+
+                            <a href="#" class="btn btn-primary btn-hnhn">I'm representating <br> an organization</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <!-- Sponsor logos! -->
+    @*<div class="sponsored-by">
+            <h4 class="text-center sponsored-by__heading">Sponsored By</h4>
+            <div class="sponsored-by__logos">
+                <div class="container-extra container">
+
+                    <div class="column">
+                        <a href="#">
+                            <img class="link-image" src="/static/images/arn-logo-white.png" alt="Arn Logo">
+
+                            <img class="hover-image" src="/static/images/arn-logo.png" alt="Arn Logo">
+
+                        </a>
+                    </div>
+
+                    <div class="column">
+                        <a href="#">
+                            <img class="link-image" src="/static/images/baylor-logo-white.png" alt="Baylor Logo">
+
+                            <img class="hover-image" src="/static/images/baylor-logo.png" alt="Baylor Logo">
+
+                        </a>
+                    </div>
+
+                    <div class="column">
+                        <a href="#">
+                            <img class="link-image" src="/static/images/himss-logo-white.png" alt="himss Logo">
+
+                            <img class="hover-image" src="/static/images/himss-logo-white.png" alt="himss Logo">
+
+                        </a>
+                    </div>
+
+                    <div class="column">
+                        <a href="#">
+                            <img class="link-image" src="/static/images/livliga-logo-white.png" alt="livliga Logo">
+
+                            <img class="hover-image" src="/static/images/livliga-logo-white.png" alt="livliga Logo">
+
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+</div>
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    @Html.BeginEditSection("div", m => m.CurrentPage.ContentSections)
+}
+@if (Model.CurrentPage.ContentSections != null)
+{
+    foreach (var section in Model.CurrentPage.ContentSections.FilteredItems.GetContentItems<BaseBlockData>().Select((value, i) => new { i, value }))
+    {
+        string sectionClass = "";
+        string tag = "";
+        if (section.i % 2 > 0)
+        {
+            sectionClass += " section--light-bg";
+        }
+        if (section.value is FeaturedContentSectionBlock)
+        {
+            sectionClass += " partners";
+            tag = "TwoColumnFeaturedContent";
+        }
+
+        @Html.DisplayFor(m => section.value, new { SectionClass = sectionClass, Tag = tag })
+    }
+}
+@if (ContentHelper.PageIsInEditMode())
+{
+    @Html.EndEditSection("div")
+}

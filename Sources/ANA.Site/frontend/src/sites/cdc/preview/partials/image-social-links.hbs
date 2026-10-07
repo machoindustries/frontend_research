@@ -1,0 +1,22 @@
+<article class="image-social-links grid-x small-12">
+    <div class="container cell small-12 grid-x">
+        <img class="background-img cell small-12" src="{{img-src}}" alt="{{img-alt}}">
+        <a href="{{url}}" download class="icon-container">
+            <img src="./assets/img/download-icon.svg" alt="download icon">
+        </a>
+        <div class="title-container">
+            <div class="title">{{title}}</div>
+            {{> share-button}}
+            <!-- <svg data-url="{{url}}" data-title="THE TITLE" data-open="share-resource-{{url}}" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
+                <path fill="white" d="M14.625 7.00016L9.08333 0.583496V4.25016C3.54167 5.16683 1.16667 9.75016 0.375 14.3335C2.35417 11.1252 5.125 9.65849 9.08333 9.65849V13.4168L14.625 7.00016Z"/>
+            </svg> -->
+            <div class="reveal" id="share-resource-{{url}}" data-reveal>
+            
+             <div class="addthis_inline_share_toolbox_qrdc"></div>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+ </article>

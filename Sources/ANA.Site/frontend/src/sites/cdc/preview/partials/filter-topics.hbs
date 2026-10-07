@@ -1,0 +1,31 @@
+<div class="filters-resources" >
+  <div id="filter-title-mobile" class="filter-title-mobile hide-for-large">
+    Filter
+    <img id="filter-title-mobile__icon" class="toggle-icon hide-for-large" src="./assets/img/vector.svg" alt="toggle icon">
+  </div>
+  <div class="filter-title show-for-large">Filter</div>
+  <ul id="filter-accordion" class="filter-accordion show-for-large" data-accordion>
+    {{#each resource-topics.data}}
+    <li>
+      <a class="filter-link" href="#" >
+        <div class="filter-category">{{this.Label}}
+          <span>
+            <img class="category-icon" src="./assets/img/vector.svg" alt="">
+          </span>
+        </div>
+      </a>
+      <div class="filter-content hide">
+        {{#each this.Filters}}
+          <div class="inputs-labels">
+            <input class="filter-checkbox" type="checkbox" id="{{Id}}">
+            <label class="filter-label" for="{{Id}}"></label>
+            <div>{{this.Label}}</div>
+          </div>
+        {{/each}}
+      </div>
+    </li>
+    <hr class="filter-line">
+    {{/each}}
+  </ul>
+</div>
+

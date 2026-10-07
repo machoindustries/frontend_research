@@ -1,0 +1,35 @@
+﻿@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCPageBaseHasComplexHeading
+
+@{
+    var HeadingWords = Model.Heading.Split(' ');
+
+    var BlueWords = HeadingWords.Take(Model.NumberWordsHeadingAccent);
+    var HeadingBlue = string.Join(" ", BlueWords);
+
+    var PlainWords = HeadingWords.Skip(Model.NumberWordsHeadingAccent);
+    var HeadingPlain = string.Join(" ", PlainWords);
+}
+
+<section class="on-the-go-copy mt-1 mb-1 cell small-12">
+    <div class="grid-x">
+        <div class="cell small-12 large-6">
+            <h1 class="home-banner color-font-dark-blue">
+                @HeadingBlue
+                <span class="color-font-white">@HeadingPlain</span>
+            </h1>
+            <div class="on-the-go-copy_content">
+                @Html.PropertyFor(i => i.IntroText)
+            </div>
+        </div>
+        <div class="hide-for-small large-6">
+            <div class="image__container @(Model.BackdropColor.ToString())">
+                <div class="img-main">
+                    @Html.PropertyFor(i => i.Image)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

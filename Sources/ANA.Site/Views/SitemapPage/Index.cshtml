@@ -1,0 +1,53 @@
+﻿@using ANA.Site.Models.ViewModels
+@model SitemapViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+<div class="grid-constraint">
+    <div class="c-sitemap grid">
+
+        <div class="grid__item one-whole">
+            <h1 class="containerblock__heading containerblock__heading--large">
+                <span>@Html.PropertyFor(m => m.CurrentPage.Heading)</span>
+            </h1>
+        </div>
+
+        @if (Model.Items != null && Model.Items.Any())
+        {
+            <div class="grid__item one-whole">
+
+                @foreach (var item in Model.Items)
+                {
+                    <div class="block block--full grid">
+                        <div class="grid__item one-whole">
+                            <h2 class="c-sitemap__section-title">@item.Name</h2>
+                        </div>
+                    </div>
+                    
+                    if (item.List1 != null && item.List1.Any())
+                    {
+                        { await Html.RenderPartialAsync("SitemapItemList", item.List1); }
+                    }
+                    
+                    if (item.List2 != null && item.List2.Any())
+                    {
+                        { await Html.RenderPartialAsync("SitemapItemList", item.List2); }
+                    }
+                    
+                    if (item.List3 != null && item.List3.Any())
+                    {
+                        { await Html.RenderPartialAsync("SitemapItemList", item.List3); }
+                    }
+                    
+                    if (item.List4 != null && item.List4.Any())
+                    {
+                        { await Html.RenderPartialAsync("SitemapItemList", item.List4); }
+                    }
+                }
+
+            </div>
+        }
+    </div>
+</div>

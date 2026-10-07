@@ -1,0 +1,13 @@
+﻿@model List<ANA.Site.Models.ViewModels.Search.SuggestedResultJsonModel>
+
+@if (Model != null && Model.Any())
+{
+    <p class="suggested-title">SUGGESTED</p>
+
+    foreach (var item in Model)
+    {
+        <a href="@item.Url" class="suggested-option">
+            <span>@Html.Raw(item.Title)</span>
+        </a>
+    }
+}

@@ -1,0 +1,56 @@
+﻿@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.ViewModels
+@model RelatedProductsViewModel
+    
+@if (Model.RelatedProducts != null && Model.RelatedProducts.Any())
+{
+    <div class="content-area">
+        <div class="block containerblock">
+
+            <section class="c-container-block"
+                     data-require="./src/views/container-block-view"
+                     data-carousel-mobile="true"
+                     data-carousel-desktop="@(Model.RelatedProducts.Count > 4 ? "true" : "false")"
+                     data-carousel-slide-items-small="2"
+                     data-carousel-slide-items-medium="3"
+                     data-carousel-slide-items-large="4">
+
+                <div class="grid-constraint">
+
+                    <div class="grid grid--center">
+                        <div class="grid__item one-whole">
+                            <h2 class="c-container-block__heading c-container-block__heading--lines">
+                                <span>@Model.Heading</span>
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="c-container-block__content c-container-block__content--margin grid grid--center grid--flex">
+
+                        @foreach (var releatedItem in Model.RelatedProducts)
+                        {
+                            var vdd = new ViewDataDictionary(this.ViewData)
+                            {
+                                new KeyValuePair<string, object>("Carousel", true)
+                            };
+
+                            <div class="c-container-block__slide block grid__item one-whole small--one-half medium--one-third large--one-quarter">
+                                @if (releatedItem.Product is CertificationProduct)
+                                {
+                                    { await Html.RenderPartialAsync("_RelatedCertificationProduct", releatedItem, vdd); }
+                                }
+                                else
+                                {
+                                    { await Html.RenderPartialAsync("_Product", releatedItem, vdd); }
+                                }
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+}

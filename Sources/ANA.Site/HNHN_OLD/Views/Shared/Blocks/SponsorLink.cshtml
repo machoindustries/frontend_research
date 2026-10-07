@@ -1,0 +1,48 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.SponsorLink
+
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .link-edit {
+            display: none;
+        }
+
+        .preview-display .link-edit {
+            display: inline-block;
+            float: left;
+            font-size: 1.0rem;
+            height: 20px;
+            text-align: center;
+            width: 40px;
+            z-index: 999;
+        }
+
+        .preview-display .sponsored-by__logos .column img {
+            position: static;
+            opacity: 1;
+            margin-bottom: 3px;
+        }
+    </style>
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <span class="link-edit" @Html.EditAttributes(m => m.LinkURL)>Edit link</span>
+}
+<a href="@Url.ContentUrl(Model.LinkURL)">
+    <img src="@_UrlResolver.GetUrl(Model.WhiteLogo)" alt="" class="link-image" />
+    @*<img class="link-image" src="/static/images/arn-logo-white.png" alt="Arn Logo">
+
+        <img class="hover-image" src="/static/images/arn-logo.png" alt="Arn Logo">*@
+    <img src="@_UrlResolver.GetUrl(Model.ColorLogo)" alt="" class="hover-image" />
+</a>

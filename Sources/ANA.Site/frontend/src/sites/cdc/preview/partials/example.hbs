@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>	
+
+<p>{{intro}}</p>
+
+{{#if this.example-list}}
+  {{#each this.example-list.article}}
+    <div class="example-list">
+      <h3>{{title}}</h3>
+      <p class="summary">{{summary}}</p>
+    </div>
+  {{/each}}
+{{/if}}

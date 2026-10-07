@@ -1,0 +1,54 @@
+﻿@using Brightfind.Helper;
+@model ANA_HNHN.Models.Blocks.VideoBlock;
+@{
+    var heading = Model.Heading;
+    var content = @Html.PropertyFor(m => m.Content);
+    var background = Model.BackgroundColor;
+    if (background == "blue")
+    {
+        background = "light-blue";
+    }
+    var accent = Model.AccentColor;
+    if (accent == "darkBlue")
+    {
+        accent = "dark-blue";
+    }
+    var image = MediaHelper.GetUrl(Model.Image);
+    var embed = @Html.PropertyFor(m => m.Video);
+    var id = ((IContent)Model).ContentLink.ID;
+
+}
+
+<section class="video-block bg-@background">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            @if (!String.IsNullOrWhiteSpace(Model.Heading) || Model.Content != null)
+            {
+                <div class="col-lg-5 video-block__text" data-aos="fade-right" data-aos-once="true">
+                    <h1>@heading</h1>
+                    @content
+                </div>
+            }
+            <div class="col-lg-7 mt-4 mt-lg-0">
+                <div class="video-block__image" data-aos="fade-left" data-aos-once="true">
+                    <img src="@image" alt="">
+                    <a href="javascript:void(0)" class="absolute-link" data-bs-toggle="modal" data-bs-target="#videoBlock-@id" aria-label="Open Video in Modal"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="video-block__squiggle" aria-hidden="true"></div>
+    <div class="video-block__slant video-block__slant--@accent" aria-hidden="true"></div>
+    <div class="modal modal--video fade" id="videoBlock-@id" tabindex="-1" aria-labelledby="Video Modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="ratio ratio-16x9">
+                        <iframe class="video-block__iframe" width="560" height="315" src="@embed" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,15 @@
+﻿@model ANA_HNHN.Models.ViewModels.PageViewModel<ANA_HNHN.Models.Pages.NotFoundErrorPage>
+@inherits ANA_HNHN.Views.AlloyPageBase<ANA_HNHN.Models.ViewModels.PageViewModel<ANA_HNHN.Models.Pages.NotFoundErrorPage>>
+
+<section class="section--error">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-2 order-lg-1">
+                @Html.PropertyFor(x => x.CurrentPage.TeaserText)
+            </div>
+            <div class="col-lg-6 order-1 order-lg-2">
+                <img class="w-100 mb-5 mb-lg-0" src="/globalassets/hnhn-redesign/utility-images/404.svg" alt="404 Error" />
+            </div>
+        </div>      
+    </div>
+</section>

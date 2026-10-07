@@ -1,0 +1,20 @@
+﻿@using EPiServer.Web.Mvc.Html
+
+@{
+    Layout = "~/HNHN_OLD/Views/Shared/Layouts/_PreviewRoot.cshtml";
+}
+
+@model ANA.Site.HNHN.Models.Blocks.Callouts.ICallout
+
+@if (Model != null)
+{
+    @*<p>This is a basic representation of a callout for editing preview only. When viewed in a page, the page may change the display type or alter the row.</p>*@
+    <div class="container container-extra">
+        <div class="row ">
+            <div class="col-md-4">
+
+                @{Html.RenderContentData(Model, true);}
+            </div>
+        </div>
+    </div>
+}

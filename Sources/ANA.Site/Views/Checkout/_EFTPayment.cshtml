@@ -1,0 +1,39 @@
+﻿@using ANA.Site.Models.ViewModels
+@model CheckoutViewModel
+
+
+<div class="c-checkout__section">
+    <h2 class="c-checkout__section-title">@Html.Translate("/CartCheckout/Payment/EFTHeading")</h2>
+    <div class="e-payment-details grid" data-require="./src/views/payment-details-view">
+
+        <div class="e-payment-details__section grid__item one-whole large--three-quarters" data-checkout-payment-method-panel-add="" aria-expanded="false">
+            <div class="e-payment-details__border-row e-payment-details__border-row--double">
+                <label for="@Html.IdFor(m => m.RoutingNumber)" class="e-form__label e-form__label--text" data-formfield="">
+                    <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/RoutingNumber")</span>
+                    @Html.TextBoxFor(m => m.RoutingNumber, new { @class = "e-form__input e-form__input--text", inputmode = "numeric", data_formfield_text = "", placeholder = "", data_validate = "", data_validate_required = "", data_validate_minlength = "9", data_validate_maxlength = "9", title = "Routing Number", data_validate_digits = "", data_validate_ignore = "" })
+                </label>
+                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.RoutingNumber)"></div>
+                <span class="e-form__validation-errors" data-payment-details-security-info=""></span>
+                <label for="@Html.IdFor(m => m.AccountNumber)" class="e-form__label e-form__label--text" data-formfield="">
+                    <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/AccountNumber")</span>
+                    @Html.TextBoxFor(m => m.AccountNumber, new { @class = "e-form__input e-form__input--text", inputmode = "numeric", data_formfield_text = "", placeholder = "", data_validate = "", data_validate_required = "", title = "Account Number", data_validate_digits = "", data_validate_ignore = "" })
+                </label>
+                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.AccountNumber)"></div>
+
+                <label for="@Html.IdFor(m => m.InstitutionName)" class="e-form__label e-form__label--text" data-formfield="">
+                    <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/CartCheckout/Payment/InstitutionName")</span>
+                    @Html.TextBoxFor(m => m.InstitutionName, new { @class = "e-form__input e-form__input--text", autocomplete = "", data_formfield_text = "", data_validate = "", data_validate_required = "", title = "Institution Name", data_validate_ignore = "" })
+                </label>
+                <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.IdFor(m => m.InstitutionName)"></div>
+
+                <label class="e-payment-details__vspaced e-form__label e-form__label--select" for="@Html.IdFor(m => m.AccountTypeOptions)" data-formfield="" data-expiry-month="">
+                    <span class="e-form__label-text">@Html.Translate("/CartCheckout/Payment/AccountType")</span>
+                    @Html.DropDownListFor(m => m.AccountType, Model.AccountTypeOptions, new { @class = "e-form__input e-form__input--select", placeholder = "" })
+                </label>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

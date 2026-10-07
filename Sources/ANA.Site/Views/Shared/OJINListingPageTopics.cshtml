@@ -1,0 +1,168 @@
+﻿﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using System.Configuration;
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+@{
+    var TopicsPageID = Model.Layout.TopicsPageID;
+    var topicsPageID = 0;
+    if (@TopicsPageID != null)
+    {
+        topicsPageID = Convert.ToInt32(TopicsPageID);
+    }
+}
+
+@if (Model != null)
+{
+    var cpContentID = Model.CurrentPage.ContentLink.ID;
+    var tableofcontent = false;
+    var maxtopic = Model.Layout.OJINSiteSettingsPage.MaxListCount > 0 ? Model.Layout.OJINSiteSettingsPage.MaxListCount : 5;
+    var topicaddscripttext = @Html.PropertyFor(m => m.CurrentPage.TopicAddThisScript);
+    <div>
+        <section class="ojin-topicsFeatured">
+            <h3>@Html.PropertyFor(m => m.CurrentPage.FeaturedTopicsTitle)</h3>
+            <div class="ojin-topicsFeatured__wrapper">
+                <div class="row">
+                    @if (Model.ListingPageFeaturedTopics != null && cpContentID == topicsPageID)
+                    {
+                        if (Model.ListingPageFeaturedTopics.Count > 0)
+                        {
+                            foreach (var baselistingfeaturedtopiccontentdetails in Model.ListingPageFeaturedTopics)
+                            {
+                                <div class="col-md-4">
+                                    <div class="ojin-topicsFeatured__card">
+                                        <div class="ojin-topicsFeatured__subTitle"><span></span> @baselistingfeaturedtopiccontentdetails.LPHeading</div>
+                                        <div class="ojin-topicsFeatured__contentWrapper">
+                                            <div class="ojin-topicsFeatured__image">
+                                                <img src="@baselistingfeaturedtopiccontentdetails.CDPPageImage" class="lazyload" />
+                                            </div>
+                                            <div class="ojin-topicsFeatured__content">
+                                                <p><a style="color:white" href="@baselistingfeaturedtopiccontentdetails.PageUrl">@baselistingfeaturedtopiccontentdetails.LPTitle</a></p>
+                                            </div>
+                                            <div class="ojin-articleCount">
+                                                <p><i><img src="~/assets/Ojin/img/article-icon.svg" alt="" class="lazyload" /></i> <span>@baselistingfeaturedtopiccontentdetails.CDPNumberOfArticles</span> articles</p>
+                                            </div>
+                                             @*@if (baselistingfeaturedtopiccontentdetails.CDPNumberOfArticles > 0 && baselistingfeaturedtopiccontentdetails.ShowNoOfArticles == true)
+                                            {
+                                                <div class="ojin-articleCount" style="@(@baselistingfeaturedtopiccontentdetails.ShowNoOfArticles == false ? "display:none" : "display:block")">
+                                                    <p><i><img src="~/assets/Ojin/img/article-icon-color.svg" alt="" class="lazyload" /></i> <span>@baselistingfeaturedtopiccontentdetails.CDPNumberOfArticles</span> articles</p>
+                                                </div>
+                                            }*@
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div>
+        @if (@topicaddscripttext != null)
+        {
+            <div class="text-center py-md-4"><img src="@topicaddscripttext" alt="" /></div>
+        }
+    </div>
+
+    @*<div>
+            @if (Model.ListingPageFeaturedAD != null && (@Html.PropertyFor(m => m.CurrentPage.Name).ToString() == "Topics"))
+            {
+                if (Model.ListingPageFeaturedAD.Count > 0)
+                {
+                    foreach (var adItem in Model.ListingPageFeaturedAD)
+                    {
+                        <div class="text-center py-md-4"><img src="@Url.ContentUrl(@adItem.ImageLink)" alt="" /></div>
+                    }
+                }
+            }
+        </div>*@
+    <div>
+        <section class="pt-3 pt-md-4 mt-5">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="ojin-topicsList">
+                        @if (Model.RelatedListingPage.Count > 0 && cpContentID == topicsPageID)
+                        {
+                            if (Model.RelatedListingPage.Count > 0)
+                            {
+                                foreach (var topicheading in Model.RelatedListingPage.Where(x => x.LPHeading != null && x.LPPageType != "FolderPage"))
+                                {
+                                    <h2>@topicheading.LPHeading</h2>
+                                    break;
+                                }
+                            }
+                        }
+
+                        <ul id="myList">
+
+                            @if (Model.RelatedListingPage.Count > 0)
+                            {
+
+                                foreach (var topiccontentdetails in Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage"))
+                                {
+                                    <li class="grid-item" style="display:none;">
+                                        <div class="grid-item__content">
+                                            <h4><a href="@Url.PageUrl(@topiccontentdetails.PageUrl)">@topiccontentdetails.LPTitle </a></h4>
+
+                                            @if (topiccontentdetails.ShowTeaser == true)
+                                            {
+                                                <p>@Html.Raw(topiccontentdetails.LPTeaserText)</p>
+                                            }
+                                        </div>
+                                        @if (topiccontentdetails.CDPNumberOfArticles > 0 && topiccontentdetails.ShowNoOfArticles == true)
+                                        {
+                                            <div class="ojin-articleCount" style="@(@topiccontentdetails.ShowNoOfArticles == false ? "display:none" : "display:block")">
+                                                <p><i><img src="~/assets/Ojin/img/article-icon-color.svg" alt="" class="lazyload" /></i> <span>@topiccontentdetails.CDPNumberOfArticles</span> articles</p>
+                                            </div>
+                                        }
+                                    </li>
+                                    tableofcontent = true;
+                                }
+
+                            }
+
+                        </ul>
+
+                        <div class="ojin-loadMore" id="loadMore">
+                            <a class="btn btn--more" id="aloadMore">Load 5 more topics</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                @if (Model.RightRail != null && tableofcontent) 
+                {
+                    <div class="col-lg-3 ojin-advContainer">
+                        @{ await Html.RenderPartialAsync("Blocks/OJINTopicCategoryListingPageRightRail", Model.RightRail); }
+                    </div>
+                }
+
+            </div>
+        </section>
+        <div id="maxdiv" style="display:none;">@maxtopic</div>
+    </div>
+}
+
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        size_li = $("#myList li").length;
+        x = $("#maxdiv").text();
+        if (Number(x) >= size_li) {
+            $('#loadMore').hide();
+        }
+        $('#myList li:lt(' + x + ')').show();
+        $('#loadMore').click(function () {
+            x = (Number(x) + 5 <= size_li) ? Number(x) + 5 : size_li;
+            $('#myList li:lt(' + x + ')').show();
+            if (Number(x) == size_li) {
+                $('#loadMore').hide();
+            }
+        });
+    });
+</script>

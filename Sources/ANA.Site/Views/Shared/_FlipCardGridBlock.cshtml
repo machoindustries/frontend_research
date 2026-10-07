@@ -1,0 +1,33 @@
+﻿@model ANA.Site.Models.ViewModels.FlipCardGrid.FlipCardGridBlock
+
+<li class="flip-card">
+    <div class="card @(Model.CardColor != null ? Model.CardColor : "")">
+        <div class="card-front">
+            <h3>
+                @if (Model.CardHeading != null)
+                {
+                    @Model.CardHeading
+                }
+                @if (Model.CardSubheading != null)
+                {
+                    <span class="role">
+                        @Model.CardSubheading
+                    </span>
+                }
+            </h3>
+        </div>
+        <div class="card-back">
+            @if (Model.CardBackDescription != null)
+            {
+                <p class="desc">@Model.CardBackDescription</p>
+            }
+            <div class="button">
+                @if (Model.CardButtonUrl != null && Model.TargetSelectionFactory != null && Model.CardButtonText != null)
+                {
+                    <a href="@Url.ContentUrl(Model.CardButtonUrl)" target="@Model.TargetSelectionFactory" class="e-button">@Model.CardButtonText</a>
+                }
+            </div>
+        </div>
+    </div>
+</li>
+

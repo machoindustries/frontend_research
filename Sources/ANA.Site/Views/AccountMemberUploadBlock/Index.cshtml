@@ -1,0 +1,281 @@
+﻿@using ANA.Site.Models.ViewModels
+@using ANA.Site.Models
+@using ANA.Site.Business.Extensions
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.AccountMemberUploadViewModel
+
+<link href="~/Styles/memberupload.css" rel="stylesheet" />
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $(document).ready(function () {
+
+            getFileDetailsOnLoad();
+            //getDownloadLink();
+
+            $('#lblfileName').empty().append(" ");
+            $('#lblDateTime').empty().append(" ");
+
+            $(document).ajaxStart(function () {
+                $('#wait').show();
+            });
+            $(document).ajaxStop(function () {
+                $('#wait').hide();
+            });
+
+            $(document).ajaxError(function () {
+                $("#wait").show();
+            });
+
+            $.date = function (date) {
+                const re = /-?\d+/;
+                const m = re.exec(date);
+                const dt = parseInt(m[0], 10);
+                return new Date(dt);
+            };
+
+            function resetFile() {
+                const file = document.getElementById('mfileupload');
+                file.value = '';
+                $('#overlay').css("height", "");
+                $('#overlay').css("width", "");
+                $('#dvfailmessage').css("display", "none");
+                $('#dvsuccessmessage').css("display", "none");
+                $('#dvdownloadmessage').css("display", "none");
+                $('#overlaycontainer').css("display", "none");
+                $('#overlay').css("display", "none");
+            }
+
+            $('#btnDownload').click(function () {
+
+                $.ajax(
+                    {
+                        url: "/userdata/DownloadFile/",
+                        type: "GET",
+                        cache: false,
+                        success: function (result) {
+                            window.location = `/assets/templatefile/${Object.values(result)[1]}?nocache=` + (new Date()).getTime();
+                        },
+                        error: (err) => {
+                            console.log('Error:');
+                            console.log(err);
+                        }
+                    });
+            });
+
+            function getFileDetailsOnLoad() {
+                $.ajax(
+                    {
+                        url: "/userdata/GetRecentFileDetails/",
+                        type: "GET",
+                        headers: {
+                            'Content-Type': "application/x-www-form-urlencoded"
+                        },
+                        success: function (resultData) {
+
+                            console.log('DATA - ' + JSON.stringify(resultData));
+                            var fileName = "";
+                            var uploadDate = "";
+                            var uploadTime = "";
+                            var dateObj="";
+                            if (resultData.length > 0) {
+
+                                $('#lblfileName').css("display", "block");
+                                $('#lblDateTime').css("display", "block");
+                                //$('#lblDate').css("display", "block");
+                                for (let i = 0; i <= resultData.length - 1; i++) {
+
+                                    fileName = `${resultData[i].UploadedFileName}`;
+                                    dateObj = new Date(resultData[i].RecentFileUploadTime);
+
+     uploadDate = dateObj.toLocaleDateString('en-CA'); 
+     uploadTime = dateObj.toLocaleTimeString('en-GB'); 
+                                }
+
+                                var dt = $.date(uploadDate);
+                                console.log(dt);
+                                console.log(dt.toLocaleDateString());
+                                console.log(dt.toLocaleTimeString());
+
+                                $('#lblfileName').empty().append(fileName.toUpperCase() + " " + " ");
+                                $('#lblDateTime').empty().append(" " + " submitted on " + uploadDate + " " + " at " + " " + uploadTime);
+                                $('#btnUpload').prop("value", "Replace");
+
+                            }
+                        },
+                        error: (err) => {
+                            console.log('Error:');
+                            console.log(err);
+                        }
+                    });
+            }
+
+            $('#btnok, #btnclose,#overlaycontainer').click(function () {
+                resetFile();
+                getFileDetailsOnLoad();
+            });
+
+            $('#btnUpload').click(function () {
+
+                const uploadFile = document.getElementById('mfileupload').value;
+                console.log("uploadFileName -------" + uploadFile);
+                const fileext = uploadFile.substring(uploadFile.indexOf('.') + 1);
+                console.log("Upload File Extension -------" + fileext.toLowerCase());
+
+                var sizeLimit = 10000;
+
+                if (!uploadFile) {
+                    $('#overlay').css("display", "block");
+                    $('#overlaycontainer').css("display", "block");
+                    $('#dvfailmessage').css("display", "block");
+                    $('#dvsuccessmessage').css("display", "none");
+                    $('#pfilesubmission').css("display", "none");
+                    $('#lblresubmit').css("display", "none");
+                    $('#overlay').css("height", "27%");
+                    $('#overlay').css("width", "27%");
+                    $('#errMsg').empty().append("Click on ''Choose File'' to select csv file to Upload.");
+                } else {
+                    if (fileext.toLowerCase() === "csv") {
+                        var sizeInKB = document.getElementById('mfileupload').files[0].size / 1024;
+                        console.log(sizeInKB);
+                        if (sizeInKB >= sizeLimit) {
+                            $('#overlay').css("display", "block");
+                            $('#dvfailmessage').css("display", "block");
+                            $('#errMsg').empty().append("File greater than 10 MB can not be uploaded. Reduce the file size (< 10 MB) and try again.");
+                        } else {
+                            $('#overlay').css("display", "none");
+                            uploadMemberFile();
+                        }
+                    } else {
+                        $('#overlay').css("display", "block");
+                        $('#overlaycontainer').css("display", "block");
+                        $('#dvfailmessage').css("display", "block");
+                        $('#overlay').css("height", "27%");
+                        $('#overlay').css("width", "29%");
+                        $('#errMsg').empty().append("Invalid File Extension. Only CSV file(s) are allowed to upload here.");
+                    }
+                }
+            });
+
+
+            function uploadMemberFile() {
+
+                const filetoUpload = document.getElementById('mfileupload');
+                console.log("-------------------------------------------------file");
+                console.log(filetoUpload);
+
+                //// Create FormData object
+                var fileData = new FormData();
+                fileData.append(filetoUpload.files[0].name, filetoUpload.files[0]);
+                console.log(fileData);
+                console.log("-----------------------------");
+                console.log(fileData.get(filetoUpload.files[0].name));
+                console.log("-----------------------------");
+
+                $.ajax(
+                    {
+                        url: "/userdata/UploadFile/",
+                        data: fileData,
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            console.log('File Uploaded - ' + JSON.stringify(result));
+                            const x = Object.values(result)[0];
+                            console.log(x);
+                            //console.log(JSON.stringify(result).length);
+
+                            if (Object.values(result)[0] === "False") {
+                                $('#dvfailmessage').css("display", "block");
+                                $('#dvsuccessmessage').css("display", "none");
+                                $('#pfilesubmission').css("display", "block");
+                                $('#errMsg').empty().append(Object.values(result)[1]);
+
+                                if (Object.values(result)[1] ===
+                                    "File can not be Uploaded/Replaced between 9:00 PM EST and 4:00 AM EST.") {
+                                    $('#lblresubmit').css("display", "none");
+                                } else {
+                                    $('#lblresubmit').css("display", "block");
+                                }
+
+                            } else {
+                                $('#dvsuccessmessage').css("display", "block");
+                                $('#dvfailmessage').css("display", "none");
+                                $('#overlay').css("height", "27%");
+                                $('#overlay').css("width", "32%");
+                                $('#btnUpload').prop("value", "Replace");
+
+                            }
+                            $('#overlay').css("display", "block");
+                            $('#overlaycontainer').css("display", "block");
+                            //resetFile();
+                        },
+                        error: (err) => {
+                            console.log('Error:');
+                            console.log(err);
+                        }
+                    });
+            };
+        });
+    });
+</script>
+
+<div id="wait" class="e-spinner e-spinner" data-loading-spinner="">
+    <svg class="e-spinner__spinner" width="96px" height="96px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;">
+        <circle cx="50" cy="50" fill="none" stroke="#009cde" stroke-width="5" r="32" stroke-dasharray="150.79644737231007 52.26548245743669" transform="rotate(354.079 50.0002 50.0002)">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+        </circle>
+    </svg>
+</div>
+<div id="overlaycontainer"></div>
+@*<div class="c-account__section" data-require="./src/views/account-member-upload-view">*@
+<div class="c-account__section">
+    <h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+    <p class="c-account__text">@Html.PropertyFor(m => m.Description)</p>
+
+    <div data-lightbox-src="accountfileupload">
+        <form class="e-form" id="uploadForm" data-require="./src/views/form-view" data-ajax-form data-account-fileupload-form>
+
+            @Html.TextBox("mfileupload", null, new { type = "file", name = "fileuploadcsv", @class = "e-form__input e-form__input--text" })<br /><br />
+
+            <div style="width: 100%">
+                <div><label style="font-size: x-small; color: red;">Supported file format - CSV file ONLY.</label></div>
+
+                <div style="display: inline; width: 100%;">
+
+                    <div style="width: 20%; display: inline-block; float: left;"><input id="btnUpload" class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="Upload" data-account-fileupload-submit /></div>
+                    <div style="display: inline-block; margin-top: 4%; font-weight: bold; cursor: pointer;"><label id="lblfileName" style="cursor: pointer;"></label></div>
+                    <div style="width: 32%; display: inline-block;margin-bottom:5%;"><label id="lblDateTime"></label></div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <p>
+        Click the link below to download the status report for the last successfully processed membership file.
+    </p>
+    <a href="#" title="Download Status report" id="btnDownload">Download</a> Membership Status report.
+
+    <div id="overlay">
+        <button title="Close (Esc)" type="button" id="btnclose">×</button>
+        <div id="dvsuccessmessage">
+
+            <p id="successheading">Upload Successful!!</p>
+            <p>You will receive an email notification once the file is processed. Thank you!</p>
+
+        </div>
+        <div id="dvfailmessage">
+            <p id="failheading">Upload Failed!!</p>
+            <p id="pfilesubmission">The file submission failed because of the below error(s). Please review and resubmit. </p>
+            <p id="errMsg"></p>
+            <label id="lblresubmit">Click OK below to re-submit a corrected file.</label>
+        </div>
+        <div id="dvdownloadmessage">
+
+            <p id="filedownloadheading">File Download Successful!!</p>
+            <p id="downloadMsg"></p>
+
+        </div>
+        <input type="button" id="btnok" style="" class="e-button e-button--submit e-button--blue e-form__submit" value="OK" />
+    </div>
+
+</div>

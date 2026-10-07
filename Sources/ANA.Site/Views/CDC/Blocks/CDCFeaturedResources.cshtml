@@ -1,0 +1,334 @@
+@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using EPiServer
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing;
+@using ANA.Site.Models.Media;
+@using System.Linq
+
+@model CDCFeaturedResourcesViewModel
+
+@{
+    /* BE there are two different styles for this section The classes are: 1. blue-background-orange-hover 2. gold-background-blue-hover */
+    var style = Model.FeaturedResources.BackgroundColor == CDCFeaturedResources.FeaturedResourcesBackgroundColor.Blue
+        ? "blue-background-orange-hover"
+        : "gold-background-blue-hover";
+}
+
+@if (Model != null && Model.FeaturedResources != null && Model.Resources != null && Model.Resources.Any())
+{
+    <section class="grid-x cell small-12 align-center three-across-card-padded @style @Model.GetCssClass()">
+        <div class="features-header small-12">@Model.FeaturedResources.Heading</div>
+        @foreach (var resourceViewModel in Model.Resources)
+        {
+            RenderResource(resourceViewModel);
+        }
+    </section>
+}
+
+
+@functions {
+
+    private void RenderResource(CDCResourceViewModel resource)
+    {
+        <article href="@WebUtility.UrlEncode(resource.AssetUrl)" class="media-social-links featured-resource small-12 medium-6 large-4">
+            <div class="card-image cell small-12">
+                <div class="card-img-container">
+                    RenderImage(resource)
+                    RenderOverlay(resource)
+                    RenderIcon(resource)
+                    RenderTaxonomy(resource)
+                </div>
+            </div>
+            RenderHeader(resource)
+        </article>
+    }
+
+    private void RenderHeader(CDCResourceViewModel resource)
+    {
+
+        if (resource.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(resource.AssetUrl))
+            {
+                <div class="card-header card-header-link"
+                     onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                     data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(resource.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                    @resource.Heading
+                </div>
+            }
+            else
+            {
+                <div class="card-header card-header-link" onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());">
+                    @resource.Heading
+                </div>
+            }
+        }
+        else if (resource.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="_blank" download class="card-header-link">
+                <div class="card-header">@resource.Heading</div>
+            </a>
+        }
+        else if (resource.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="_blank" class="card-header-link">
+                <div class="card-header">@resource.Heading</div>
+            </a>
+        }
+        else
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="@resource.TargetFrame" class="card-header-link">
+                <div class="card-header">@resource.Heading</div>
+            </a>
+        }
+    }
+
+    private void RenderTaxonomy(CDCResourceViewModel resource)
+    {
+        if (resource.Taxonomy != null && resource.Taxonomy.Any())
+        {
+            var tag = resource.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic).FirstOrDefault();
+            if (tag == null)
+            {
+                tag = resource.Taxonomy.FirstOrDefault();
+            }
+
+            if (resource.ResourceType == ResourceLinkType.EmbeddedContent)
+            {
+                if (!string.IsNullOrEmpty(resource.AssetUrl))
+                {
+                    <div class="taxonomy"
+                         onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                         data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(resource.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                         RenderTag(tag)
+                        <div class="taxonomy-overlay"></div>
+                    </div>
+                }
+                else
+                {
+                    <div class="taxonomy" onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());">
+                        RenderTag(tag)
+                        <div class="taxonomy-overlay"></div>
+                    </div>
+                }
+            }
+            else if (resource.ResourceType == ResourceLinkType.Download)
+            {
+                <a href="@resource.AssetUrl"
+                   onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                   target="_blank" download>
+                    <div class="taxonomy">
+                        RenderTag(tag)
+                        <div class="taxonomy-overlay"></div>
+                    </div>
+                </a>
+            }
+            else if (resource.ResourceType == ResourceLinkType.ExternalLink)
+            {
+                <a href="@resource.AssetUrl"
+                   onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                   target="_blank">
+                    <div class="taxonomy">
+                        RenderTag(tag)
+                        <div class="taxonomy-overlay"></div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <a href="@resource.AssetUrl"
+                   onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                   target="@resource.TargetFrame" download>
+                    <div class="taxonomy">
+                        RenderTag(tag)
+                        <div class="taxonomy-overlay"></div>
+                    </div>
+                </a>
+            }
+        }
+    }
+
+    private void RenderOverlay(CDCResourceViewModel resource)
+    {
+        if (resource.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(resource.AssetUrl))
+            {
+                <div class="card-img-overlay"
+                     onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                     data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(resource.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                </div>
+            }
+            else
+            {
+                <div class="card-img-overlay"
+                     onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());">
+                </div>
+            }
+        }
+        else if (resource.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="_blank" download class="asset-icon">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+        else if (resource.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="_blank" class="asset-icon">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+        else
+        {
+            <a href="@resource.AssetUrl"
+               onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+               target="@resource.TargetFrame" class="asset-icon">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+    }
+
+    private void RenderTag(CDCTaxonomyViewModel tag)
+    {
+        <div class="taxonomy-text">@tag.Label</div>
+
+        // Commenting out sub-taxonomy to only display top tag
+        @*if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                @RenderTag(subTag)
+            }
+        }*@
+    }
+
+    private void RenderImage(CDCResourceViewModel resource)
+    {
+        var cardImage = !ContentReference.IsNullOrEmpty(resource.Image)
+           ? ServiceLocator.Current.GetInstance<IContentLoader>().Get<MediaData>(resource.Image)
+           : null;
+
+        if (cardImage is ImageFile)
+        {
+            var image = (ImageFile)cardImage;
+
+            if (resource.ResourceType == ResourceLinkType.EmbeddedContent)
+            {
+                if (!string.IsNullOrEmpty(resource.AssetUrl))
+                {
+                    <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(resource.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0" />
+                }
+                else
+                {
+                    <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                }
+            }
+            else
+            {
+                <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+            }
+        }
+    }
+
+    private void RenderIcon(CDCResourceViewModel resource)
+    {
+        string iconSrc = "";
+        switch (resource.ResourceType)
+        {
+            case ResourceLinkType.Download:
+                iconSrc = "/assets/img/download-icon.svg";
+                break;
+            case ResourceLinkType.EmbeddedContent:
+                iconSrc = "/assets/img/youtube-1.svg";
+                break;
+            case ResourceLinkType.Link:
+                iconSrc = "/assets/img/external-link.svg";
+                break;
+
+            default:
+                iconSrc = string.Empty;
+                break;
+        }
+
+        if (resource.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            <button onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                    data-open="video-modal-@resource.ContentLinkID" class="button card-icon-container">
+                @if (!string.IsNullOrEmpty(resource.AssetUrl))
+                {
+                    <img class="card-link-icon" src="@Html.Raw(iconSrc)" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(resource.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0" />
+                }
+                else
+                {
+                    <img class="card-link-icon card-icon-container" src="@Html.Raw(iconSrc)">
+                }
+            </button>
+        }
+        else if (resource.ResourceType == ResourceLinkType.Download)
+        {
+            if (!string.IsNullOrEmpty(iconSrc))
+            {
+                <a href="@resource.AssetUrl"
+                   onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                   target="_blank" download class="no-ext-icon card-icon-container">
+                    <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+                </a>
+            }
+        }
+        else if (resource.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            if (!string.IsNullOrEmpty(iconSrc))
+            {
+                <a href="@resource.AssetUrl"
+                   onclick="dataLayer.push(@resource.GoogleTags.GetAssetClickEventData());"
+                   target="_blank" class="no-ext-icon card-icon-container">
+                    <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+                </a>
+            }
+        }
+        else
+        {
+            <!-- No Icon for Internal Link -->
+        }
+    }
+
+    private void StoreExcess()
+    {
+        <div class="reveal open-modal" id="video-modal-" data-reveal data-reset-on-close="true" data-animation-in="fade-in" data-animation-out="fade-out">
+            <iframe class="open-modal__video" allowfullscreen
+                    src="{{video-url}}">
+            </iframe>
+            <button class="close-button close-button-custom" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

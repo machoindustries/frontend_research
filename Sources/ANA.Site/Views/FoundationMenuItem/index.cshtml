@@ -1,0 +1,101 @@
+﻿
+@*Commenting to disable Foundation Popup - ADO 27155*@
+<!--model ANA.Site.Models.Pages.FoundationMenuItemPage
+
+@using EPiServer.Framework.Web.Resources
+@using EPiServer.Shell.Navigation
+
+@{
+    ViewBag.Title = "Foundation Admin";
+
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="~/App_Themes/Default/Styles/system.css" type="text/css" rel="stylesheet">
+    <link href="~/App_Themes/Default/Styles/ToolButton.css" type="text/css" rel="stylesheet">-->
+    <!-- Shell -->
+    <!--@Html.Raw(ClientResources.RenderResources("ShellCore"))-->
+    <!-- Light Theme -->
+    <!--@Html.Raw(ClientResources.RenderResources("ShellCoreLightTheme"))
+
+</head>
+<body>
+    @Html.Raw(Html.CreatePlatformNavigationMenu())
+    <br /><br /><br /><br /><br />
+    <div @Html.ApplyPlatformNavigation()>
+            <div class="epi-contentContainer epi-padding">
+                <div class="epi-contentArea">
+                    <h1 class="EP-prefix">
+                        American Nurses Foundation
+                    </h1>
+                    <p class="EP-systemInfo">
+                        Features supporting the American Nurses Foundation.
+                    </p>
+                </div>
+                <fieldset>
+                    <h2 class="EP-prefix">Exclude from Pop-Up</h2>
+                    <select id="exclusions"
+                            name="exclusions"
+                            size="10"
+                            class="selectpicker"
+                            style="width:56%;">
+                        @foreach (var item in Model.FoundationExcludes)
+                        {
+                            <option value="@item.Id">@item.Keyword</option>
+                        }
+                    </select>
+                    <div style="width:54%;margin:5px;">
+                        <div style="float:left;width:65%;">
+                            <input type="text"
+                                   id="newExclude" />
+                            <input type="button"
+                                   id="addItem"
+                                   style="margin-left:5px;"
+                                   value="Insert"
+                                   onclick="exclusionEvents('add');" />
+                            <input type="button"
+                                   id="deleteItem"
+                                   style="margin-left:5px;"
+                                   value="Delete"
+                                   onclick="exclusionEvents('delete');" />
+                        </div>
+                        <div style="float:right;width:20%;text-align:right;">
+                            &nbsp;
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <script>
+            function exclusionEvents(t) {
+                var d = document.querySelector('#exclusions');
+                if (t === 'delete') {
+                    if (d && d.selectedIndex >= 0) {
+                        d.remove(document.querySelector('#exclusions').selectedIndex);
+                    }
+                }
+                else if (t === 'add') {
+                    let o = document.createElement('option');
+                    o.text = document.querySelector('#newExclude').value;
+                    if (o && o.text.length) {
+                        d.add(o);
+
+                        document.querySelector('#newExclude').value = '';
+                    }
+                }
+                var xhr = new XMLHttpRequest(), excludes = [];
+                for (var i = 0; i < d.options.length; i++) {
+                    excludes.push(d.options[i].text);
+                }
+                xhr.open('POST', "/FoundationMenuItem/Save", true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.responseType = 'json';
+                xhr.send(JSON.stringify(excludes));
+            }
+        </script>
+</body>
+</html>-->

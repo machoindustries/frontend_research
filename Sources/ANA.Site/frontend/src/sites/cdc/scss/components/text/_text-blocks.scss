@@ -1,0 +1,92 @@
+.text-block,
+.bi-text-block,
+.tri-text-block {
+  .head {
+    //text-transform: uppercase;
+    font-family: "MontserratSemiBold";
+    line-height: 1.25;
+    color: $midnight-blue;
+    font-family: $header-font-family;
+  }
+
+  .copy {
+    font-size: $base-font-size;
+    line-height: 1.5;
+    font-size: rem-calc(17);
+
+    @media screen and (min-width: $medium) {
+      font-size: rem-calc(16);
+    }
+
+    @media screen and (min-width: $large) {
+      font-size: rem-calc(15);
+    }
+  }
+}
+
+.text-block {
+  .head {
+    font-weight: 800;
+  }
+
+  .copy {
+    font-family: "MontserratRegular";
+    line-height: 2;
+  }
+}
+
+.bi-text-block {
+  h2.head {
+    margin: 1.5rem 0;
+  }
+  .copy {
+    font-family: "MontserratRegular";
+    line-height: 2;
+    //padding: 0 4rem;
+  }
+}
+
+.tri-text-block {
+  &.block-border {
+    border: 1px solid #cccccc;
+    padding: 0.5rem 1.25rem;
+    margin-bottom: 2rem;
+
+    .head,
+    .subhead {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .copy {
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .copy {
+    line-height: 1.75;
+    margin-top: 1rem;
+    padding: 0;
+  }
+}
+
+.truncate-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media screen and (max-width: $large) {
+    .h1.head {
+      font-size: rem-calc(26);
+      line-height: 2;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+﻿@using ANA.Site.Business.Interfaces
+@using EPiServer
+@using Geta.Optimizely.Extensions
+
+@inject IContentLoader ContentLoader
+
+@model ANA.Site.Models.Blocks.MosaicTileBlock
+
+<section class="ana-block ana-block--97a86d67-c740-4ec8-a509-059cd42ff51b padded-y">
+    <div class="container">
+        <div class="ana-well padding-none">
+            <div class="ana-well-header padding-lg text-white bg-navy">
+                <h2 class="text-center h1 mb-0">
+                    @Html.PropertyFor(x => x.Heading)
+                </h2>
+            </div>
+            <div class="ana-well-content padding-lg">
+                <div class="ana-masonry">
+                    @if (Model.Content != null)
+                    {
+                        @foreach (var contentAreaItem in Model.Content.FilteredItems)
+                        {
+                            if (ContentLoader.TryGet<IContent>(contentAreaItem.ContentLink, out var content))
+                            {
+                                if (content is IContentTile contentTile)
+                                {
+                                    <article class="post-news teaser grid-item" id="post-news-1">
+                                        <div class="ana-well bordered padding-none">
+                                            <div class="ana-well-header bg-light padding-none">
+                                                <a href="@(new Url(contentTile.LinkItem.Href).GetFriendlyUrl())" target="@contentTile.LinkItem.Target" tabindex="-1" class="stretched-link" title="@contentTile.LinkItem.Title"></a>
+                                                @if (contentTile.Image != null)
+                                                {
+                                                    @Html.PropertyFor(x => contentTile.Image)
+                                                }
+                                            </div>
+                                            <div class="ana-well-content">
+                                                <div class="ana-post-type">News</div>
+                                                @if (!string.IsNullOrWhiteSpace(contentTile.Heading))
+                                                {
+                                                    <h3><a href="#" class="post-title" title="@contentTile.Heading">@Html.PropertyFor(x => contentTile.Heading)</a></h3>
+                                                }
+                                                @if (contentTile.Description is { IsEmpty: false })
+                                                {
+                                                    @Html.PropertyFor(x => contentTile.Description)
+                                                }
+                                            </div>
+                                        </div>
+                                    </article>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                @if (Model.CtaContentArea != null)
+                {
+                    <div class="d-flex flex-wrap align-items-center justify-content-center gap-4 mt-4">
+                        @foreach (var contentAreaItem in Model.CtaContentArea.FilteredItems)
+                        {
+                            if (ContentLoader.TryGet<IContent>(contentAreaItem.ContentLink, out var content))
+                            {
+                                if (content is ICtaBlock ctaBlock)
+                                {
+                                    <a href="@(new Url(ctaBlock.LinkItem.Href).GetFriendlyUrl())" target="@ctaBlock.LinkItem.Target" class="btn btn-outline-secondary">@ctaBlock.LinkItem.Text</a>
+                                }
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

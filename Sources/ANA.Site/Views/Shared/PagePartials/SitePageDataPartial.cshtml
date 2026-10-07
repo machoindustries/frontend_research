@@ -1,0 +1,11 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels.CTA
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.SitePageData
+
+@{
+    var ctaBlockViewModelFactory = EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<CtaBlockViewModelFromSitePageDataFactory>();
+    var blockModel = ctaBlockViewModelFactory.CreateModel(Model);
+}
+
+@{ await Html.RenderPartialAsync("/Views/CtaBlock/Index.cshtml", blockModel); }

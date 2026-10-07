@@ -1,0 +1,266 @@
+﻿@using ANA.Site.Models.CDC.Pages.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing;
+@using ANA.Site.Models.Media;
+@using System.Linq
+
+@model ICDCTaxonomyCardViewModel
+
+<article href="@WebUtility.UrlEncode(Model.AssetUrl)" class="card small-12 medium-6 large-4 grid-x white-space media-content-social-links">
+    <div class="img-content-container">
+        <div class="card-img-container">
+            @{
+                RenderImage();
+                RenderOverlay();
+                RenderIcon();
+            }
+        </div>
+        <div class="card-content">
+            @{
+                RenderHeading();
+            }
+            <p>@Model.Description</p>
+        </div>
+    </div>
+    @{
+        RenderTags();
+    }
+</article>
+
+@{
+    void RenderHeading()
+    {
+        if (Model.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(Model.AssetUrl))
+            {
+                <h4 onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());"
+                    data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0">
+                    @Model.Heading
+                </h4>
+            }
+            else
+            {
+                <h4 onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">@Model.Heading</h4>
+            }
+        }
+        else if (Model.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@Model.AssetUrl" target="_blank" download onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <h4>@Model.Heading</h4>
+            </a>
+        }
+        else if (Model.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@Model.AssetUrl" target="_blank" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <h4>@Model.Heading</h4>
+            </a>
+        }
+        else
+        {
+            <a href="@Model.AssetUrl" target="@Model.TargetFrame" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <h4>@Model.Heading</h4>
+            </a>
+        }
+    }
+
+
+
+
+    void RenderImage()
+    {
+        var cardImage = !ContentReference.IsNullOrEmpty(Model.Image)
+            ? EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(Model.Image)
+            : null;
+
+        if (cardImage is ImageFile)
+        {
+            var image = (ImageFile)cardImage;
+
+            if (Model.ResourceType == ResourceLinkType.EmbeddedContent)
+            {
+                if (!string.IsNullOrEmpty(Model.AssetUrl))
+                {
+                    <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0" />
+                }
+                else
+                {
+                    <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+                }
+            }
+            else
+            {
+                <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+            }
+        }
+    }
+
+    void RenderOverlay()
+    {
+        if (Model.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(Model.AssetUrl))
+            {
+                <div class="card-img-overlay" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0"></div>
+            }
+            else
+            {
+                <div class="card-img-overlay" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());"></div>
+            }
+        }
+        else if (Model.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@Model.AssetUrl" target="_blank" download onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+        else if (Model.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@Model.AssetUrl" target="_blank" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+        else
+        {
+            <a href="@Model.AssetUrl" target="@Model.TargetFrame" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+                <div class="card-img-overlay"></div>
+            </a>
+        }
+    }
+
+    void RenderIcon()
+    {
+        string iconSrc = "";
+        switch (Model.ResourceType)
+        {
+            case ResourceLinkType.Download:
+                iconSrc = "/assets/img/download-icon.svg";
+                break;
+            case ResourceLinkType.EmbeddedContent:
+                iconSrc = "/assets/img/youtube-1.svg";
+                break;
+            case ResourceLinkType.ExternalLink:
+                iconSrc = "/assets/img/external-link.svg";
+                break;
+
+            default:
+                iconSrc = string.Empty;
+                break;
+        }
+
+        if (Model.ResourceType == ResourceLinkType.EmbeddedContent)
+        {
+            if (!string.IsNullOrEmpty(Model.AssetUrl))
+            {
+                <button onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());" data-open="video-modal-@Model.ContentLinkID" class="button card-icon-container" aria-controls="video-modal-@Model.ContentLinkID" aria-haspopup="true" tabindex="0">
+                    <img class="card-link-icon" src="@Html.Raw(iconSrc)" data-open="resource-modal" data-embeded-content="@WebUtility.UrlEncode(Model.AssetUrl)" aria-controls="resource-modal" aria-haspopup="true" tabindex="0" />
+                </button>
+            }
+            else
+            {
+                <img class="card-link-icon" src="@Html.Raw(iconSrc)" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());">
+            }
+        }
+        else if (Model.ResourceType == ResourceLinkType.Download)
+        {
+            <a href="@Model.AssetUrl" target="_blank" download onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());" class="no-ext-icon card-icon-container">
+                <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+            </a>
+        }
+        else if (Model.ResourceType == ResourceLinkType.ExternalLink)
+        {
+            <a href="@Model.AssetUrl" target="_blank" onclick="dataLayer.push(@Model.GoogleTags.GetAssetClickEventData());" class="no-ext-icon card-icon-container">
+                <img class="card-link-icon" src="@Html.Raw(iconSrc)">
+            </a>
+        }
+        else
+        {
+            <!-- No Icon for Internal Links -->
+        }
+    }
+
+    void RenderTags()
+    {
+        IEnumerable<CDCTaxonomyViewModel> sources = Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source);
+        IEnumerable<CDCTaxonomyViewModel> topics = Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic);
+        CDCShareButtonViewModel shareButton = new CDCShareButtonViewModel(Model);
+
+        <div>
+            <div class="date-source">
+                @if (Model.Date != null)
+                {
+                    DateTime date = (DateTime)Model.Date;
+                    string formattedDate = date.ToString("MMM d, yyyy").ToUpper();
+                    <div class="date">@formattedDate</div>
+                }
+                @if (sources != null && sources.Any())
+                {
+                    foreach (var source in Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source))
+                    {
+                        RenderSource(source);
+                    }
+                }
+            </div>
+
+            <div class="tags-container">
+                @if ((topics != null && topics.Any()) || (sources != null && sources.Any()))
+                {
+                    <ul>
+                        <div>tags:</div>
+                        @if (sources != null && sources.Any())
+                        {
+                            foreach (var source in Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Source))
+                            {
+                                RenderTag(source);
+                            }
+                        }
+                        @if (topics != null && topics.Any())
+                        {
+                            foreach (var topic in Model.Taxonomy.Where(t => t.TaxonomyType == CDCTaxonomyType.Topic))
+                            {
+                                RenderTag(topic);
+                            }
+                        }
+                    </ul>
+                }
+
+                await @Html.PartialAsync("~/Views/CDC/Partials/_CDCShareButton.cshtml", shareButton)
+
+                <div class="reveal" id="share-resource" data-reveal>
+                    <div class="addthis_inline_share_toolbox_qrdc"></div>
+                    <button class="close-button" data-close aria-label="Close modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    void RenderSource(CDCTaxonomyViewModel tag)
+    {
+        <div class="source">@tag.Label</div>
+        if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                RenderSource(subTag);
+            }
+        }
+    }
+
+
+    void RenderTag(CDCTaxonomyViewModel tag)
+    {
+        <li>@tag.Label<span>,</span></li>
+        if (tag.SubTaxonomy != null && tag.SubTaxonomy.Any())
+        {
+            foreach (var subTag in tag.SubTaxonomy)
+            {
+                RenderTag(subTag);
+            }
+        }
+    }
+}
+

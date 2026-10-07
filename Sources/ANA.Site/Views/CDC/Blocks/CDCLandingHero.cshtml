@@ -1,0 +1,42 @@
+@using ANA.Site.Models.CDC.Blocks
+@using EPiServer.Web.Routing;
+@using ANA.Site.Models.Media;
+@model CDCLandingHero
+
+@{
+    var mobileImage = !ContentReference.IsNullOrEmpty(Model.MobileImage)
+        ? EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(Model.MobileImage)
+        : null;
+
+    var desktopImage = !ContentReference.IsNullOrEmpty(Model.DesktopImage)
+        ? EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.IContentLoader>().Get<MediaData>(Model.DesktopImage)
+        : null;
+
+    ImageFile mobileImageFile = null;
+    ImageFile desktopImageFile = null;
+
+    if (mobileImage is ImageFile)
+    {
+        mobileImageFile = (ImageFile)mobileImage;
+    }
+    if (desktopImage is ImageFile)
+    {
+        desktopImageFile = (ImageFile)desktopImage;
+    }
+}
+
+@if (mobileImageFile != null || desktopImageFile != null)
+{
+    <div class="grid-x landing-hero">
+        <picture>
+            @if (desktopImageFile != null)
+            {
+                <source srcset="@UrlResolver.Current.GetUrl(desktopImageFile.ContentLink)" media="(min-width: 768px)">
+            }
+            @if (mobileImageFile != null)
+            {
+                <img src="@UrlResolver.Current.GetUrl(mobileImageFile.ContentLink)" alt="@mobileImageFile.AltText" />
+            }
+        </picture>
+    </div>
+}

@@ -1,0 +1,34 @@
+﻿@model ANA.Site.Models.ViewModels.AccountOrderHistoryViewModel
+
+    <div class="c-account__section">
+        <h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+        @Html.PropertyFor(m => m.Description)
+        @if (Model.Orders != null && Model.Orders.Any())
+        {
+            <table>
+                <thead>
+                    <th>@Html.Translate("/MyAccount/Order/OrderNumber")</th>
+                    <th>@Html.Translate("/MyAccount/Order/DatePlaced")</th>
+                    @*<th>@Html.Translate("/MyAccount/Order/Status")</th>*@
+                    <th>@Html.Translate("/MyAccount/Order/Total")</th>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders)
+                    {
+                        <tr data-require="./src/views/order-item-view">
+                            <td><a href="@(Model.OrderDetailUrl+"?orderId="+order.PersonifyOrderNumber)">@order.PersonifyOrderNumber</a></td>
+                            <td>@order.Created.ToString("MM/dd/yyyy")</td>
+                            @*<td>@order.OrderStatus</td>*@
+                            <td>@order.Total</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>
+                @Html.PropertyFor(m => m.NoResultsMessage)
+            </div>
+        }
+    </div>

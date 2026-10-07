@@ -1,0 +1,66 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+
+@model SelectionElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var placeholderText = Model.PlaceHolder;
+    var defaultOptionItemText = !string.IsNullOrWhiteSpace(placeholderText) ? placeholderText : Html.Translate(string.Format("/episerver/forms/viewmode/selection/{0}", Model.AllowMultiSelect ? "selectoptions" : "selectanoption")).GetString();
+    var defaultOptionSelected = Model.Items.Count(x => x.Checked.HasValue && x.Checked.Value) <= 0 ? "selected=\"selected\"" : "";
+    var items = Model.GetItems();
+    var helpText = Model.GetHelpText();
+    var errorMessage = Model.GetErrorMessage();
+    var submittedValue = Model.GetSubmittedValue() as string;
+
+    string[] entries = null;
+
+    if (!string.IsNullOrWhiteSpace(submittedValue))
+    {
+        entries = submittedValue.Split(',');
+    }
+}
+
+<label class="e-form__label e-form__label--select" for="@formElement.Guid" data-formfield>
+    <span class="e-form__label-text">@labelText</span>
+    <select class="e-form__input e-form__input--select @(Model.HasError() ? ANA.Site.Global.StringConstants.FormsValidationFailCssClass : "")" name="@formElement.ElementName" title="@labelText" id="@formElement.Guid" @(Model.AllowMultiSelect ? "multiple" : "") @Model.AttributesString @Model.GetValidationAttributes()>
+        <!option disabled="disabled" @defaultOptionSelected value="">@defaultOptionItemText</!option>
+        @foreach (var item in items)
+        {
+            var defaultSelectedString = Model.GetDefaultSelectedString(item);
+            var selectedString = string.IsNullOrEmpty(defaultSelectedString) ? string.Empty : "selected";
+
+            if (!string.IsNullOrWhiteSpace(submittedValue))
+            {
+                defaultSelectedString = "";
+
+                if (entries != null)
+                {
+                    selectedString = entries.Any(s => s == item.Value) ? "selected" : "";
+                }
+                else
+                {
+                    selectedString = item.Value == submittedValue ? "selected" : "";
+                }
+            }
+            <!option class="e-form__input e-form__input--option" value="@item.Value" @selectedString @defaultSelectedString>@item.Caption</!option>
+        }
+    </select>
+    
+</label>
+
+@if (!string.IsNullOrWhiteSpace(helpText))
+{
+    <p class="Form__HelpText">@helpText</p>
+}
+
+@Model.RenderDataList()
+<div class="e-form__validation-errors" data-validation-error="" data-validation-for="@formElement.ElementName">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div id="@formElement.ElementName-error" class="error-msg">@errorMessage</div>
+    }
+</div>

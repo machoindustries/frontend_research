@@ -1,0 +1,143 @@
+﻿@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Models.Blocks
+@using ANA.Site.HNHN.Business
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+@using ANA.Site.HNHN.Models.Blocks.Callouts
+@using ANA.Site.HNHN.Models.ViewModels
+
+@model ANA.Site.HNHN.Models.ViewModels.IPageViewModel<ANA.Site.HNHN.Models.Pages.BasePageData>
+
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+    
+}
+
+<footer class="footer footer-main">
+    <div class="footer__top">
+        <div class="container container-extra">
+            <div class="row">
+                <div class="footer__columns col-sm-6 footer__logo">
+                    @if (Model.Settings.FooterLogo != null)
+                    {
+                        var logoblock = Model.Settings.FooterLogo.GetContent<LogoBlock>();
+                        var logoViewModel = new LogoBlockViewModel(logoblock);
+                        await Html.RenderPartialAsync("_LogoBlock", logoViewModel, new ViewDataDictionary(ViewData) { { "BtnClass", "btn-danger btn-wide" } });
+                    }
+
+                    @*<a href="#"><img src="/static/images/footer-enterprise-logo-lockup.svg" class="img-responsive" alt="Footer logo"></a>*@
+                </div>
+                <div class="footer__columns col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            @Html.PropertyFor(m => m.Settings.LeftColumnNavItems, new { Tag = "FooterNavController", NavCssClass = "footer__links" })
+                            @*<h5>About</h5>
+                                <ul class="footer__links">
+                                    <li><a href="#">About the Healthy Nurses Healthy Nation Grand Challenge</a></li>
+                                    <li><a href="#">What`s a Grand Challenge?</a></li>
+                                    <li><a href="#">Research</a></li>
+                                    <li><a href="#">Steering Committee/Advisory Board</a></li>
+                                </ul>*@
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.PropertyFor(m => m.Settings.RightColumnNavItems, new { Tag = "FooterNavController", NavCssClass = "footer__links" })
+                            @*<h5>Partners</h5>
+                                <ul class="footer__links">
+                                    <li><a href="#">Partnership Levels</a></li>
+                                    <li><a href="#">Organizational Partner Join Form</a></li>
+                                </ul>
+                                <h5>Sponsors</h5>
+                                <ul class="footer__links">
+                                    <li><a href="#">Sponsors</a></li>
+                                    <li><a href="#">Sponsor Join Form</a></li>
+                                </ul>
+                                <h5>Toolkit</h5>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer__middle">
+        <div class="container container-extra">
+            <div class="row">
+                <div class="footer__columns col-sm-4">
+                    @if (Model.Settings.LeftCallout != null)
+                    {
+                        var cta = Model.Settings.LeftCallout.GetContent<CTACallout>();
+                         await Html.RenderPartialAsync("_NoImageCTACallout", cta, new ViewDataDictionary(ViewData) { { "BtnClass", "btn-danger btn-wide" } });
+                    }
+                    @*<h4>Healthy Nurses Healthy Nation</h4>
+        <p>3.6 Million Registered Nurses Leading the Nation's Journey to Better Health</p>
+        <a href="#" class="btn btn-danger">Join the Challenge</a>*@
+                </div>
+                <div class="footer__columns col-sm-4">
+                    @Html.PropertyFor(m => m.Settings.CompanyInformation)
+                    @*<h4>Contact Us</h4>
+                        <p>
+                            <a href="tel:+18002744" class="tel-number">1(800)274-4ANA</a><br>
+                            <a href="">example@ana.com</a>
+                        </p>
+                        <address>
+                            American Nurses Association <br>
+                            8515 Georgia Ave. Suite 400 <br>
+                            Silver Spring, Md 20910
+                        </address>*@
+                </div>
+                <div class="footer__columns col-sm-4">
+                    @if (Model.Settings.RightCallout != null)
+                    {
+                        var cta = Model.Settings.RightCallout.GetContent<CTACallout>();
+                         await Html.RenderPartialAsync("_NoImageCTACallout", cta, new ViewDataDictionary(ViewData) { { "BtnClass", "btn-danger btn-wide" } });
+                    }
+                    @*<h4>About ANA</h4>
+        <p>Visit <a href="#">ANA.org</a> to learn more about ANA and what we can do for you! </p>
+        <a href="#" class="btn btn-danger btn-wide">Donate</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-lg-push-9">
+                    @*<a href="#">#anaexample</a>*@
+                    @if (!string.IsNullOrWhiteSpace(Model.Settings.TwitterHashtag) || ContentHelper.PageIsInEditMode())
+                    {
+                        <a href="http://twitter.com/@Model.Settings.TwitterHashtag">@Html.PropertyFor(m => m.Settings.TwitterHashtag)</a>
+                    }
+                    @if (Model.Settings.SocialLinks.Any() || ContentHelper.PageIsInEditMode())
+                    {
+                        <ul class="social-list" @Html.EditAttributes(m => m.Settings.SocialLinks)>
+                            @foreach (var link in Model.Settings.SocialLinks.GetContentItems<SocialLinkBlock>())
+                            {
+                                await Html.RenderPartialAsync("SocialLinkBlock", link);
+                            }
+                        </ul>
+                    }
+                    @*<ul class="social-list">
+                            <li><a href="#"><img src="/static/images/icons/twitter.svg" alt="Twitter"></a></li>
+                            <li><a href="#"><img src="/static/images/icons/facebook.svg" alt="facebook"></a></a></li>
+                            <li><a href="#"><img src="/static/images/icons/instagram.svg" alt="instagram"></a></a></li>
+                            <li><a href="#"><img src="/static/images/icons/linkedin.svg" alt="linkedin"></a></a></li>
+                        </ul>*@
+                </div>
+                <div class="col-lg-9 col-lg-pull-3">
+                    <ul class="footer__bottom__list">
+                        @foreach (var linkItem in Model.Settings.FooterLinks ?? Enumerable.Empty<EPiServer.SpecializedProperties.LinkItem>())
+                        {
+                            <li>
+                                @Html.ContentLink(linkItem)
+                            </li>
+                        }
+                        @*<li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Term of Use</a></li>*@
+                        <li>&copy; @DateTime.Now.Year American Nurses Association. All rights reserved</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</footer>

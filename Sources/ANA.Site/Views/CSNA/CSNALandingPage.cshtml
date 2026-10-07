@@ -1,0 +1,83 @@
+@model ANA.Site.Models.ViewModels.CSNA.CSNALandingPageViewModel
+
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    var labelName = Model.UserDisplayName;
+    var today = DateTime.Now.ToString("dddd, MMMM d, yyyy");
+}
+
+<div class="csna-page">
+    <div class="csna-header">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="csna-user-pill" aria-label="Signed in as @labelName">
+                <span class="csna-user-pill__dot" aria-hidden="true"></span>
+                <span class="csna-user-pill__name">@labelName</span>
+            </div>
+        }
+    </div>
+    <main class="csna-body" role="main">
+
+        <p class="csna-eyebrow">@Model.PageEyebrow</p>
+        <h1 class="csna-title">@Model.PageHeading</h1>
+        <p class="csna-subtitle">@Model.PageSubtitle</p>
+
+        <div class="csna-tiles" role="list">
+
+            <a href="@Model.DashboardUrl"
+               class="csna-tile"
+               role="listitem"
+               aria-label="@Model.DashboardAriaLabel">
+                <div class="csna-tile__icon" aria-hidden="true">
+                    @if (!string.IsNullOrWhiteSpace(Model.CardOneImage))
+                    {
+                        <img src="@Model.CardOneImage" alt="" width="24" height="24"/>
+                    }
+                    else
+                    {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.5"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="12" width="4" height="9" rx="1"/>
+                            <rect x="10" y="7" width="4" height="14" rx="1"/>
+                            <rect x="17" y="3" width="4" height="18" rx="1"/>
+                        </svg>
+                    }
+                </div>
+                <span class="csna-tile__title">@Model.CardOneTitle</span>
+                <span class="csna-tile__desc">@Model.CardOneDescription</span>
+                <span class="csna-tile__arrow" aria-hidden="true">&#8594;</span>
+            </a>
+
+            <a href="@Model.RosterUrl"
+               class="csna-tile"
+               role="listitem"
+               aria-label="@Model.RosterAriaLabel">
+                <div class="csna-tile__icon" aria-hidden="true">
+                    @if (!string.IsNullOrWhiteSpace(Model.CardTwoImage))
+                    {
+                        <img src="@Model.CardTwoImage" alt="" width="24" height="24"/>
+                    }
+                    else
+                    {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.5"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    }
+                </div>
+                <span class="csna-tile__title">@Model.CardTwoTitle</span>
+                <span class="csna-tile__desc">@Model.CardTwoDescription</span>
+                <span class="csna-tile__arrow" aria-hidden="true">&#8594;</span>
+            </a>
+
+        </div>
+
+        <p class="csna-date" aria-label="Today's date">@today</p>
+
+    </main>
+</div>

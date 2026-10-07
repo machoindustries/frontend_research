@@ -1,0 +1,17 @@
+﻿@using EPiServer.Editor
+@using ANA.Site.Business.Helpers
+@model ANA.Site.Models.Blocks.PromoAlertBlock
+
+@if (Model.Content != null && !Model.Content.IsEmpty)
+{
+    <article class="grid__item one-whole c-promo-block--full-width">
+        <div class="c-promo-block--full-width__wrapper" style="background-color:@Model.BGColor;">
+            <div class="grid-constraint">
+                <div class="grid-item one-whole c-promo-block--full-width__advert-content e-richtext">
+                    @{ var htmlString = new HtmlString(Model.Content.ToHtmlString());}
+                    @htmlString
+                </div>
+            </div>
+        </div>
+    </article>
+}

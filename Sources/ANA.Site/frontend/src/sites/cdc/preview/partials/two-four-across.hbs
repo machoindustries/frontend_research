@@ -1,0 +1,8 @@
+<section class="small-12">
+    {{> heading-and-subheading data.heading}}
+    <div class="two-four-across-cards small-12">
+        {{#each data.cards}}
+            {{> testimonial-card this}}
+        {{/each}}
+    </div>
+</section>

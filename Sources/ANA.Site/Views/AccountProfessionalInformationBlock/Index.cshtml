@@ -1,0 +1,291 @@
+﻿@{
+    ViewBag.Title = "Professional Info";
+}
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<link href="~/Styles/MyAccount_PI.css" rel="stylesheet" />
+<link href="~/assets/css/screen.css" rel="stylesheet" />
+<script type="text/javascript">
+    var selectedvalue = 0;
+    var catexselect = 0;
+    var cateyselect = 0;
+    var spixselect = 0;
+    var spiyselect = 0;
+    var caspxselect = 0;
+    var caspyselect = 0;
+    var EmpHeader = '';
+    var PageHeader = '';
+    var PIPDDefaultValues = '';
+    var PIWDefaultValues = '';
+    var PIDDefaultValues = [];
+    var PIESDefaultValues = '';
+    var PIPDvalues = [];
+    var PIPDNewvalue = [];
+    var DPIPDvalue = [];
+    var PIWvalues = [];
+    var PIWNewvalue = [];
+    var DPIWvalue = [];
+    var PIDvalues = [];
+    var PIDNewvalue = [];
+    var DPIDvalue = [];
+    var PIESvalues = [];
+    var PIESNewvalue = [];
+    var DPIESvalue = [];
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $(document).ready(function () {
+
+
+            $(document).ajaxStart(function () {
+                $('#wait').show();
+            });
+            $(document).ajaxStop(function () {
+                $('#wait').hide();
+            });
+
+            $(document).ajaxError(function () {
+                $("#wait").show();
+            });
+            GetUserDemographicInfo();
+
+
+
+        });
+    });
+
+
+
+    function SaveContinue() {
+        $(document).ajaxStart(function () {
+            $('#wait').show();
+        });
+         
+ 
+        var list = new Array();
+        $("input[name='chklistitem']:radio:checked").length
+        list.push("POSITION_DESCR" + ":" + ($("input[name='chklistitem']:radio:checked").length == 0 ? "" : $("input[name='chklistitem']:radio:checked").val()));
+        console.log("1" + $("input[name='chklistitem']:radio:checked").val());
+        console.log("2" + list);
+        
+        list.push("WORKSETTING" + ":" + ($("input[name='chklistitem1']:radio:checked").length == 0 ? "" : $("input[name='chklistitem1']:radio:checked").val()));
+        list.push("DEGREE" + ":" + ($("input[name='chklistitem2']:radio:checked").length == 0 ? "" : $("input[name='chklistitem2']:radio:checked").val()));
+        list.push("EMPLOYMENT_STATUS" + ":" + $(".empStatus option:selected").val());
+        list.push("Credential" + ":" + $('#Credential').val());
+
+
+        $.ajax(
+            {
+
+                url: "/AccountProfessionalInformationBlock/SaveDemographic",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                data: JSON.stringify(list),
+                type: "POST",
+                success: function (data, status, xhr) {
+                    window.location = "/my-account/professional-information-continued";
+                }
+            });
+
+
+         
+        $('#wait').hide();
+
+    }
+
+    function GetUserDemographicInfo() {
+        $.ajax(
+            {
+
+                url: "/AccountProfessionalInformationBlock/GeUserDemographicInformation",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',                 
+                type: "POST",
+                success: function (data, status, xhr) {
+                    BindPositionDescription();
+                }
+            });
+    }
+
+    function BindPositionDescription() {
+
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationBlock/GetProfessionalInfoPositionDescr",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.Result);
+                    $('#demo').empty();
+                    var table = $('<table class="table_width" ID="ProfessionalInfo"></table>');
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        table.append("<tr>" +
+                            "<td class='td_width'>" + "<input type='radio' name='chklistitem' class='Profpd Radiobutton-style' value=" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id = lbl" + obj.PositionDescription.PositionDescr[i]["Subcode"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"] + "</td>"
+                            + "</tr>");
+                    }
+                    $('#demo').removeData();
+                    $('#demo').html(table);                
+                    
+                    $('#chllist' + data.PDesc).prop('checked', true);
+                     
+                    $('#Credential').val(data.credentials);
+                    BindWork();
+                }
+
+            });
+
+
+
+
+
+    }
+
+    function BindWork() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationBlock/GetProfessionalInfoWork",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.GetPWork);
+                    $('#work').empty();
+                    var table = $('<table class="table_width" ID="ProfessionalInfo"></table>');
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        table.append("<tr>"
+                            + "<td class='td_width'>" + "<input type='radio' name='chklistitem1' class='Profw Radiobutton-style' value=" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id = lbl" + obj.PositionDescription.PositionDescr[i]["Subcode"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"] + "</td>"
+                            + "</tr>");
+                    }
+                    $('#work').removeData();
+                    $('#work').html(table); 
+                    $("input[name='" + "chklistitem1" + "'][value='" + data.CheckPWork + "']").prop('checked', true);
+                    BindDegree();
+                }
+
+            });
+
+
+    }
+
+    function BindDegree() { 
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationBlock/GetProfessionalInfoDegree",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.GetPDegree);
+                    $('#degree').empty();
+                    var table = $('<table class=table_width ID="ProfessionalInfo"></table>');
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        table.append("<tr>"
+                            + "<td class='td_width'>" + "<input type='radio' name='chklistitem2' class='Profd Radiobutton-style' value=" + obj.PositionDescription.PositionDescr[i]["Code"] + " id=chllist" + obj.PositionDescription.PositionDescr[i]["Code"] + " />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Code"] + " id = lbl" + obj.PositionDescription.PositionDescr[i]["Code"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"].replace('â€™', "'") + "</td>");
+
+                    }
+                    $('#degree').removeData();
+                    $('#degree').html(table);
+                    
+                    $('#chllist' + data.CheckPDegree).prop('checked', true);
+                    BindEmpstatus();
+                }
+
+            }); 
+    }
+
+    function BindEmpstatus() {
+        $('#infostatus').html('<img src="/Styles/Images/Loading.gif"> ');
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationBlock/GetProfessionalInfoStatus",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.GetPInfoStatus);
+                    $('#infostatus').empty();
+                    var listItems = '';
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        listItems += "<option class = 'profes' value='" + obj.PositionDescription.PositionDescr[i]["Subcode"] + "'>" + obj.PositionDescription.PositionDescr[i]["Description"] + "</option>";
+
+                    }
+                    $('#infostatus').removeData();
+                    $('#infostatus').html(listItems);
+ 
+                    $('#infostatus').val(data.CheckPInfoStatus);
+                }
+            });
+
+        $('#PInfo').fadeIn();
+    }
+
+
+
+</script>
+
+<div id="wait" class="e-spinner e-spinner" data-loading-spinner="">
+    <svg class="e-spinner__spinner" width="96px" height="96px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;">
+        <circle cx="50" cy="50" fill="none" stroke="#009cde" stroke-width="5" r="32" stroke-dasharray="150.79644737231007 52.26548245743669" transform="rotate(354.079 50.0002 50.0002)">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+        </circle>
+    </svg>
+</div>
+
+<div id="PInfo" style="display:none" class="c-account__section">
+
+    <h4 class="sub_title">My Professional Information</h4>
+
+    <div id="cntInfo">
+        <div class="checkbox">
+            <h2 class="c-account__title">What is your primary role in nursing (Position Description)?</h2>
+
+            <div id="demo" class="e-richtext">
+
+            </div>
+        </div>
+        <div class="checkbox">
+            <h2 class="c-account__title">
+                Choose the setting that best describes where you work:
+            </h2>
+            <div id="work">
+            </div>
+        </div>
+        <div class="checkbox">
+            <h2 class="c-account__title">
+                Highest Nursing Degree Earned:
+            </h2>
+            <div id="degree"></div>
+        </div>
+        <div class="checkbox">
+
+            <h2 class="c-account__title">
+                Credentials:
+            </h2>
+            <input class="e-form__input e-form__input--text" type="text" id="Credential" />
+
+
+
+            <p><span class="checkbox-font">Separate each credential with a comma.  (Example: MSN, RN, FNP-BC, etc.)</span></></p>
+        </div>
+        <div class="e-form__input--select">
+            <span class="e-form__label e-form__label--text">
+                *Employment Status:
+                <select class="e-form__label--select-no-margin empStatus" id="infostatus"></select>
+            </span>
+
+        </div>
+
+        <div class="checkbox">
+            <p><span class="checkbox-font">*If you've had an employment status change, please note that your dues rate will not be impacted. Please contact Membership Billing at 1.800.923.7709 to determine if a rate change should occur</span></p>
+        </div>
+
+        <div class="form_save">
+            <br />
+            <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" id="Savecontinue" onclick="SaveContinue()" value="Save & Continue" data-submit-address="">
+        </div>
+    </div>
+</div>
+

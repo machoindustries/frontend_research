@@ -1,0 +1,398 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Business.Extensions
+@using EPiServer
+@using Global = ANA.Site.Global
+@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@using Geta.Optimizely.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model ANA.Site.Models.ViewModels.ProductPartialViewModel
+
+@{
+    const string DefaultQtyOnProductListingPage = "1";
+    var productType = "";
+    string contacthours = "0";
+    var expirationdate = "";
+    var authorName = string.Empty;
+    var productIcon = Model.Product.GetIconClass();
+    var productGroup = Model.Product.ProductGroupBlock;
+    var isProductBulkPurchase = false;
+    var isVariantBulkPurchase = false;
+    var learnProduct = Model.Product as LearnBase;
+    if (Model.Product.GetOriginalType() == typeof(OnlineCourseProduct))
+    {
+        productType = learnProduct.Type;
+        expirationdate = learnProduct.ExpirationDate == DateTime.MinValue ? string.Empty : learnProduct.ExpirationDate.ToAnaFormatString();
+        if (learnProduct.PresentedBy != null && learnProduct.PresentedBy.FilteredItems.Any())
+        {
+            var firstAuthor = (PersonBlock)learnProduct.PresentedBy.FilteredItems.FirstOrDefault()?.LoadContent();
+            if (!string.IsNullOrEmpty(firstAuthor?.Name))
+            {
+                authorName = firstAuthor.Name;
+            }
+        }
+
+        Model.Classes.Add("c-product-detail--course");
+        //isOnlineCourse = true;
+    }
+
+    if (!string.IsNullOrEmpty(learnProduct?.ContactHour))
+    {
+        contacthours = learnProduct.ContactHour;
+    }
+
+    if (learnProduct != null)
+    {
+        Model.Classes.Add("c-product-detail--learn");
+        productType = learnProduct.Type;
+    }
+
+    var firstVariant = Model.VariantsModel.Where(x => x != null).OrderBy(x => x.DiscountedPrice).FirstOrDefault();
+
+    if (firstVariant != null)
+    {
+        if (Model.Product.GetOriginalType() == typeof(BookProduct))
+        {
+            var bookProduct = (BookProduct)Model.Product;
+
+            if (bookProduct.Authors != null && bookProduct.Authors.FilteredItems.Any())
+            {
+                var firstAuthor = (PersonBlock)bookProduct.Authors.FilteredItems.FirstOrDefault()?.LoadContent();
+
+                if (!string.IsNullOrEmpty(firstAuthor?.Name))
+                {
+                    authorName = firstAuthor.Name;
+                }
+            }
+
+            Model.Classes.Add("c-product-detail--book");
+        }
+
+        var workshopProduct = Model.Product as WorkshopProduct;
+        if (workshopProduct != null)
+        {
+            productType = "Workshop";
+            contacthours = workshopProduct.ContactHour ?? "0";
+            Model.Classes.Add("c-product-detail--workshop");
+            //isWorkshop = true;
+        }
+
+        if (ViewData.ContainsKey("Carousel") && (bool)ViewData["Carousel"])
+        {
+            Model.Classes.Add("c-product-detail--carousel");
+        }
+
+        var gtmPrice = string.Empty;
+
+        if (firstVariant != null)
+        {
+            gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? firstVariant.DiscountedPrice.ToString() : firstVariant.PlacedPrice.ToString();
+
+            if (UserState.CurrentProfile.IsMember())
+            {
+                gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? firstVariant.DiscountedMemberPrice.ToString() : firstVariant.MemberPrice.ToString();
+            }
+        }
+
+        var impression = new
+        {
+            productName = (firstVariant?.DisplayName ?? string.Empty),
+            productId = (firstVariant?.Code ?? string.Empty),
+            productPrice = gtmPrice,
+            productBrand = Model.BannerText,
+            productCategory = Model.Product.GetOriginalType().Name.Replace("Product", string.Empty),
+            productVariant = (firstVariant?.Code ?? string.Empty),
+            productPosition = ViewBag.listingIndex,
+            productQuantity = DefaultQtyOnProductListingPage,
+            productFormat = (firstVariant?.VariantType ?? string.Empty)
+        };
+
+        <article class="@string.Join(" ", Model.Classes)"
+                 data-product=""
+                 data-product-item_name="@impression.productName"
+                 data-product-item_id="@impression.productId"
+                 data-product-price="@impression.productPrice"
+                 data-product-item_brand="@impression.productBrand"
+                 data-product-item_category="@impression.productCategory"
+                 data-product-item_variant="@impression.productVariant"
+                 data-product-index="@impression.productPosition"
+                 data-product-quantity="@impression.productQuantity"
+                 data-product-format="@impression.productFormat">
+
+            <div class="c-product-detail__wrapper">
+
+                <figure class="c-product-detail__figure" @Html.Raw(productGroup != null && string.IsNullOrEmpty(firstVariant.ImageUrl) ? $"style=\"background-color: {productGroup.Colour}\"" : string.Empty)>
+                    <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="c-product-detail__figure-link" data-product-detail-link>
+                        @if (!string.IsNullOrEmpty(firstVariant.ImageUrl))
+                        {
+                            <img src="@firstVariant.ImageUrl?width=150" alt="@firstVariant.DisplayName" class="c-product-detail__image" />
+                        }
+                        else
+                        {
+                            <span class="@productIcon c-product-detail__figure-icon" @Html.Raw(productGroup != null ? $"style=\"color: {productGroup.Colour}\"" : string.Empty)></span>
+                        }
+                    </a>
+
+                    @if (Model.Product.GetOriginalType() != typeof(BookProduct))
+                    {
+                        <span class="c-product-detail__figure-info">
+                            @if (!String.IsNullOrWhiteSpace(productType))
+                            {
+                                <span class="c-product-detail__product-type">@productType</span>
+                            }
+                            <span class="c-product-detail__totalhours-description">
+                                @if (!string.IsNullOrEmpty(contacthours))
+                                {
+                                    <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span> <strong>@contacthours</strong> @Html.Translate("/productpartial/contacthours")
+                                }
+                                else
+                                {
+                                    <span class="c-product-detail__totalhours-clock icon--icon-contacthours"></span> @Html.Translate("/productpartial/nocontacthours")
+                                }
+                            </span>
+                        </span>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.BannerText))
+                    {
+                        <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                            <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                            <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                        </div>
+                    }
+                </figure>
+
+                @if (productGroup != null)
+                {
+                    <div class="c-product-detail__group-name" style="color: @productGroup.Colour;">
+                        @productGroup.Name
+                    </div>
+                }
+
+                <div class="c-product-detail__info">
+                    @if (!String.IsNullOrWhiteSpace(productType))
+                    {
+                        <span class="c-product-detail__info-type">@productType</span>
+                    }
+                    <h3 class="c-product-detail__info-title">
+                        <a class="c-product-detail__info-link" href="@Model.Product.ContentLink.GetFriendlyUrl()" data-product-detail-link>
+                            @Model.Product.Heading
+                        </a>
+                    </h3>
+                </div>
+
+            </div>
+
+            <div class="c-product-detail__wrapper">
+
+                <div class="c-product-detail__info">
+
+                    @if (!string.IsNullOrWhiteSpace(authorName))
+                    {
+                        <span class="c-product-detail__info-detail-1">
+                            @(Html.Raw(string.IsNullOrWhiteSpace(authorName) ? "&nbsp;" : authorName))
+                        </span>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(productType))
+                    {
+                        <span class="c-product-detail__info-detail-1">
+                            @(Html.Raw(string.IsNullOrWhiteSpace(productType) ? "&nbsp;" : productType))
+                        </span>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(expirationdate))
+                    {
+                        <span class="c-product-detail__info-detail-2">
+                            @(Html.Raw(string.IsNullOrWhiteSpace(expirationdate) ? "&nbsp;" : expirationdate))
+                        </span>
+                    }
+
+                    @if (Model.Product.GetOriginalType() != typeof(BookProduct))
+                    {
+                        if (!string.IsNullOrEmpty(contacthours))
+                        {
+                            <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @contacthours</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__info-note">@Html.Translate("/productpartial/contacthours"): @Html.Translate("/productpartial/nocontacthours")</span>
+                        }
+                    }
+
+                    @if (Model.VariantsModel.Any(x => x.VariantType == ANA.Site.Global.StringConstants.Paperback))
+                    {
+                        <span class="c-product-detail__info-detail-2">
+                            @(Html.Translate("/productpartial/paperback"))
+                        </span>
+                    }
+
+                    @if (Model.VariantsModel.Any(x => x.VariantType == ANA.Site.Global.StringConstants.Ebook))
+                    {
+                        <span class="c-product-detail__info-note">
+                            @Html.Translate("/productpartial/ebook")
+                        </span>
+                    }
+
+                </div>
+
+                @{
+                    var gtmPriceNormal = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? @firstVariant.DiscountedPrice : @firstVariant.PlacedPrice;
+                    var gtmPriceMember = firstVariant.DiscountedMemberPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m ? @firstVariant.DiscountedMemberPrice : @firstVariant.MemberPrice;
+                }
+
+                <div class="c-product-detail__pricing" data-gtm-pricing-info="" data-gtm-price-normal="@gtmPriceNormal" data-gtm-price-member="@gtmPriceMember">
+
+                    <div class="c-product-detail__pricing-item">
+                        <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/pricefrom")</span>
+                        @if (firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m)
+                        {
+                            <span class="c-product-detail__pricing-price--old">@firstVariant.PlacedPrice</span>
+                            <span class="c-product-detail__pricing-price">@firstVariant.DiscountedPrice</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__pricing-price">@firstVariant.PlacedPrice</span>
+                        }
+                    </div>
+
+                    <div class="c-product-detail__pricing-item">
+                        <span class="c-product-detail__pricing-label">@Html.Translate("/productpartial/memberprice")</span>
+                        @if (firstVariant.DiscountedMemberPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m)
+                        {
+                            <span class="c-product-detail__pricing-price--old">@firstVariant.MemberPrice</span>
+                            <span class="c-product-detail__pricing-price">@firstVariant.DiscountedMemberPrice</span>
+                        }
+                        else
+                        {
+                            <span class="c-product-detail__pricing-price">@firstVariant.MemberPrice</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="c-product-detail__controls" data-require="./src/views/add-to-cart-view">
+                    @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "c-product-detail__controls-form", data_add_to_cart_form = "", data_ajax_form = "" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Quantity)
+                        @Html.Hidden("Impression", Newtonsoft.Json.JsonConvert.SerializeObject(impression));
+                        if (Model.Product.GetOriginalType() == typeof(BookProduct))
+                        {
+                            <label class="e-form__label e-form__label--select c-product-detail__controls-label">
+                                <select class="e-form__input e-form__input--select c-product-detail__controls-select" name="@Html.NameFor(m => m.Code)" data-add-to-cart-variant>
+                                    @if (Model.VariantsModel.Count() > 1)
+                                    {
+                                        <option value="e-form__input e-form__input--option" selected="selected" disabled="disabled">@Html.Translate("/productpartial/pleaseselect")</option>
+                                    }
+                                    @foreach (var variant in Model.VariantsModel)
+                                    {
+                                        var chepeastPrice = variant.DiscountedPrice.HasValue && variant.DiscountedPrice.Value.Amount > 0.0m
+                                            ? variant.DiscountedPrice
+                                            : variant.PlacedPrice;
+
+                                        var cheapestMemberPrice =
+                                            variant.DiscountedMemberPrice.HasValue && variant.DiscountedMemberPrice.Value.Amount > 0.0m
+                                                ? variant.DiscountedMemberPrice
+                                                : variant.MemberPrice;
+
+                                        var priceString = $"{variant.VariantType} {chepeastPrice}";
+
+                                        if (variant.MemberPrice.Amount > 0.0m)
+                                        {
+                                            priceString = $"{variant.VariantType} {chepeastPrice}/{cheapestMemberPrice} members";
+                                        }
+
+                                        var variantPrice = variant.DiscountedPrice != null && variant.DiscountedPrice.Value.Amount > 0.0m ? variant.DiscountedPrice.ToString() : variant.PlacedPrice.ToString();
+
+                                        if (UserState.CurrentProfile.IsMember())
+                                        {
+                                            variantPrice = variant.DiscountedPrice != null && variant.DiscountedMemberPrice.Value.Amount > 0.0m ? variant.DiscountedMemberPrice.ToString() : variant.MemberPrice.ToString();
+                                        }
+                                        if (variant.VariantType == ANA.Site.Global.StringConstants.Paperback)
+                                        {
+                                            if (((ANA.Site.Models.Commerce.Variants.BookVariant)variant.Variant).IsBulkPurchase == true)
+                                            {
+                                                isVariantBulkPurchase = true;
+                                                isProductBulkPurchase = true;
+                                            }
+                                            else
+                                            {
+                                                isVariantBulkPurchase = false;
+                                            }
+                                        }
+                                        if (variant.VariantType == ANA.Site.Global.StringConstants.Ebook)
+                                        {
+                                            if (((ANA.Site.Models.Commerce.Variants.EBookVariant)variant.Variant).IsBulkPurchase == true)
+                                            {
+                                                isVariantBulkPurchase = true;
+                                                isProductBulkPurchase = true;
+                                            }
+                                            else
+                                            {
+                                                isVariantBulkPurchase = false;
+                                            }
+                                        }
+
+                                        // Note: Removed the default selection logic to match with the INTE/Live site
+                                        // string variantSelected = Model.VariantsModel.Count().Equals(1) ? "selected" : string.Empty; 
+                                        <option value="@variant.Code"
+                                                data-variant-price="@variantPrice.Replace("$", "")"
+                                                data-variant-format="@variant.VariantType"
+                                                data-variant-bulk-purchase="@isVariantBulkPurchase"
+                                                @* selected="@variantSelected" *@
+                                                >
+                                            @priceString
+                                        </option>
+                                    }
+                                </select>
+                            </label>
+                        }
+                        else
+                        {
+                            var variant = Model.VariantsModel.FirstOrDefault();
+                            if (variant.Variant is ANA.Site.Models.Commerce.Variants.DefaultVariant)
+                            {
+                                if (!((ANA.Site.Models.Commerce.Variants.DefaultVariant)variant.Variant).IsNull)
+                                {
+                                    if (((ANA.Site.Models.Commerce.Variants.DefaultVariant)variant.Variant).IsBulkPurchase == true)
+                                    {
+
+                                        isProductBulkPurchase = true;
+                                    }
+                                }
+                            }
+                            if (variant.Variant is ANA.Site.Models.Commerce.Variants.WorkshopVariant)
+                            {
+                                if (!((ANA.Site.Models.Commerce.Variants.WorkshopVariant)variant.Variant).IsNull)
+                                {
+                                    if (((ANA.Site.Models.Commerce.Variants.WorkshopVariant)variant.Variant).IsBulkPurchase == true)
+                                    {
+
+                                        isProductBulkPurchase = true;
+                                    }
+                                }
+                            }
+                            @Html.HiddenFor(m => m.VariantsModel.First().Code)
+                        }
+                        <input class="e-button e-button--submit e-button--white e-button c-product-detail__controls-button" type="submit" value="@Html.Translate("/productpartial/addtocart")" data-add-to-cart />
+                        if (isProductBulkPurchase)
+                        {
+                            <a href="@Url.Action("GoToEnrollment", "Cart")" data-go-to-bulkpurchase-link></a>
+                            <a title=" @Html.Translate("/productpartial/BulkPurchaseOnlyForRegisteredUsers")" class="e-button e-button--submit e-button--white e-button c-product-detail__controls-button" data-go-to-bulkpurchase>
+
+                                @Html.Translate("/productpartial/BulkPurchase")
+
+                            </a>
+                        }
+                    }
+
+                </div>
+
+
+            </div>
+
+        </article>
+    }
+}

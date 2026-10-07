@@ -1,0 +1,17 @@
+﻿@using EPiServer
+@using Geta.Optimizely.Extensions;
+@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@if (Model != null && Model.Count > 0)
+{
+    <ul class="c-section-nav__list grid grid--center grid--full" data-dropdown-options>
+        @foreach (var link in Model)
+        {
+            <li class="c-section-nav__item grid__item one-whole large--one-fifth">
+                <a href="@(new Url(link.Href).GetFriendlyUrl())" class="c-section-nav__item-link" target="@link.Target">
+                    <span class="c-section-nav__item-title">@link.Text</span>
+                </a>
+            </li>
+        }
+    </ul>
+}

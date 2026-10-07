@@ -1,0 +1,127 @@
+@using ANA.Site.Models.Blocks
+@using Geta.Net.Extensions
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+<footer class="c-footer" data-require="./src/views/footer-view">
+    <div class="c-footer__wrap">
+        <div class="c-footer__section">
+            <section class="c-footer__content">
+                <nav class="c-footer__nav">
+                    <ul class="c-footer__nav-list grid">
+                        @{
+                            var contentAreaItems = Model.Layout.FooterNavigation != null ? Model.Layout.FooterNavigation.FilteredItems : new List<ContentAreaItem>();
+                            var footerNavIndex = 0;
+                        }
+
+                        @if (contentAreaItems.Any())
+                        {
+                            foreach (var contentAreaItem in contentAreaItems)
+                            {
+                                var content = contentAreaItem.LoadContent() as LinkListBlock;
+
+                                if (content == null)
+                                {
+                                    continue;
+                                }
+
+                                await Html.RenderPartialAsync("FooterNavList", content, new ViewDataDictionary(this.ViewData) { { "footerNavIndex", footerNavIndex } });
+
+                                footerNavIndex++;
+                            }
+                        }
+
+                        <li class="c-footer__nav-item grid__item one-whole large--one-quarter">
+                            <div class="e-link-list">
+                                <a href="@Url.ContentUrl(Model.Layout.SocialLandingUrl)" class="c-footer__link-list-heading">
+                                    Social Media
+                                    <span data-toggle-heading="" data-index="@footerNavIndex"></span>
+                                </a>
+                                <ul class="c-footer__link-list">
+
+                                    @if (Model.Layout.TwitterUrl != null)
+                                    {
+                                        <li class="c-footer__link-list-item c-footer__link-list-item--icon">
+                                            <a href="@Url.ContentUrl(Model.Layout.TwitterUrl)" class="c-footer__link-list-link icon icon--icon-twitter-x" data-footer-nav-link data-gtm-event-label="Twitter">
+                                                <span class="sr-only">X</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (Model.Layout.LinkedInUrl != null)
+                                    {
+                                        <li class="c-footer__link-list-item c-footer__link-list-item--icon">
+                                            <a href="@Url.ContentUrl(Model.Layout.LinkedInUrl)" class="c-footer__link-list-link icon icon--icon-linkedin" data-footer-nav-link data-gtm-event-label="LinkedIn">
+                                                <span class="sr-only">LinkedIn</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (Model.Layout.FacebookUrl != null)
+                                    {
+                                        <li class="c-footer__link-list-item c-footer__link-list-item--icon">
+                                            <a href="@Url.ContentUrl(Model.Layout.FacebookUrl)" class="c-footer__link-list-link icon icon--icon-facebook" data-footer-nav-link data-gtm-event-label="Facebook">
+                                                <span class="sr-only">Facebook</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (Model.Layout.YouTubeUrl != null)
+                                    {
+                                        <li class="c-footer__link-list-item c-footer__link-list-item--icon">
+                                            <a href="@Url.ContentUrl(Model.Layout.YouTubeUrl)" class="c-footer__link-list-link icon icon--icon-youtube" data-footer-nav-link data-gtm-event-label="Youtube">
+                                                <span class="sr-only">Youtube</span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (Model.Layout.CommunitySiteUrl != null)
+                                    {
+                                        <li class="c-footer__link-list-item">
+                                            <a href="@Url.ContentUrl(Model.Layout.CommunitySiteUrl)" class="c-footer__link-list-link c-footer__link-list-link--pad-top" data-footer-nav-link data-gtm-event-label="@Model.Layout.CommunitySite">
+                                                @Model.Layout.CommunitySite
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="c-footer__back-to-top">
+                    <a href="#top" class="e-back-to-top" title="Back to top" data-back-to-top="" data-require="./src/views/scroll-to-top-view">
+                        <span class="e-back-to-top__text">Top</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="c-footer__wrap--dark cf">
+        <section class="c-footer__secondary">
+
+            @if (Model.Layout.FooterUtilityNavigation != null)
+            {
+                { await Html.RenderPartialAsync("FooterUtilityNav", Model); }
+            }
+            else
+            {
+                <div class="c-footer__section c-footer__section--dark">
+                    <section class="c-footer__content grid grid--full">
+                        <div class="c-footer__content-item grid__item one-whole large--one-quarter">
+                        </div>
+                        <div class="c-footer__content-item grid__item one-whole large--one-half push--large--one-quarter">
+
+                            @if (!string.IsNullOrEmpty(Model.Layout.Copyright))
+                            {
+                                <aside class="c-footer__copyright">
+                                    @Model.Layout.Copyright
+                                </aside>
+                            }
+
+                        </div>
+                    </section>
+                </div>
+            }
+        </section>
+    </div>
+</footer>

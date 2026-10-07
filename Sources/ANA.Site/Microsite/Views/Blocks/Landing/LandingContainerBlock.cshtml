@@ -1,0 +1,8 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Landing.LandingContainerBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-container grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        @Html.PropertyFor(m => m.ContentArea, new { HasContainer = false, HasItemContainer = false })
+    </div>
+</div>

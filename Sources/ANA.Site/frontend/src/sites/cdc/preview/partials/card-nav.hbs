@@ -1,0 +1,25 @@
+<section id="card-nav">
+  <div class="grid-container mt-2 ph-16">
+    <div class="grid-x grid-padding-x align-justify">
+
+      {{#each card-nav.card}}
+      <article class="cell small-12 card__container">
+        <!-- <img class="bkgd-color-nav-card" src="{{background}}" /> -->
+        <div class="img__container">
+          <div class="img-nav-card">
+            <img src="{{image}}" alt="{{alt}}" />
+          </div>
+        </div>
+        <div class="nav-card">
+          <h5>{{title}}</h5>
+          <p>
+            {{content}}
+          </p>
+          <a href="{{url}}">{{url-caption}}</a>
+        </div>
+      </article>
+      {{/each}}
+
+    </div>
+  </div>
+</section>

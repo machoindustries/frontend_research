@@ -1,0 +1,30 @@
+{{#each data.news}}
+<section class="image-text-social-link-block small-12 grid-x {{color-theme}}">
+  <div class="small-12 heading">{{heading}}</div>
+  <div class="small-12 large-5">
+    <div class="img-container show-for-large">
+      <img src="https://picsum.photos/200/200?grayscale" alt="{{alt}}">
+      <div class="overlay"></div>
+    </div>
+  </div>
+  <div class="small-0 large-7 content-container">
+    <a href="{{url}}" class="headline">{{headline}}</a>
+    <div class="date">Updated <span>{{date}}</span></div>
+    <div class="content">{{content}}</div>
+    <ul>
+      <li>Tags:</li>
+      {{# each tags}}
+      <li>{{tag}}</li>
+      {{/each}}
+
+      {{> share-button }}
+    </ul>
+    <div class="reveal" id="share-resource{{url}}" data-reveal>
+      <div class="addthis_inline_share_toolbox_qrdc"></div>
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</section>
+{{/each}}

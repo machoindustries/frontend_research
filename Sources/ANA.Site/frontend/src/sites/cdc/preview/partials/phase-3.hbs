@@ -1,0 +1,29 @@
+<!--RESOURCES PAGE  -->
+<div class="grid-container">
+  <div class="grid-x">
+
+    {{> text text.green-cta}}
+    {{> cta-mask}}
+
+    {{> text text.news-cards}}
+    {{> 4-across-news-cards firstline-news}}
+
+    {{> text text.disclaimer}}
+
+    {{> disclaimer disclaimer}}
+
+    {{> text text.faq-accordion}}
+    {{> faq data=faq-dummy-data}}
+
+    <h2>--- FAQ 3 Across ---</h2>
+    {{> text text.featured-resources}}
+    {{> 3-across-card-padded data=featured-resources}}
+
+    {{> text text.related-news}}
+    {{> related-news}}
+
+    {{> text text.carousel}}
+    {{> card-carousel data=card-carousel}}
+
+  </div>
+</div>

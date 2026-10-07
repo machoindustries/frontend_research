@@ -1,0 +1,19 @@
+<!--FAQ PAGE-->
+
+    <section class="faq-accordion small-12">
+      <h4>FAQS</h4>
+      <ul class="accordion" data-accordion data-allow-all-closed="true">
+        {{#each data.question}}
+        {{>
+            faq-item
+            openOnLoad=openOnLoad
+            faqtitle=faqtitle
+            faqcontent=faqcontent
+        }}
+       {{/each}}
+      </ul>
+    </section>
+
+  <!--END GRID-X -->
+<!--END GRID-CONTAINER -->
+

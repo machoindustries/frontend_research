@@ -1,0 +1,26 @@
+﻿.Sleek .dijitTabPaneWrapper .epi-formsRow label[title]:after,
+.Sleek .dijitTabPaneWrapper .epi-form-container__section__row label[title]:after {
+    content: "?";
+    height: 14px;
+    width: 14px;
+    display: inline-block;
+    font-size: 1.0em;
+    line-height: 14px;
+    margin: 0 0 0 5px;
+    border-radius: 10px;
+    background-color: #c9c9c9;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #acacac;
+    cursor: help;
+}
+
+.Sleek .dijitTabPaneWrapper .epi-form-container__section__row label[title]:hover:after {
+    background-color: #a9a9a9;
+    border: 1px solid #9f9f9f;
+}
+
+.Sleek .dijitTabPaneWrapper .epi-form-container__section__row label[title=""]:after {
+    display: none;
+}

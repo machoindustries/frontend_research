@@ -1,0 +1,23 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.CustomerAccountModels
+@using EPiServer.ServiceLocation
+@using EPiServer
+@using Mediachase.Commerce.Catalog
+@using EPiServer.Web.Routing
+@using EPiServer.Commerce.Catalog.ContentTypes
+@model ANA.Site.Models.ViewModels.AccountPremierMembershipViewModel
+<article class="c-cta-block">
+    <div class="c-cta-block__inner">
+        
+        <img src="@Model.Image" class="c-cta-block__image" />
+
+        <h3 class="c-cta-block__heading">
+            @Model.Heading
+        </h3>
+
+        <div class="c-cta-block__content e-richtext">
+            <a href="@Model.CertUrl" target="_blank">Click here</a> to view and print your personalized Premier Membership Certificate.
+        </div>
+
+    </div>
+</article>

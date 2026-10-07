@@ -1,0 +1,54 @@
+﻿@using ANA.Site.Business.Interfaces
+@using EPiServer
+
+@inject IContentLoader ContentLoader
+
+@model ANA.Site.Models.Blocks.AccordionDisplayBlock
+
+@{
+    var accordionParentId = $"accordion-{Guid.NewGuid()}";
+}
+<section class="ana-block ana-block--@Guid.NewGuid() padded-y">
+    <div class="container">
+        <div class="ana-well padding-none">
+            @if (!string.IsNullOrWhiteSpace(Model.Heading))
+            {
+                <div class="ana-well-header bg-navy padding-lg">
+                    <h2 class="mb-0 text-white text-center">@Html.PropertyFor(x => x.Heading)</h2>
+                </div>
+            }
+            <div class="ana-well-content padding-lg">
+                @if (Model.AccordionItemsContentArea != null)
+                {
+                    <div class="accordion accordion-flush" data-max-visible="5" id="accordionParentId">
+                        @foreach (var contentAreaItem in Model.AccordionItemsContentArea.FilteredItems)
+                        {
+                            if (ContentLoader.TryGet<IContent>(contentAreaItem.ContentLink, out var content))
+                            {
+                                if ((content is IAccordionItem accordionItem))
+                                {
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#@accordionParentId-1" aria-expanded="false" aria-controls="@accordionParentId-1">
+                                                @Html.PropertyFor(x => accordionItem.Heading)
+                                            </button>
+                                        </h2>
+                                        <div id="@accordionParentId-1" class="accordion-collapse collapse" data-bs-parent="#@accordionParentId">
+                                            <div class="accordion-body">
+                                                @Html.PropertyFor(x => accordionItem.Description)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="hstack justify-content-center gap-1 mt-5">
+                        <button data-toggle-max-visible class="btn btn-outline-dark">View more</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

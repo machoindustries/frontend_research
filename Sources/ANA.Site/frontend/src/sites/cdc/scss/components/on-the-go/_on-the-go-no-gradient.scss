@@ -1,0 +1,64 @@
+.on-the-go-no-gradient {
+  
+    &.mt-2 {
+      margin-top: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-transform: capitalize;
+      padding: 1rem;
+      color: white;
+      font-weight: 600;
+      line-height: 1.1;
+      margin-top: 3rem;
+  
+      @media screen and (max-width: $medium) {
+        font-size: 1.5rem;
+        padding-top: 1.5rem;
+      }
+   
+      @media screen and (max-width: $medium) {
+        font-size: 2rem;
+      }
+    }
+
+    .light-blue {
+        background-color: #009CDE;
+    }
+
+    &_content {
+      font-size: 1.125rem;
+      line-height: 2;
+      padding: 0 1rem;
+      
+      @media screen and (min-width: $large) {
+        margin-right: 1rem;
+        padding-left: 0;
+      }
+    }
+    div {
+      .image__container {
+        position: relative;
+        height: 0;
+        padding-bottom: 66%;
+        margin-top: 3rem;
+      }
+  
+        img {
+          position: absolute;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+  }
+  
+  @media screen and (max-width: $large) {
+    .on-the-go-copy {
+      div .image__container {
+        margin-top: 1.875rem;
+        margin-bottom: 1.75rem;
+      }
+    }
+  }
+  

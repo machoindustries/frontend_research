@@ -1,0 +1,44 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.OJIN
+@using EPiServer.Find.Helpers
+@model ANA.Site.Business.Interfaces.IJoinPromo
+
+@if(Model.JoinPromoBlock.FilteredItems.Count() > 0) {
+
+    var promo = Model.JoinPromoBlock.FilteredItems.Select(y => y.LoadContent() as ANA.Site.Models.Blocks.JoinPromoBlock).First();
+    // TODO: Implement a dynamic <Heading> text that pulls membership price based on the person's state
+    var hasImage = promo.Image == null ? "" : "c-join-promo-block--has-background";
+    var promoCreative = promo.Image == null ? "no image" : promo.Image.GetUri().ToString();
+    var gtmPosition = "";
+
+
+    var heading = promo.Heading?.ReplaceMembershipPlaceholders() ?? string.Empty;
+
+
+<div class="c-join-promo-block @hasImage c-join-promo-block--slim" style="background-image: url(@(promo.Image?.GetCroppedImageUrl(400,400) ?? string.Empty));"
+     data-require="./src/views/join-promo-view"
+     data-join-promo=""
+     data-promo-id="JoinPromoSlim"
+     data-promo-name="@heading"
+     data-promo-creative="@promoCreative"
+     data-promo-position="@gtmPosition">
+    <div class="c-join-promo-block__content grid">
+        <div class="grid__item large--two-sixths">
+            <h3 class="c-join-promo-block__title c-join-promo-block__title--slim" @Html.EditAttributes(promo.Heading)>@heading</h3>
+        </div>
+        <div class="grid__item large--three-sixths e-richtext">
+            @Html.Raw(promo.Content)
+        </div>
+        @if (promo.CTALink.IsNotNull())
+        {
+            <div class="grid__item large--one-sixth">
+                <a href="@Url.ContentUrl(promo.CTALink)" class="e-button e-button--anchor e-button--orange e-button" data-join-promo-cta>
+                    @promo.CTATitle
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
+}

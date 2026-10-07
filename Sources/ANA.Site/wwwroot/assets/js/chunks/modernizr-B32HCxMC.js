@@ -1,0 +1,1 @@
+var r=window.Modernizr;export{r as t};

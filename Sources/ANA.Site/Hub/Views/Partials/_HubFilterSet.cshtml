@@ -1,0 +1,64 @@
+﻿@using ANA.Site.Hub.Models.Pages.ViewModels
+@model  ANA.Site.Hub.Models.ViewModels.HubFilterSetViewModel
+
+@if (Model != null && Model.Filters.Any())
+{
+    <li>
+        <a class="filter-link">
+            <div class="filter-category">
+                @Model.Label
+                <span>
+                    <img class="category-icon" src="/assets/img/vector-arrow.svg" alt="">
+                </span>
+            </div>
+        </a>
+        <div class="filter-content hide">
+            @foreach (var filter in Model.Filters)
+            {
+                RenderFilters(filter);
+            }
+        </div>
+    </li>
+}
+
+@functions {
+void RenderFilters(HubTaxonomyViewModel filter)
+{
+    var isChecked = filter.IsSelected ? "checked" : string.Empty;
+
+    if (!filter.SubTaxonomy.Any(i => i.ShouldDisplayInFacetPanel))
+    {
+        <div class="inputs-labels">
+            <input class="filter-checkbox" type="checkbox" id="@filter.LabelId" @isChecked>
+            <label class="filter-label" for="@filter.LabelId"></label>
+            <div>@filter.Label</div>
+        </div>
+    }
+    else
+    {
+        <div class="inputs-labels">
+            <input class="filter-checkbox filter-checkbox-sub" type="checkbox" id="@(filter.LabelId)" @isChecked>
+            <label class="filter-label" for="@filter.LabelId"></label>
+            <div class="filter-label-sub">
+                @filter.Label
+                <span>
+                    <img class="sub-category-icon" src="/assets/img/vector-arrow.svg" alt="">
+                </span>
+            </div>
+        </div>
+
+        <div class="nested-checkbox-wrapper hide">
+            @foreach (var subFilter in filter.SubTaxonomy)
+            {
+                var subchecked = subFilter.IsSelected ? "checked" : string.Empty;
+
+                <div class="inputs-labels">
+                    <input class="filter-checkbox" type="checkbox" id="@subFilter.LabelId" @subchecked>
+                    <label class="filter-label " for="@subFilter.LabelId"></label>
+                    <div>@subFilter.Label</div>
+                </div>
+            }
+        </div>
+    }
+}
+}

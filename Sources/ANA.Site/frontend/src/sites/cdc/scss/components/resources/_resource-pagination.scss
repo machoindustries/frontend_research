@@ -1,0 +1,25 @@
+.resource-pagination{
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    font-size: 0.875rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.0313rem;
+    margin-top: 3rem;
+    
+    &__page{
+        font-weight: 600;
+        padding: 0rem 1rem
+    }
+
+    .current{
+        color: $media-content-social-card-link-background;
+        text-decoration: underline;
+    }
+
+    &__link{
+        text-decoration: none;
+        color: black;
+        padding: 0rem 1rem
+    }
+}

@@ -1,0 +1,85 @@
+﻿@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Pages
+@using EPiServer.Web
+@using EPiServer.Web.Mvc.Html
+@using HtmlHelpers = ANA.Site.Business.Helpers.HtmlHelpers
+
+@functions {
+void NavTemplate(IEnumerable<ANA.Site.HNHN.Helpers.HtmlHelpers.MenuItem> menuItems)
+{
+    foreach (var item in menuItems)
+    {
+        <li @(item.IsContainer && !(item.Page is LinkPage) ? "class=dropdown" : "")>
+            @if (item.IsContainer)
+            {
+                if (item.Page is LinkPage)
+                {
+                    var linkPage = (LinkPage) item.Page;
+                    <a href="@linkPage.Link.GetContentUrl(linkPage.TrackCampaign)">@item.Page.Name</a>
+                }
+                else
+                {
+                    <a href="#">@item.Page.Name <b class="caret"></b></a>
+                }
+            }
+            else
+            {
+                @Html.ContentLink(item.Page.ContentLink)
+            }
+            @if (item.HasChildren.Value)
+            {
+                SubNavTemplate(Html.NavMenuList(item.Page.ContentLink));
+            }
+            </li>
+        }
+    }
+
+    void SubNavTemplate(IEnumerable<ANA.Site.HNHN.Helpers.HtmlHelpers.MenuItem> menuItems)
+    {
+    <ul class="dropdown-menu">
+        @foreach (var item in menuItems)
+        {
+            <li>@Html.ContentLink(item.Page.ContentLink)</li>
+        }
+    </ul>
+}
+}
+<ul class="nav navbar-nav navbar-right">
+    @{
+        NavTemplate(Html.NavMenuList(SiteDefinition.Current.StartPage, false, true, false));
+    }
+    @*<li class="dropdown">
+            <a href="#">About <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#">Partners <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#">Sponsors <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Separated link</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Toolkit </a>
+        </li>
+        <li>
+            <a href="#">Donate </a>
+        </li>*@
+</ul>

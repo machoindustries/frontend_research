@@ -1,0 +1,300 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using ANA.Site.Models.Blocks
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINHomePage>
+@{
+    Layout = "~/Views/Shared/Layouts/_OJINBase1.cshtml";
+}
+@*27-April-2022: Added image if it is available for Cake Layer Block.*@
+@*<div>*@
+    <section class="ojin-currentTopic">
+        <h1>@Html.PropertyFor(m => m.CurrentPage.Title)</h1>
+        <div class="ojin-currentTopic__cards">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-md-8 order-md-2">
+                            @*Current Topic CardBlock - Expecting one Card Block here with Big Image *@
+                            @if (Model.CardBlockList != null)
+                            {
+                                if (Model.CardBlockList.Count > 0)
+                                {
+                                    var cnt = 0;
+                                    foreach (var cardItem in Model.CardBlockList)
+                                    {
+                                        if (cnt == 2)
+                                        {
+                                        <div class="ojin-currentTopic__card">
+                                            <figure>
+                                                <picture>
+                                                    <source media="(max-width:767px)" srcset="@Url.ContentUrl(cardItem.Image)">
+                                                    <img src="@Url.ContentUrl(cardItem.Image)" alt="" class="lazyload" />
+                                                </picture>
+                                            </figure>
+                                            <div class="ojin-currentTopic__desc">
+                                                <div class="ojin-currentTopic__category">@cardItem.ARPageContentType</div>
+                                                <h3 class="ojin-currentTopic__title">
+                                                    <a href="@cardItem.ARUrl">@cardItem.ARTitle</a>
+                                                </h3>
+                                                <div class="ojin-currentTopic__subTitle text-uppercase">@cardItem.ARAuthor</div>
+                                                <p>@Html.Raw(@cardItem.ARTeaserText)</p>
+                                            </div>
+                                        </div>
+                                        }
+                                        cnt++;
+                                    }
+                                }
+                            }
+
+                        </div>
+                        @*Current Topic CardBlock - Expecting two Card Block here *@
+                        <div class="col-md-4 pr-md-0 pr-lg-4 order-md-1">
+                            @if (Model.CardBlockList != null)
+                            {
+                                if (Model.CardBlockList.Count > 0)
+                                {
+                                    var cnt = 0;
+                                    foreach (var cardItem in Model.CardBlockList)
+                                    {
+                                        if (cnt == 1)
+                                        {
+                                        <div class="ojin-currentTopic__card">
+                                            <div class="ojin-currentTopic__desc">
+                                                <div class="ojin-currentTopic__category">@cardItem.ARPageContentType</div>
+                                                <h3 class="ojin-currentTopic__title">
+                                                    <a href="@cardItem.ARUrl">@cardItem.ARTitle</a>
+                                                </h3>
+                                                <div class="ojin-currentTopic__subTitle text-uppercase">@cardItem.ARAuthor</div>
+                                                <p>@Html.Raw(@cardItem.ARTeaserText)</p>
+                                                <div class="ojin-currentTopic__date">@((@cardItem.ARPublicationDate.Date != null && @cardItem.ARPublicationDate.Date.Year != 0001) ? @cardItem.ARPublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+                                            </div>
+                                        </div>
+                                        }
+                                        if (cnt == 0)
+                                        {
+                                        <div class="ojin-currentTopic__card">
+                                            @if (cardItem.Image != null)
+                                            {
+                                                <img src="@Url.ContentUrl(cardItem.Image)" class="lazyload" />
+                                            }
+                                            <div class="ojin-currentTopic__desc">
+                                                <div class="ojin-currentTopic__category">@cardItem.ARPageContentType</div>
+                                                <h3 class="ojin-currentTopic__title">
+                                                    <a href="@cardItem.ARUrl">@cardItem.ARTitle</a>
+                                                </h3>
+                                                <div class="ojin-currentTopic__subTitle text-uppercase">@cardItem.ARAuthor</div>
+                                                <p>@Html.Raw(@cardItem.ARTeaserText)</p>
+                                                <div class="ojin-currentTopic__date">@((@cardItem.ARPublicationDate.Date != null && @cardItem.ARPublicationDate.Date.Year != 0001) ? @cardItem.ARPublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+                                            </div>
+                                        </div>
+                                        }
+                                        cnt++;
+                                    }
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 ojin-advContainer">
+                    @*Current Topic Cake Layer - Expecting one Cake layer block here *@
+                    
+                    @if (Model.CakeLayerList != null)
+                    {
+                        if (Model.CakeLayerList.Count > 0)
+                        {
+                            var cnt = 0;
+                            foreach (var cakeItem in Model.CakeLayerList)
+                            {
+                                if (cnt == 0)
+                                {
+                                <div class="ojin-currentTopic__card orange" style="background-color:@cakeItem.BackgroundColor; color:@cakeItem.TextColor" !important >
+                                    @if (cakeItem.Url != null)
+                                    { 
+                                        <img src="@Url.ContentUrl(cakeItem.Url)"  class="lazyload"/> 
+                                    }                                     
+                                    <div class="ojin-currentTopic__desc">
+                                        <h3 class="ojin-currentTopic__title">
+                                            @cakeItem.Heading
+                                        </h3>
+                                        <p>@Html.Raw(@cakeItem.TeaserText)</p>
+                                        <div class="ojin-currentTopic__btnCon">
+                                            @if (cakeItem.ButtonTarget == "Same Window")
+                                            {
+                                                <a href="@cakeItem.ButtonLink" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                            }
+                                            @if (cakeItem.ButtonTarget == "New Window")
+                                            { 
+                                                <a href="@cakeItem.ButtonLink" target="_new" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                    @*Current Topic Ads- Expecting two Ad blocks here *@
+                    @if (Model.HomePageAd != null)
+                    {
+                        if (Model.HomePageAd.Count > 0)
+                        {
+                            var cnt = 0;
+                            foreach (var adItem in Model.HomePageAd)
+                            {
+                                if (cnt == 0 || cnt == 1)
+                                {
+                                    <div class="ojin-advBlock">
+                                        <a href="@adItem.Url">
+                                            <img src="@Url.ContentUrl(@adItem.ImageLink)" class="lazyload" />
+                                        </a>
+                                    </div>
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    @*Featured Topic section is going come here.*@
+     
+    <section class="ojin-featuredTopics">
+        <h3>@Html.PropertyFor(x => x.CurrentPage.TopicsTitle)</h3>
+        <div class="container">
+            <div class="row">
+                @if (Model.Topics != null)
+                {
+                    if (Model.Topics.Count > 0)
+                    {
+                        foreach (var topic in Model.Topics)
+                        {
+                            <div class="col-md-4">
+                                <div class="ojin-featuredTopics__card d-lg-flex">
+                                    <div class="ojin-featuredTopics__image">
+                                        <img src="@topic.CDPPageImage" class="lazyload" />
+                                    </div>
+                                    <div class="ojin-featuredTopics__content">
+                                        <div class="ojin-featuredTopics__title">@topic.LPHeading</div>
+                                        <p><a style="color:white" href="@Url.PageUrl(@topic.PageUrl)">@topic.LPTitle</a></p>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </section>
+
+
+    <section class="ojin-additionalItems">
+        <div class="container">
+            <h3 class="ojin-additionalItems__title">@Html.PropertyFor(x => x.CurrentPage.CakeLayerTitle)</h3>
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        @*Additional Iteams CardBlock - Expecting two card block, i.e. 3 and 4th.*@
+                        @if (Model.CardBlockList != null)
+                        {
+                            if (Model.CardBlockList.Count > 0)
+                            {
+                                var cnt = 0;
+                                foreach (var cardItem in Model.CardBlockList)
+                                {
+                                    if (cnt >= 3)
+                                    {
+                                    <div class="col-md-4">
+                                        <div class="ojin-currentTopic__card">
+                                            @if (cardItem.Image != null)
+                                            {
+                                                <img src="@Url.ContentUrl(cardItem.Image)" class="lazyload" />
+                                            }
+                                            <div class="ojin-currentTopic__desc">
+                                                <div class="ojin-currentTopic__category">@cardItem.ARPageContentType</div>
+                                                <h3 class="ojin-currentTopic__title">
+                                                    <a href="@cardItem.ARUrl">@cardItem.ARTitle</a>
+                                                </h3>
+                                                <div class="ojin-currentTopic__subTitle text-uppercase">@cardItem.ARAuthor</div>
+                                                <p>@Html.Raw(@cardItem.ARTeaserText)</p>
+                                                <div class="ojin-currentTopic__date">@((@cardItem.ARPublicationDate.Date != null && @cardItem.ARPublicationDate.Date.Year != 0001) ? @cardItem.ARPublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    cnt++;
+                                }
+                            }
+                        }
+                        @*Additional Iteams Cake Layer - Expecting one Cake Layer*@
+
+                        @if (Model.CakeLayerList != null)
+                        {
+                            if (Model.CakeLayerList.Count > 0)
+                            {
+                                var cnt = 0;
+                                foreach (var cakeItem in Model.CakeLayerList)
+                                {
+                                    if (cnt >= 1)
+                                    {
+                                    <div class="col-md-4">
+                                        <div class="ojin-currentTopic__card orange" style="background-color:@cakeItem.BackgroundColor; color:@cakeItem.TextColor" !important>
+                                            @if (cakeItem.Url != null)
+                                            {
+                                                <img src="@Url.ContentUrl(cakeItem.Url)" class="lazyload" />
+                                            }
+                                            <div class="ojin-currentTopic__desc">
+                                                <h3 class="ojin-currentTopic__title">
+                                                    @cakeItem.Heading
+                                                </h3>
+                                                <p>@Html.Raw(@cakeItem.TeaserText)</p>
+                                                <div class="ojin-currentTopic__btnCon">
+                                                    @if (cakeItem.ButtonTarget == "Same Window")
+                                                    {
+                                                        <a href="@cakeItem.ButtonLink" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                                    }
+                                                    @if (cakeItem.ButtonTarget == "New Window")
+                                                    {
+                                                        <a href="@cakeItem.ButtonLink" target="_new" class="btn btn--secondary" style="color:@cakeItem.TextColor" !important>@cakeItem.ButtonText</a>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    cnt++;
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                @*Additional Iteams Ad Block - Expecting one image.*@
+                <div class="col-lg-3 ojin-advContainer">
+                    
+                    @if (Model.HomePageAd != null)
+                    {
+                        if (Model.HomePageAd.Count > 0)
+                        {
+                            var cnt = 0;
+                            foreach (var adItem in Model.HomePageAd)
+                            {
+                                if (cnt >= 2)
+                                {
+                                <div class="ojin-advBlock">
+                                    <a href="@adItem.Url">
+                                        <img src="@Url.ContentUrl(@adItem.ImageLink)" class="lazyload" />
+                                    </a>
+                                </div>
+                                }
+                                cnt++;
+                            }
+                        }
+                    }
+                </div>
+
+            </div>
+        </div>
+    </section>
+@*</div>*@

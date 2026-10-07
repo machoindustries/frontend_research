@@ -1,0 +1,15 @@
+﻿@using EPiServer
+@using Geta.Optimizely.Extensions;
+@model EPiServer.SpecializedProperties.LinkItemCollection
+
+@if (Model != null && Model.Count > 0)
+{
+    <ul class="c-footer__link-list">
+        @foreach (var link in Model)
+        {
+            <li class="c-footer__link-list-item">
+                <a class="c-footer__link-list-link" href="@(new Url(link.Href).GetFriendlyUrl())" target="@link.Target" data-footer-nav-link data-gtm-event-label="@link.Text">@link.Text</a>
+            </li>
+        }
+    </ul>
+}

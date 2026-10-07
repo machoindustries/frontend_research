@@ -1,0 +1,22 @@
+/* Resets */
+html, body { position: relative; height: 100%; width: 100%; }
+img { max-width: 100%; border: none; }
+a[href^=tel] { color: inherit; text-decoration: none; }
+
+*, *:before, *:after { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; list-style: none; }
+
+h1, h2, h3, h4, h5, h6, p, ul, ol, li { margin: 0px; padding: 0px; list-style: none; }
+
+a { outline: none; text-decoration: underline; color: inherit;}
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {text-decoration: none;}
+
+a:hover, a:focus { color: inherit; outline: none; text-decoration: none;
+&:hover {
+    text-decoration: underline;
+}}
+strong{font-weight: bold;}
+input:focus, button:focus { outline: none; }
+input { -webkit-appearance: none; appearance: none; border-radius: 0; }
+button, button:hover, button:focus{ outline: none;}
+ol li:focus, ul li:focus {outline: none;}
+.clearfix:after { content: "";  clear: both;  display: block; }

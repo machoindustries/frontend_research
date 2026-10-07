@@ -1,0 +1,29 @@
+﻿@model ANA.Site.Models.ViewModels.Subscribe.SubscribeBlock
+
+@if (Model != null)
+{
+    <div class="grid-constraint">
+        <div class="grid grid--full">
+            <div class="grid__item one-whole">
+                <div class="c-email-subscribe">
+                    <div class="wrapper">
+                        @if (!string.IsNullOrWhiteSpace(Model.SubscribeText))
+                        {
+                            <h2>@Model.SubscribeText</h2>
+                        }
+                        @if (Model.FormActionLink != null && !Model.FormActionLink.IsEmpty() && !string.IsNullOrWhiteSpace(Model.SubscribeCTAText))
+                        {
+                            <form class="form" action="@Url.ContentUrl(Model.FormActionLink)" method="GET" accept-charset="UTF-8" enctype="multipart/form-data">
+                                <label class="sr-only">Enter your email</label>
+                                <input type="email" placeholder="Enter your email" name="email" class="email" required>
+                                <button type="submit" class="submit e-button e-button--orange">
+                                    <span class="text">@Model.SubscribeCTAText</span>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

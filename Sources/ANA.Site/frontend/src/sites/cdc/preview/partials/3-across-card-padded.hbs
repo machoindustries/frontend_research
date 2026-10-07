@@ -1,0 +1,16 @@
+<!-- BE there are two different styles for this section The classes are: 1. blue-background-orange-hover 2.  gold-background-blue-hover -->
+<section class="grid-x cell small-12 align-center three-across-card-padded {{data.style}}">
+    {{> features-header data.heading}}
+    {{#each data.card}}
+      {{>
+          media-social-links
+          id=id
+          img-url=img-url
+          img-alt=img-alt
+          video-url=video-url
+          youtube-img=youtube-img
+          taxonomy=taxonomy
+          card-header=card-header
+      }}
+     {{/each}}
+</section>

@@ -1,0 +1,57 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Blog.BlogListViewModel
+
+@if (!string.IsNullOrEmpty(Model.CurrentContent.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.CurrentContent.Heading)
+    </h2>
+}
+<div class="grid-x">
+    <ul class="cell ana-resources small-10 small-offset-1 medium-offset-1 grid-x">
+        @foreach (var blog in Model.BlogPages)
+        {
+            if (blog.EmbededVideo != null)
+            {
+                var video = blog.EmbededVideo.Get<EmbededVideoBlock>();
+                <div data-module-dynamic="modal-video-player" class="modal-video-player modal-video-player__hide">
+                    <div class="modal-video-player__close-button">
+                        <span>X</span>
+                    </div>
+                    <iframe src="@video.EmbededUrl"></iframe>
+                </div>
+            }
+            <li class="cell small-12 medium-6  large-4 ana-resources__card has-play-button" data-module-dynamic="resources-anim">
+                <a href="@blog.GetFriendlyUrl()">
+                    @if (blog.CoverImage != null)
+                    {
+                        var coverImage = blog.CoverImage.Get<ImageFile>();
+                        <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="ana-resources__image" />
+                    }
+                    @if (blog.EmbededVideo != null)
+                    {
+                        <div class="modal-video-player__play-button-container">
+                            <div class="modal-video-player__play-button">
+                                <span>Play</span>
+                            </div>
+                        </div>
+                    }
+                    <div class="ana-resources__text-container">
+                        @if (blog.FilterCategories != null && blog.FilterCategories.Any())
+                        {
+                            <h5 class="ana-resources__category">
+                                @string.Join(", ", blog.FilterCategories)
+                            </h5>
+                        }
+                        <p class="ana-resources__lead-in">@blog.Heading</p>
+                    </div>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

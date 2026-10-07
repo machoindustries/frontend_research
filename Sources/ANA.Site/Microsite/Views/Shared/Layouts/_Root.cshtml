@@ -1,0 +1,136 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Microsite.Models.Pages
+@using ANA.Site.Models.Media
+@using ANA.Site.Business.Helpers
+@model ANA.Site.Microsite.Models.IMicrositePageViewModel<MicrositePageData>
+
+@{
+    var canonicalUrl = SiteDefinition.Current.SiteUrl.ToString().TrimEnd('/') + Model.CurrentPage.ContentLink.GetFriendlyUrl(false, true); ;
+    var imageData = Model.Layout.SocialImage != null ? Model.Layout.SocialImage.Get<ImageFile>() : null;
+}
+
+<!DOCTYPE html>
+<html class="no-js loading" lang="@Model.Layout.Culture.Name">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2, user-scalable=yes">
+    <meta name="target_country" content="@Model.Layout.Region.TwoLetterISORegionName">
+    <title>@(Model.CurrentPage.MetaTitle ?? (Model.CurrentPage.Heading ?? string.Empty + " | " + Model.Layout.SiteName ?? string.Empty))</title>
+    <link rel="canonical" href="@canonicalUrl" />
+    <meta name="description" content="@(Model.CurrentPage.MetaDescription ?? Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+    <meta property="og:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta property="og:locale" content="@Model.Layout.Culture.Name">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:site_name" content="@Model.Layout.SiteName" />
+    <meta property="og:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+    <meta property="article:published_time" content="@Model.CurrentPage.StartPublish.Value.ToString("s")" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@("@" + (Model.Layout.TwitterSite ?? "ananursingworld"))" />
+    <meta name="twitter:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta name="twitter:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+
+    @if (imageData != null)
+    {
+        <meta property="og:image" content="@imageData.GetCroppedImageUrl(1200, 630, true)" />
+        <meta property="og:image:type" content="@imageData.MimeType" />
+        <meta name="twitter:image" content="@imageData.GetCroppedImageUrl(300, 300, true)" />
+    }
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.RobotMetaTagContent))
+    {
+        <meta name="robots" content="@Model.CurrentPage.RobotMetaTagContent" />
+    }
+
+    <script src="/microsite/assets/js/app.js" type="text/javascript" asp-append-version="true" async></script>
+    <link href="/microsite/assets/css/app.css" rel="stylesheet" type="text/css" asp-append-version="true">
+
+
+    <link rel="shortcut icon" href="/assets/img/Microsite/favicon.ico" asp-append-version="true">
+    <link rel="icon" type="image/png" sizes="16x16" href="/microsite/assets/favicons/favicon-16x16.png" asp-append-version="true">
+    <link rel="icon" type="image/png" sizes="32x32" href="/microsite/assets/favicons/favicon-32x32.png" asp-append-version="true">
+    <link rel="manifest" href="/microsite/assets/favicons/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#fff">
+    <meta name="application-name" content="@Model.Layout.SiteName">
+    <link rel="apple-touch-icon" sizes="180x180" href="/microsite/assets/favicons/apple-touch-icon.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="57x57" href="/microsite/assets/favicons/apple-touch-icon-57x57.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="60x60" href="/microsite/assets/favicons/apple-touch-icon-60x60.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="72x72" href="/microsite/assets/favicons/apple-touch-icon-72x72.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="76x76" href="/microsite/assets/favicons/apple-touch-icon-76x76.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="114x114" href="/microsite/assets/favicons/apple-touch-icon-114x114.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="120x120" href="/microsite/assets/favicons/apple-touch-icon-120x120.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="144x144" href="/microsite/assets/favicons/apple-touch-icon-144x144.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="152x152" href="/microsite/assets/favicons/apple-touch-icon-152x152.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="167x167" href="/microsite/assets/favicons/apple-touch-icon-167x167.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="180x180" href="/microsite/assets/favicons/apple-touch-icon-180x180.png" asp-append-version="true">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="/microsite/assets/favicons/apple-touch-icon-1024x1024.png" asp-append-version="true">
+    <link rel="apple-touch-icon-precomposed" href="/microsite/assets/favicons/apple-touch-icon-precomposed.png" asp-append-version="true">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="@Model.Layout.SiteName">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="/microsite/assets/favicons/apple-touch-startup-image-320x460.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="/microsite/assets/favicons/apple-touch-startup-image-640x920.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="/microsite/assets/favicons/apple-touch-startup-image-640x1096.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="/microsite/assets/favicons/apple-touch-startup-image-750x1294.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" href="/microsite/assets/favicons/apple-touch-startup-image-1182x2208.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)" href="/microsite/assets/favicons/apple-touch-startup-image-1242x2148.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 1)" href="/microsite/assets/favicons/apple-touch-startup-image-748x1024.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)" href="/microsite/assets/favicons/apple-touch-startup-image-768x1004.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="/microsite/assets/favicons/apple-touch-startup-image-1496x2048.png" asp-append-version="true">
+    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="/microsite/assets/favicons/apple-touch-startup-image-1536x2008.png" asp-append-version="true">
+    <link rel="icon" type="image/png" sizes="228x228" href="/microsite/assets/favicons/coast-228x228.png" asp-append-version="true">
+    <meta name="msapplication-TileColor" content="#fff">
+    <meta name="msapplication-TileImage" content="/microsite/assets/favicons/mstile-144x144.png" asp-append-version="true">
+    <meta name="msapplication-config" content="/microsite/assets/favicons/browserconfig.xml" asp-append-version="true">
+
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.SiteWideHeadScripts))
+    {
+        @Html.Raw(Model.Layout.SiteWideHeadScripts)
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.HeadScripts))
+    {
+        @Html.Raw(Model.CurrentPage.HeadScripts)
+    }
+</head>
+<body>
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.SiteWideBodyScripts))
+    {
+        @Html.Raw(Model.Layout.SiteWideBodyScripts)
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.BodyScripts))
+    {
+        @Html.Raw(Model.CurrentPage.BodyScripts)
+    }
+
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.FullRefreshPropertiesMetaData()
+
+    <div class="grid-container off-canvas-wrapper">
+        @await Html.PartialAsync("~/Microsite/Views/Shared/Partials/Header.cshtml", Model)
+        <main id="main-content" class="off-canvas-content" role="main" tabindex="0" data-off-canvas-content data-module-dynamic="smooth-scroll">
+            @RenderBody()
+        </main>
+
+        @await Html.PartialAsync("~/Microsite/Views/Shared/Partials/Footer.cshtml", Model)
+    </div>
+
+    @await Html.PartialAsync("~/Microsite/Views/Shared/Partials/SVGSprite.cshtml")
+
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.SiteWideFooterScripts))
+    {
+        @Html.Raw(Model.Layout.SiteWideFooterScripts)
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.FooterScripts))
+    {
+        @Html.Raw(Model.CurrentPage.FooterScripts)
+    }
+    @* @if (!string.IsNullOrEmpty(Model.Layout.AddThisKey))
+    {
+        Go to www.addthis.com/dashboard to customize your tools
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=@Model.Layout.AddThisKey"></script>
+    } *@
+</body>
+</html>

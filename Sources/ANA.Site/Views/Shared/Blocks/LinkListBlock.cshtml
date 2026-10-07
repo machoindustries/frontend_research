@@ -1,0 +1,24 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.LinkListBlock
+           
+<section class="c-in-page-link-list">
+    
+    @if (!string.IsNullOrEmpty(Model.Heading))
+    {
+        <h2 class="e-link-list__heading">
+            @if (Model.HeadingLink != null)
+            {
+                <a href="@Model.HeadingLink.GetFriendlyUrl()" target="@Model.TargetFrame">@Model.Heading</a>
+            }
+            else
+            {
+                @Model.Heading
+            }
+        </h2>
+    }
+    
+    @Html.DisplayFor(x => Model.Links, "LinkItemCollectionInPage")
+    
+</section>
+
+

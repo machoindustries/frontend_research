@@ -1,0 +1,40 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCHeroBlock
+
+<div class="hero-large full-bleed @Model.GetCssClass()" style="@Model.GetInlineStyle()">
+    <div class="grad-wrap full-bleed">
+        <div class="grad1"></div>
+        <div class="grad2"></div>
+        <div class="grad3"></div>
+        <div class="grad3a"></div>
+        <div class="grad4"></div>
+        <div class="grad5"></div>
+        <div class="grad6"></div>
+        <div class="grad6a"></div>
+        <div class="grad7"></div>
+        <div class="grad8"></div>
+        <div class="grad9"></div>
+        <div class="grad-wm"><img src="/assets/img/logos/ana-flame-white.svg" alt="ANA Flame" /></div>
+    </div>
+    <div class="grid-container">
+        <div class="grid-x">
+            <div class="hero-text-container cell">
+                <div class="logo">
+                    <img src="/assets/img/logos/project-first-line-logo-color-no-shield.svg" alt="Project FirstLine Logo" />
+                    <img src="/assets/img/logos/project-first-line-logo-color-no-shield.svg" alt="Project FirstLine Logo" />
+                </div>
+                @*<div class="text-1">Introducing <br><span class="ana-logo-t">ANA</span><span class="enterprise-logo-t">Enterprise</span></div>
+                <h2 class="text-2">@Html.PropertyFor(i => i.Title) </h2>
+                <img class="heartbeat" src="/assets/img/heartbeat.svg" alt="heartbeat">
+                <div class="text-3">@Html.PropertyFor(i => i.Text)</div>*@
+                <div class="opt-container">
+                    @if (Model.Buttons.HasContent())
+                    {
+                        @await Html.PartialAsync("~/Views/CDC/Partials/_CDCButtonList.cshtml", Model.Buttons)
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

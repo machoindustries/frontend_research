@@ -1,0 +1,33 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Helpers
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.VideoBlock
+
+@{
+    var videoId = Model.VideoUrl == null ? "0" : Model.VideoUrl.ToString().Replace("https://www.youtube.com/watch?v=", string.Empty).Replace("https://youtu.be/", string.Empty).Split('&').FirstOrDefault().Split('?').FirstOrDefault();
+    var youtubeImageFormat = Model.UseSDThumbnail ? "https://img.youtube.com/vi/{0}/0.jpg" : "https://img.youtube.com/vi/{0}/maxresdefault.jpg";
+    var previewImage = Model.PreviewImage == null ? string.Format(youtubeImageFormat, videoId) : Model.PreviewImage.GetCroppedImageUrl(640, 360);
+
+    var tag = (Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string) ?? string.Empty;
+
+    var gridClass = tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator)
+        ? ANA.Site.Global.StringConstants.GridClass8ColRight
+        : ANA.Site.Global.StringConstants.GridClass8ColCentre;
+
+    var disableGrid = ViewData["DisableGrid"] as bool?;
+}
+
+<section class="c-media-block c-media-block--small" data-require="./src/views/video-view">
+    <a href="@Model.VideoUrl" style="background-image: url('@previewImage');" class="c-media-block__link grid__item one-whole" title="Play video @Model.CaptionTitle" data-video-link>
+        <span class="c-media-block__play-icon" data-video-play-icon></span>
+    </a>
+    @if (!string.IsNullOrEmpty(Model.CaptionTitle))
+    {
+        <div class="c-media-block__caption">
+            <div class="c-media-block__caption-content">
+                <h2 class="c-media-block__heading">@Model.CaptionTitle</h2>
+                <p class="c-media-block__description">@Model.Caption</p>
+            </div>
+        </div>
+    }
+</section>

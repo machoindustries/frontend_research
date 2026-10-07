@@ -1,0 +1,15 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Landing.LandingHtmlBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-contact-form grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="cell small-12 ana-contact-form--form">
+            <div class="ana-contact-form--form-msg">
+                @Html.PropertyFor(m => m.Title)
+            </div>
+            <div>
+                @Html.Raw(Model.Html)
+            </div>
+        </div>
+    </div>
+</div>

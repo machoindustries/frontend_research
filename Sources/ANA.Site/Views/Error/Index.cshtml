@@ -1,0 +1,97 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>@Model.Content.Title</title>
+    <meta content="noindex, nofollow" name="ROBOTS" />
+    <style type="text/css">
+        body {
+            font-family: Verdana, Arial, Helvetica, Tahoma;
+            font-size: 0.65em;
+            color: #333;
+            background-color: #ffffff;
+        }
+
+        a {
+            color: 0000cc;
+        }
+
+            a:hover {
+                color: #000;
+                text-decoration: none;
+            }
+
+        h1 {
+            font-weight: bold;
+            font-size: 1.8em;
+            color: #606060;
+            margin-bottom: 0.5em;
+            margin-top: 0.5em;
+        }
+
+        div.lookingfor {
+            border: #660033 1px solid;
+            padding: 10px;
+            background-color: #ffdab5;
+            width: 100%;
+        }
+
+        .notfoundbox {
+            border-bottom: solid 1px #cccccc;
+            border-right: solid 1px #cccccc;
+            border-left: solid 1px #f8f8f8;
+            border-top: solid 1px #f8f8f8;
+            padding: 10px 10px 10px 10px;
+            width: 100%;
+            background-color: #f8f8f8;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .logo {
+            font-family: Verdana;
+            font-size: 5em;
+            color: #a0a0a0;
+            padding-bottom: 0.5em;
+            letter-spacing: -0.08em;
+        }
+
+        div.floater {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-family: Times New Roman;
+            font-size: 10em;
+            font-style: italic;
+            color: #f0f0f0;
+            margin: 0 20px 10px 0;
+            letter-spacing: -0.08em;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        Company Logo Here
+    </div>
+    <h1>
+        @Model.Content.Title
+    </h1>
+    <div style="width: 760px">
+        <div style="padding-left: 10px; float: left; width: 550px">
+            @Model.Content.TopText
+            @Model.Content.LookingFor
+            <div class="notfoundbox">
+                @Html.Encode(Model.UrlNotFound)
+                @(Model.Referer.Length > 0 ? Model.Content.CameFrom : string.Empty)
+                @(Model.Referer.Length > 0 ? Html.Encode(Model.Referer) : string.Empty)
+            </div>
+            @Model.Content.BottomText
+        </div>
+        <div style="padding-right: 10px; padding-left: 10px; float: right; width: 200px">
+            &nbsp;
+        </div>
+    </div>
+    <div class="floater">
+        404
+    </div>
+</body>
+</html>

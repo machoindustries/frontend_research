@@ -1,0 +1,214 @@
+﻿@model ANA.Site.Controllers.SearchTestViewModel
+@using EPiServer.Find;
+@using EPiServer.Framework.Web;
+@using EPiServer.Framework.Web.Mvc.Html;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    @if (Model.TrackQuery && Model.TrackMethod != "3")
+    {
+        <!-- HEADER client resources -->
+        @Html.RequiredClientResources(RenderingTags.Header)
+    }
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        ul.SearchResults {
+            list-style: none;
+        }
+
+            ul.SearchResults li {
+                padding-bottom: 20px;
+            }
+
+                ul.SearchResults li:nth-child(2n+1) {
+                    background-color: #efefef;
+                }
+    </style>
+</head>
+<body>
+    <h1>Search Test Page</h1>
+    <div class="container-fluid">
+        <form class="form" method="get">
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="searchQuery" class="sr-only">Search Query</label>
+                    <input type="text" class="form-control mb-2" id="searchQuery" name="q" placeholder="Search Query" value="@Model.Query" />
+                </div>
+                <div class="form-group col-md-2">
+                    @*<select name="size" class="form-control">
+                        <option value="">Page Size</option>
+                        <option value="10" @Html.Raw(Model.PageSize == 10 ? "checked" : "")>10</option>
+                        <option value="25" @Html.Raw(Model.PageSize == 25 ? "checked" : "")>25</option>
+                        <option value="50" @Html.Raw(Model.PageSize == 50 ? "checked" : "")>50</option>
+                    </select>*@
+                    <select name="typeFilter" class="form-control">
+                        <option value="">- Type Filter -</option>
+                        <!option value="ICommonProperties" @Html.Raw(Model.TypeFilter == "ICommonProperties" ? "selected" : "")>ICommonProperties</!option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-primary">SEARCH!</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <fieldset>
+                        <legend>Options</legend>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="includeBestBets" name="includeBestBets" value="true" @Html.Raw(Model.IncludeBestBets ? "checked" : "") />
+                            <label class="form-check-label" for="includeBestBets">Include Best Bets</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="includeSynonyms" name="includeSynonyms" value="true" @Html.Raw(Model.IncludeSynonyms ? "checked" : "") />
+                            <label class="form-check-label" for="includeSynonyms">Apply Synonyms</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="trackQuery" name="trackQuery" value="true" @Html.Raw(Model.TrackQuery ? "checked" : "") />
+                            <label class="form-check-label" for="trackQuery">Track Query</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group col-md-4">
+                    <fieldset>
+                        <legend>Tracking Method</legend>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" id="trackMethod1" name="trackMethod" value="1" @Html.Raw(Model.TrackMethod == "1" ? "checked" : "") />
+                            <label class="form-check-label" for="trackMethod1">Use .Track()</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" id="trackMethod2" name="trackMethod" value="2" @Html.Raw(Model.TrackMethod == "2" ? "checked" : "") />
+                            <label class="form-check-label" for="trackMethod2">Use .StatisticsTrack()</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" id="trackMethod3" name="trackMethod" value="3" @Html.Raw(Model.TrackMethod == "3" ? "checked" : "") />
+                            <label class="form-check-label" for="trackMethod3">Use Custom TrackContext</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group col-md-4">
+                    <fieldset>
+                        <legend>Hit-Tracking Method</legend>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" id="hitTracking_Javascript" name="hitTrackingMethod" value="js" @Html.Raw(string.Equals(Model.HitTrackingMethod, "js", StringComparison.OrdinalIgnoreCase) ? "checked" : "") />
+                            <label class="form-check-label" for="hitTracking_Javascript">JavaScript</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" id="hitTracking_Redirect" name="hitTrackingMethod" value="redirect" @Html.Raw(string.Equals(Model.HitTrackingMethod, "redirect", StringComparison.OrdinalIgnoreCase) ? "checked" : "") />
+                            <label class="form-check-label" for="hitTracking_Redirect">Server Redirect</label>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.HasQuery)
+    {
+        <p>You searched for: <strong>@Model.Query</strong> (Total Results: <em>@Model.TotalResults.ToString("N0")</em>)</p>
+        if (Model.TrackQuery)
+        {
+            <p>TrackID: @Model.TrackId</p>
+        }
+    }
+
+    @if (Model.HasRelatedQueries)
+    {
+        <h2>Did you mean...</h2>
+        <p>Status: @Model.RelatedQueries.Status</p>
+        <ul>
+            @foreach (var item in Model.RelatedQueries.Hits)
+            {
+                <li>[@item.Type] @item.Suggestion</li>
+            }
+        </ul>
+    }
+
+    @if (Model.HasSearchResults)
+    {
+        <h2>Results</h2>
+        <ul class="SearchResults" data-tracking-id="@Model.TrackId" data-webservice="@Model.TrackUrl">
+            @foreach (var hit in Model.SearchResults)
+            {
+                <li>
+                    @if (hit.Hit.Document.IsBestBet())
+                    {
+                        <strong>BEST BET: </strong>
+                    }
+
+                    @hit.Hit.Document.Title<br />
+                    @if (!string.IsNullOrWhiteSpace(hit.Hit.Document.Section))
+                    {
+                        @hit.Hit.Document.Section <text>&raquo;</text> @hit.Hit.Document.Subsection<br />
+                    }
+                    <small><a href="@Url.ContentUrl(hit.HitTrackingUrl)" data-hit-id="@hit.Hit.Type/@hit.Hit.Id" data-hit-type="@hit.Hit.Type">@hit.Hit.Document.Url</a></small>
+                </li>
+            }
+        </ul>
+    }
+
+    @if (Model.TrackQuery && Model.TrackMethod != "3")
+    {
+        <!-- FOOTER client resources -->
+        @Html.RequiredClientResources(RenderingTags.Footer)
+    }
+    else if (Model.TrackQuery && Model.HitTrackingMethod == "js")
+    {
+        <script>
+        var ready = (callback) => {
+            if (document.readyState != "loading") callback();
+            else document.addEventListener("DOMContentLoaded", callback);
+        }
+
+        ready(() => {
+            var onTrackResponse = function (data, response) {
+                var xhr = this;
+                var DONE = 4; // readyState 4 means the request is done.
+                var OK = 200; // status 200 is a successful return.
+                if (xhr.readyState === DONE) {
+                    if (xhr.status === OK) {
+                        console.log(xhr.responseText); // 'This is the returned text.'
+                    } else {
+                        console.log('Error: ' + xhr.status); // An error occurred during the request.
+                    }
+                }
+            };
+
+            var container = document.querySelector("ul.SearchResults");
+            var trackId = container.getAttribute('data-tracking-id');
+            var trackUrl = container.getAttribute('data-webservice');
+
+            var onClick = function (event) {
+                //event.preventDefault();
+                console.log(this);
+                console.log(event);
+                console.log('trackId = ' + trackId);
+
+                var oReq = new XMLHttpRequest();
+                oReq.addEventListener("load", onTrackResponse);
+                oReq.open("POST", trackUrl);
+                oReq.setRequestHeader('Content-Type', 'application/json');
+                var data = {
+                    query: '@Model.Query',
+                    hitId: this.getAttribute('data-hit-id'),
+                    trackId: trackId
+                };
+                oReq.onreadystatechange = onTrackResponse;
+                oReq.send(JSON.stringify(data));
+            };
+
+            var links = container.querySelectorAll("a");
+            links.forEach(link => {
+                link.addEventListener("click", onClick);
+            });
+        });
+        </script>
+    }
+</body>
+</html>

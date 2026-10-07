@@ -1,0 +1,15 @@
+<section class="small-12 grid-x four-across-news-cards">
+    <h2 class="small-12">{{heading}}</h2>
+    {{#each cards}}
+        <div class="card-container">
+            {{> 
+                news-article-card 
+                img-src=img-src
+                img-alt=img-alt
+                heading=heading
+                short-content=short-content
+                long-content=long-content
+            }}
+        </div>
+    {{/each}}
+</section>

@@ -1,0 +1,10 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCIconicTextList
+
+<div class="iconic-text__list @Model.GetCssClass()" style="@Model.GetInlineStyle()">
+    <div class="grid-container">
+        @Html.PropertyFor(i => i.List, new { HasContainer = false, HasItemContainer = false })
+    </div>
+</div>

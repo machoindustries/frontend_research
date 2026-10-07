@@ -1,0 +1,16 @@
+<section class="grid-x grid-margin-x cell small-12 large-9 three-across-cards {{data.style}}">
+    {{#each data.card}}
+      {{>
+          media-content-social-links
+          background=background
+          image=image
+          alt=alt
+          title=title
+          content=content
+          url=url
+          source=source
+          topic=topic
+          subTopic=subTopic
+      }}
+     {{/each}}
+</section>

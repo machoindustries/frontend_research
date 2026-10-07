@@ -1,0 +1,127 @@
+﻿@using System.Configuration
+@using System.Web
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Settings
+@using Geta.Optimizely.Extensions;
+@using Geta.Net.Extensions
+@using ANA.Site.Microsite.Extensions
+@using ANA.Site.Models.Blocks
+@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.OJIN.OJINInterfaces.IOJINCommonProperties>
+@inject IAppSettings _appSettings;
+
+@*@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>*@
+@{
+    var joinButton = Model.Layout.OJINSiteSettingsPage.CTAButton.GetContentItems<ButtonBlock>();
+}
+<div class="ojin-nav__wrapper">
+    <div class="ojin-nav__bar">
+        <div class="ojin-nav__container container">
+            <nav class="ojin-nav mr-auto">
+                <ul>
+
+                    @if (Model.Layout.MainNav != null && Model.Layout.MainNav.Count > 0)
+                    {
+                        foreach (var item in Model.Layout.MainNav)
+                        {
+                            <li>
+                                <a class="active" href="@item.Href">@item.Text</a>
+                                @if (item.SubItems != null && item.SubItems.Count > 0)
+                                {
+                                    var i = 0;
+                                    var ismore = false;
+                                    var maxMenuCount = Model.Layout.OJINSiteSettingsPage.MaxMenuCount > 0 ? Model.Layout.OJINSiteSettingsPage.MaxMenuCount : 9;
+                                    <ul>
+                                        <li>
+                                            <div class="ojin-nav__subItem">
+                                                @foreach (var childItem in item.SubItems)
+                                                {
+                                                    i = i + 1;
+                                                    if (ismore)
+                                                    {
+                                                        break;
+                                                    }
+                                                    if (i > maxMenuCount)
+                                                    {
+                                                        <a href="@item.Href">More...</a>
+                                                        ismore = true;
+                                                        break;
+                                                    }
+
+                                                    if (!string.IsNullOrWhiteSpace(childItem.Href))
+                                                    {
+                                                        <a href="@childItem.Href">@childItem.Text</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="ojin-nav__subTitle">@childItem.Text</div>
+                                                        foreach (var l3menu in childItem.SubItems)
+                                                        {
+                                                            i = i + 1;
+                                                            if (ismore)
+                                                            {
+                                                                break;
+                                                            }
+                                                            if (i > maxMenuCount)
+                                                            {
+                                                                <a href="@item.Href">More...</a>
+                                                                ismore = true;
+                                                                break;
+                                                            }
+
+                                                            if (!string.IsNullOrWhiteSpace(l3menu.Href))
+                                                            {
+                                                                <a href="@l3menu.Href">@l3menu.Text</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="ojin-nav__subTitle">@l3menu.Text</div>
+                                                            }
+
+
+                                                        }
+                                                    }
+
+                                                }
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </nav>
+            <div class="ojin-search-desk">
+                <form action="@Model.Layout.SearchPage" method="post">
+                    <input type="text" placeholder="Search" name="q" />
+                    <button type="submit"><img src="~/assets/Ojin/img/search.svg" alt="search" class="lazyload" /></button>
+                </form>
+            </div>
+            <div class="ojin-header__mobilebtnCon">
+                @foreach (var button in joinButton)
+                {
+                    <a class="site-header-utility__button" href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame" title="@button.Text">
+                        <span>@button.Text</span>
+                    </a>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="@($"{_appSettings.LogoutUrl}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true,true) + "?act=logout")}")"
+                       class="btn btn--secondary">@Html.Translate("/header/logout")</a>
+                }
+                else if (@Model.Layout.OJINSiteSettingsPage.LoginPage != null)
+                {
+                    var loginURL = Model.Layout.OJINSiteSettingsPage.LoginPage.ToString();
+                    <a href="@loginURL" class="btn btn--secondary">@Html.Translate("/header/login")</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="ojin-nav__menuClose">
+        <a href="javascript:void(0)"><img src="~/assets/Ojin/img/close-icon.svg" alt="" class="lazyload" /></a>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+﻿@using ANA_HNHN.Models.Blocks.Local
+@model SkipQuestionnaireBlock
+
+<a href="#" id="skip-questionnaire" data-redirect="@Url.ContentUrl(Model.TargetPageReference)">
+	@Html.PropertyFor(x => x.Label)
+</a>

@@ -1,0 +1,17 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+
+@model ANA.Site.Models.Blocks.DynamicAdBlock
+
+@{
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+}
+<article class="c-cta-block">
+    <div class="c-cta-block__inner">
+
+        @Html.Raw(Model.AdHtml)
+
+    </div>
+</article>

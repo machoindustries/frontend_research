@@ -1,0 +1,28 @@
+﻿@using System.Linq
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Editor
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Blocks
+
+@model ANA.Site.HNHN.Models.Blocks.SponsorBar
+
+@if (Model.SponsorsList?.FirstOrDefault() != null || ContentHelper.PageIsInEditMode())
+{
+    <div class="sponsored-by">
+        <h4 class="text-center sponsored-by__heading" @Html.EditAttributes(m => m.Title)>@Html.PropertyFor(m => m.Title)</h4>
+        <div class="sponsored-by__logos" @Html.EditAttributes(m => m.SponsorsList)>
+            <div class="container-extra container">
+                <div class="row">
+                    @foreach (var item in Model.SponsorsList.GetContentItems<SponsorLink>())
+                    {
+                        <div class="column">
+                            @{ Html.RenderContentData(item, false); }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

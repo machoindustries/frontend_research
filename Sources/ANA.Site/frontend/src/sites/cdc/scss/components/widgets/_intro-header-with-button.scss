@@ -1,0 +1,33 @@
+.intro-header-with-button {
+    padding: 1rem 0rem;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .heading-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+
+        .heading {
+            text-align: left;
+            margin-top: 0;
+         }
+
+         .button-container {
+            min-width: 12.5rem;
+            margin-left: 1rem;
+            display: flex;
+            justify-content: flex-end;
+         }
+    }
+            
+    .sub-heading,
+    .sub-heading > p {
+        font-size: 1.125rem;
+        line-height: 2.125rem;
+        letter-spacing: 0.0313rem;
+        margin-bottom: 1rem;
+    }
+}

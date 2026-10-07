@@ -1,0 +1,70 @@
+﻿@model ANA.Site.Models.ViewModels.LatestNews.LatestNewsViewModel
+
+@if (Model == null || (!Model.HasNewsArticle && !ContentHelper.PageIsInEditMode()))
+{
+    return;
+}
+
+<div class="grid-constraint">
+    <div class="grid grid--full">
+        <div class="grid__item one-whole">
+            <div class="c-latest-news">
+                <div class="intro">
+                    <div class="heading">
+                        <div class="eyebrow" @Html.EditAttributes(x => x.TopTitle)>@Model.TopTitle</div>
+                        <h2 class="title" @Html.EditAttributes(x => x.BottomTitle)>@Model.BottomTitle</h2>
+                    </div>
+                    @if (Model.HasCtaLink)
+                    {
+                        <a href="@Model.CtaLink" class="e-button e-button--blue">@Model.CtaText</a>
+                    }
+                </div>
+                @if (Model.HasNewsArticle)
+                {
+                    var article = Model.NewsArticle;
+                    <div class="news-wrapper">
+                        @if (Model.NewsArticle.HasImage)
+                        {
+                            <a href="@article.Url" class="image">
+                                <img src="@article.ImageUrl" alt="">
+                            </a>
+                        }
+
+                        <article class="article">
+                            <header class="header">
+                                @if (article.HasTags)
+                                {
+                                    <ul class="tags">
+                                        @foreach (var tag in article.Tags)
+                                        {
+                                            <li>
+                                                <div class="e-tag e-tag--white">
+                                                    <a href="@tag.Url">@tag.Name</a>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                @if (article.HasFormattedDate)
+                                {
+                                    <div class="date">@article.FormattedDate</div>
+                                }
+                            </header>
+
+                            <div class="body">
+                                <h3 class="title">
+                                    <a href="@article.Url">@article.Heading</a>
+                                </h3>
+
+                                <p class="summary">
+                                    @article.Teaser
+                                    <a href="@article.Url" class="more">Read More</a>
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

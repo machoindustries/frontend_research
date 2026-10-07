@@ -1,0 +1,103 @@
+.montage.cell {
+  display: inline-flex;
+  margin-bottom: 6rem;
+  @media screen and (max-width: $large) {
+    visibility: hidden;
+    display: none;
+  }
+
+  .montage-container {
+    position: relative;
+    width: 85%;
+    text-align: center;
+    height: auto;
+
+    @media screen and (min-width: $large) {
+      margin: 3rem 0 auto -6.5%;
+    }
+
+    @media screen and (max-width: $large) {
+      visibility: hidden;
+      display: none;
+    }
+  }
+
+  .mainimage img {
+    width: 100%;
+    margin-left: 0;
+
+    @media screen and (min-width: $large) {
+      width: 85%;
+      margin-left: 12.5%;
+    }
+  }
+
+  .secondary1,
+  .secondary2,
+  .secondary3 {
+    position: absolute;
+    padding: rem-calc(12) rem-calc(8) rem-calc(8) rem-calc(8);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(206, 69, 33, .5);
+    box-sizing: content-box;
+
+    -moz-border-image: -moz-linear-gradient(left,  rgba(206, 69, 33, .5) 0%, rbga(0, 155, 222, .5) 100%);
+    -webkit-border-image: -webkit-linear-gradient(left, rgba(206, 69, 33, .5) 0%, rbga(0, 155, 222, .5) 100%);
+    border-image: linear-gradient(to right,  rgba(206, 69, 33, .5) 0%, rbga(0, 155, 222, .5) 100%);
+    border-image-slice: 1;
+
+    display: none;
+
+    @media screen and (min-width: $large) {
+      display: block;
+    }
+
+    img {
+      padding: rem-calc(8);
+      border-width: 1px;
+      border-style: solid;
+      border-color: $font-orange;
+      height: auto;
+      width: 92.29%;
+
+      -moz-border-image: -moz-linear-gradient(left, $logo-red 0%, $logo-blue 100%);
+      -webkit-border-image: -webkit-linear-gradient(left, $logo-red 0%, $logo-blue 100%);
+      border-image: linear-gradient(to right, $logo-red 0%, $logo-blue 100%);
+      border-image-slice: 1;
+
+    }
+  }
+
+  .secondary1 {
+    width: 39.25%;
+    left: 6.75%;
+    top: 47.5%;
+    // width: 41.25%;
+    // left: -8.125%;
+    // bottom: 5.875%;
+  }
+
+  .secondary2 {
+    right: -27.25%;
+    width: 45%;
+    top: 5.25%;
+
+    // right: -27.75%;
+    // width: 43%;
+    // top: 5.25%;
+    // right: -33%;
+    // width: 49%;
+    // top: 5%;
+  }
+
+  .secondary3 {
+    top: 68%;
+    right: -8.75%;
+    width: 37.5%;
+    // bottom: -15%;
+    // right: -14.5%;
+    // width: 45%;
+  }
+
+}

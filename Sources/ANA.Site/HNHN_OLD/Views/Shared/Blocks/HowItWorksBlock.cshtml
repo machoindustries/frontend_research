@@ -1,0 +1,94 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Blocks
+@using ANA.Site.HNHN.Models.Blocks.Infographics
+
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HowItWorksBlock
+
+@{
+    string sectionClass = (ViewData["SectionClass"] ?? "").ToString();
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .how-it-works .link-edit {
+            display: none;
+        }
+
+        .preview-display .how-it-works .edit-box {
+            margin-left: 30px;
+        }
+
+        .preview-display .how-it-works .link-edit {
+            display: block;
+            font-size: 1.0rem;
+            height: 20px;
+            text-align: center;
+            width: 40px;
+            z-index: 999;
+        }
+    </style>
+}
+
+<section class="how-it-works section @(!string.IsNullOrWhiteSpace(sectionClass)?sectionClass:"")">
+    <div class="container">
+        <h2 class="wow fadeInLeftFast">@Html.PropertyFor(m => m.Heading)</h2>
+        @if (ContentHelper.PageIsInEditMode())
+        {
+            @Html.BeginEditSection("div", m => m.NumberedSteps)
+        }
+        <ol class="how-it-works_list wow fadeInLeft">
+            @foreach (var step in Model.NumberedSteps.GetContentItems<HowItWorksStepBlock>())
+            {
+                Html.RenderContentData(step, false);
+            }
+            @*<li>Take a personalized health risk assessment. <span class="icon-hnhn"><img src="/static/images/icons/health-risk-icon.svg" alt="health risk"></span></li>
+                <li>
+                    Pick your focus area(s):
+                    <ul class="focus-area-list">
+                        <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/activity-icon.svg" alt="Activity"></span> Activity </a></li>
+                        <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/rest-icon.svg" alt="Rest"></span> Rest </a></li>
+                        <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/nutrition-icon.svg" alt="nutrition"></span> Nutrition </a></li>
+                        <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/quality-of-life-icon.svg" alt="quality of life"></span> Quality of life </a></li>
+                        <li><a href="#"><span class="icon-hnhn"><img src="/static/images/icons/safety-icon.svg" alt="safety"></span> Safety </a></li>
+                    </ul>
+                </li>
+                <li>
+                    Receive customized health information! <span class="icon-hnhn"><img src="/static/images/icons/health-info-icon.svg" alt="health info"></span>
+                </li>
+                <li>Connect with other nurses taking on the Challenge for support, and share your successes! <span class="icon-hnhn"><img src="/static/images/icons/nurses-icon.svg" alt="nurses"></span></li>
+                <li>See how far you've come and set your next goal! <span class="icon-hnhn"><img src="/static/images/icons/next-goal-icon.svg" alt="next goal"></span></li>*@
+        </ol>
+        @if (ContentHelper.PageIsInEditMode())
+        {
+            @Html.EndEditSection("div")
+        }
+
+        @if ((Model.CallToActions?.FirstOrDefault() != null) || ContentHelper.PageIsInEditMode())
+        {
+            <div class="btn-groups btn-groups--center" @Html.EditAttributes(m => m.CallToActions)>
+                <div class="btns-wrap">
+                    @foreach (var cta in Model.CallToActions.GetContentItems<CallToActionBlock>())
+                {
+                    Html.RenderContentData(cta, false);
+                }
+                </div>
+            </div>
+        }
+
+        @*<div class="btn-groups btn-groups--center">
+
+                <div class="btns-wrap">
+
+                    <a href="#" class="btn btn-primary btn-hnhn">Join the challenge</a>
+
+                    <a href="#" class="btn btn-primary btn-hnhn">Learn more about <br> the challenge</a>
+
+                </div>
+            </div>*@
+    </div>
+</section>

@@ -1,0 +1,44 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+@model ANA.Site.HNHN.Models.Blocks.FeaturedVideoSectionBlock
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+<section class="section section--blue-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                <h2 class="wow fadeInLeftFast">@Html.PropertyFor(m => m.Heading)</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 parallax-adjacent-section wow fadeInLeft">
+                @Html.PropertyFor(m => m.Content)
+            </div>
+            <div class="col-sm-5 col-sm-offset-1 parallax-wrapper wow fadeInRight">
+
+
+                <div class="helium-parallax helium-parallax--video">
+
+                    <div class="parallax parallax-1 ">
+                        <div class="parallax-video" @Html.EditAttributes(m => m.VideoURL)>
+                            <iframe src="@Model.VideoURL" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="parallax parallax-2" @Html.EditAttributes(m => m.BackgroundImage)>
+                        <img src="@_UrlResolver.GetUrl(Model.BackgroundImage)" alt="" class="img-responsive" />
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section>

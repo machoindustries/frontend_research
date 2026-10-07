@@ -1,0 +1,123 @@
+.news-article-card {
+    width: 17.5rem;
+    height: 25.25rem;
+    position: relative;
+    color: $white;
+    margin: auto;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+    
+    &:hover {
+
+        .short-content {
+            
+            h3, p {
+                display: none;
+            }
+        }
+
+        .long-overlay, .long-content {
+            animation: fadein .4s ease-in-out 0s 1 normal;
+            animation-fill-mode: forwards;
+            @keyframes fadein {
+                from {opacity: 0}
+                to {opacity: 1}
+            }
+        }
+    }
+
+    h3 {
+        font-weight: 600;
+        line-height: 1.25rem;
+        letter-spacing: 0.0313rem;
+        font-size: 1rem;
+        color: $white;
+        overflow: hidden;
+        max-height: 2.5rem;
+        margin-bottom: 1rem;
+        
+    }
+
+    p {
+        font-size: 0.75rem;
+        line-height: 1.0625rem;
+        margin-bottom: 1rem;
+        letter-spacing: .5px;
+        overflow: hidden;
+    }
+
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .short-overlay {
+        background-color: #7D4578;
+        // opacity: .75 ;
+        mix-blend-mode: multiply;
+        height: 12.6875rem;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+
+    }
+
+    .short-content {
+        height: 12.6875rem;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        padding: .5rem 1rem;
+        z-index: 5;
+
+        p {
+            max-height: 6.5rem;
+        }
+
+    }
+    svg {
+        fill: $white;
+        cursor: pointer;
+        height: 1rem;
+        width: 1rem;
+        position: absolute;
+        bottom: 0.625rem;
+        right: 0.625rem;
+        z-index: 10;
+    }
+
+    .long-overlay {
+        height: calc(100% - 12.6875rem);
+        width: 100%;
+        position: absolute;
+        top: 0;
+        background-color: #7D4578;
+        opacity: 0;
+        mix-blend-mode: multiply;
+    }
+
+    .long-content {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        padding: 1rem;
+        z-index: 6;
+
+        a {
+            text-decoration: none;
+        }
+
+        p {
+            max-height: 18.125rem;
+            color: #fefefe;
+        }
+    }
+}

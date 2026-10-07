@@ -1,0 +1,323 @@
+﻿@using EPiServer.Web.Mvc.Html
+@using ANA.Site.Models.OJIN;
+@using ANA.Site.Models.OJIN.Pages;
+@using EPiServer.Web;
+@using ANA.Site.Models.Pages;
+@using Geta.Optimizely.Extensions;
+@using EPiServer.ServiceLocation;
+@using EPiServer;
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINContentDetailPage>
+@{
+    Layout = "~/Views/Shared/Layouts/_OJINBase1.cshtml";
+}
+
+@*11-MAY-2022: Commented the variables: 11587:Hide "Key Words" and "Citation" labels*@
+@*12-MAY-2022: 11391: Modify Content Detail front end display for Doc Type = "Other"*@
+
+@*<script src="/assets/Ojin/js/articleContent.js"></script>
+    <script src="/assets/Ojin/js/articleHeadline.js"></script>*@
+@{
+    var PDFfileUrl = "";
+    if (Model.CurrentPage.PDF != null)
+    {
+        PDFfileUrl = OJINCategoryExtensions.GetContentUrl(Model.CurrentPage.PDF);
+    }
+}
+
+@{
+    var ojinAddThisScript = OJINCategoryExtensions.GetOJINAddThisScriptProperty();
+}
+
+
+@{
+    var checkArticle = Html.PropertyFor(x => x.CurrentPage.DocType)?.ToString()?.Trim();
+    var checkCitation = Html.PropertyFor(x => x.CurrentPage.Citation)?.ToString()?.Trim();
+    var checkAbstract = Html.PropertyFor(x => x.CurrentPage.Abstract)?.ToString()?.Trim();
+    var checkKeyword = Html.PropertyFor(x => x.CurrentPage.Keywords)?.ToString()?.Trim();
+    var checkArticleHeader = Html.PropertyFor(x => x.CurrentPage.ArticleHeader)?.ToString()?.Trim();
+    var checkFiguresTablesHeader = Html.PropertyFor(x => x.CurrentPage.FiguresTablesHeader)?.ToString()?.Trim();
+    var checkReference = @Html.PropertyFor(x => x.CurrentPage.References)?.ToString()?.Trim();
+    var checkFigAndTable = Html.PropertyFor(x => x.CurrentPage.FigTables)?.ToString()?.Trim();
+}
+@{
+    var figuretableLableName = "";
+    var authorLableName = "";
+    var doiLableName = "";
+    //var keywordLableName = "";
+    var referenceLableName = "";
+    var abstractLableName = "";
+    //var citationLableName = "";
+    String leftColClass = "col-xl-8";
+    String rightColClass = "col-xl-4";
+    bool showRightCol = true;
+    if (Model.CurrentPage.DocType?.ToString()?.Trim() == "Other")
+    {
+        if(Model.CurrentPage.PublicationDate.Date.Year == 0001)
+        {
+            leftColClass = "col-xl-10";
+            showRightCol = false;
+        }
+    }
+
+
+    if (Model != null && Model.ContentDetailsLabelList.Count > 0)
+    {
+        foreach (var label in Model.ContentDetailsLabelList)
+        {
+            if (label.figuretableLableName == "Figures/Tables")
+            {
+                figuretableLableName = label.figuretableLableName;
+            }
+            if (label.authorLableName == "Authors")
+            {
+                authorLableName = label.authorLableName;
+            }
+            if (label.doiLableName == "DOI")
+            {
+                doiLableName = label.doiLableName;
+            }
+            if (label.keywordLableName == "Key Words")
+            {
+                //keywordLableName = label.keywordLableName;
+            }
+            if (label.referenceLableName == "References")
+            {
+                referenceLableName = label.referenceLableName;
+            }
+            if (label.abstractLableName == "Abstract")
+            {
+                abstractLableName = label.abstractLableName;
+            }
+            if (label.citationLableName == "Citation" && Html.PropertyFor(m => m.CurrentPage.Citation) != null)
+            {
+                //citationLableName = label.citationLableName;
+            }
+        }
+    }
+}
+
+<div class="container">
+    <section class="ojin-articleHeadline">
+        <h1>@Html.PropertyFor(m => m.CurrentPage.Title)</h1>
+        <ul>
+            @*<li><a href="#">@Html.PropertyFor(m => m.CurrentPage.Author)</a></li>*@
+            @if (Model.Authors != null)
+            {
+                if (Model.Authors.Count > 0)
+                {
+                    foreach (var author in Model.Authors)
+                    {
+            <li>
+                <a href="javascript:void(0)">@author.AuthorName</a>
+                <div class="ojin-authorBio__item">
+                    <div class="ojin-authorBio__heading">@author.AuthorName</div>
+                    @if (author.Email != null)
+                                {
+                    <div class="ojin-authorBio__email">Email: <a href="mailto:@author.Email">@author.Email</a></div>
+                                }
+                <p>@Html.PropertyFor(i => author.Bio)</p>
+                </div>
+            </li>
+                    }
+                }
+            }
+        </ul>
+    </section>
+    <section class="ojin-articleWrapper">
+        <div class="row">
+            <div class="@leftColClass">
+                <div class="ojin-ttlList clearfix">
+                    @if ((Model.CurrentPage.DocType?.ToString()?.Trim() == "Article") && (Model.CurrentPage.PageTypeName == "OJINContentDetailPage"))
+                    {
+                    <div class="ojin-ttlList__anchor float-right">
+                        <a href="javascript:void(0)"><img src="/assets/Ojin/img/more-options.svg" alt="" class="lazyload" /><span>Contents</span></a>
+                    </div>
+                    <ul class="ojin-ttlList__links" id="docmap">
+                    </ul>
+                    }
+                </div>
+                <div class="ojin-articleContent">
+                    @if (Model.CurrentPage.DocType?.ToString()?.Trim() != "Other")
+                    {
+                    <ul class="ojin-tabs">
+                            @if (!string.IsNullOrWhiteSpace(checkArticleHeader))
+                            {
+                        <li class="active"><a href="#article">@checkArticleHeader</a></li>
+                            }
+                            else
+                            {
+                        <li class="active"><a href="#article">Article</a></li>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(checkFiguresTablesHeader))
+                            {
+                                if (!string.IsNullOrWhiteSpace(checkFigAndTable))
+                                {
+                        <li><a href="#tables">@checkFiguresTablesHeader</a></li>
+                                }
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrWhiteSpace(checkFigAndTable))
+                                {
+                        <li><a href="#tables">@figuretableLableName</a></li>
+                                }
+                            }
+
+                    </ul>
+                    }
+                    <div class="ojin-tabContent" id="article" style="opacity:1 !important;">
+                        @if (!string.IsNullOrWhiteSpace(checkAbstract))
+                        {
+                        <div class="ojin-articleAbstract">
+                            <div class="ojin-articleAbstract__title">@abstractLableName</div>
+                            <p>@Html.PropertyFor(m => m.CurrentPage.Abstract)</p>
+                        </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(checkKeyword))
+                        {
+                        <div class="ojin-keywords">
+                            <div class="ojin-keywords__title">@*@keywordLableName*@</div>
+                            <p>@Html.PropertyFor(m => m.CurrentPage.Keywords)</p>
+                        </div>
+                        }
+                        <div class="ojin-references">
+                            @*<a href="#">
+                                    <strong></strong> @referenceLableName
+                                </a>*@
+                            @Html.PropertyFor(m => m.CurrentPage.IntroText)
+                        </div>
+                        <div class="ojin-refList">
+
+                            @if (Model.CurrentPage.DocType?.ToString()?.Trim() != "Other")
+                            {
+                                if (!string.IsNullOrWhiteSpace(checkReference))
+                                {
+                            <h4>@referenceLableName<span>@*(19)*@</span></h4>
+                                }
+                            }
+                            @Html.PropertyFor(m => m.CurrentPage.References)
+                        </div>
+
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(checkFigAndTable))
+                    {
+                    <div class="ojin-tabContent" id="tables" style="opacity: 1 !important;">
+                        @Html.PropertyFor(m => m.CurrentPage.FigTables)
+                    </div>
+                    }
+
+                </div>
+            </div>
+            @if (showRightCol)
+            {
+            <div class="@rightColClass ojin-rightRail">
+                <div class="ojin-articleDate">
+                    @if (Model.CurrentPage.PublicationDate.Date != null && Model.CurrentPage.PublicationDate.Date.Year != 0001)
+                    {
+                    <p>@Model.CurrentPage.PublicationDate.Date.ToString("MMMM dd, yyyy")</p>
+                    }
+                    @*<p><span>DOI: </span>@Html.PropertyFor(m => m.CurrentPage.DOI)/@Html.PropertyFor(m => m.CurrentPage.DOIURL)</p>*@
+                    @if (Model.CurrentPage.DOI != null)
+                    {
+                        var doi = @Html.PropertyFor(m => m.CurrentPage.DOI);
+                        var doiurl = @Html.PropertyFor(m => m.CurrentPage.DOIURL);
+
+                        //@*<p><span>DOI: </span><a href="@doiurl">@doi</a></p>*@
+                    <p><span><strong>DOI</strong>: @doi</span></p>
+                    <p><a href="@doiurl">@doiurl</a></p>
+                    @*<p><span>DOI: </span><a href="#tables">@doi</a></p>*@
+                    }
+                    else
+                    {
+                    @*<p><span>DOI: </span></p>*@
+                    }
+
+
+                    @*<p><span>DOI: </span>@doi</p>*@
+                <div class="ojin-options">
+
+                    @if (Model.CurrentPage.ShowSocial == true)
+                    {
+                        <ul>
+                            @if (Model.CurrentPage.PDF != null && PDFfileUrl != null && PDFfileUrl.Length > 0)
+                            {
+                                <li><a href="@PDFfileUrl" target="_new"><img src="/assets/Ojin/img/download.svg" alt="" class="lazyload" /></a></li>
+                            }
+                            <li class="share"><a href="javascript:void(0)"><img src="/assets/Ojin/img/share-icon.svg" alt="" class="lazyload" /></a></li>
+                            <li class="print"><a href="javascript:void(0)"><img src="/assets/Ojin/img/print-icon.svg" alt="" class="lazyload" /></a></li>
+                        </ul>
+                        <div class="ojin-articleShare">
+                            <span>Share</span>
+                            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                            <div class="addthis_inline_share_toolbox"></div>
+                        </div>
+                    }
+                </div>
+                </div>
+                    @if (!string.IsNullOrWhiteSpace(checkCitation))
+                    {
+                        <div class="ojin-citation">
+                            <div class="ojin-citation__title">@*@citationLableName*@</div>
+                            <p>@Html.PropertyFor(m => m.CurrentPage.Citation)</p>
+                        </div>
+                    }
+
+                @if (!string.IsNullOrWhiteSpace(checkArticle) && checkArticle == "Article")
+                {
+                <div class="ojin-relatedArticles">
+                    <div class="ojin-relatedArticles__headline">Related Articles</div>
+                    <ul>
+                        @if (Model.CurrentPage.Category.Count > 0 && Model.CategoryPageList.Count > 0)
+                            {
+                                foreach (var categorylist in Model.CategoryPageList)
+                                {
+                        <li class="ojin-relatedArticles__item">
+                            <div class="ojin-relatedArticles__category"><span>@categorylist.ContentType</span>@((categorylist.PublicationDate.Date != null && categorylist.PublicationDate.Date.Year != 0001) ? categorylist.PublicationDate.Date.ToString("MMMM dd, yyyy") : "")</div>
+                            <div class="ojin-relatedArticles__title">
+                                <a href="@categorylist.Url">@categorylist.Title</a>
+                            </div>
+                            <div class="ojin-relatedArticles__editor">@categorylist.Author</div>
+                        </li>
+                                }
+
+                            }
+
+                        @*@if (Model.CurrentPage.Category.Count > 0)
+                            {
+                                foreach (int category in this.Model.CurrentPage.Category)
+                                {
+                                    //var Categoryname = EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.DataAbstraction.CategoryRepository>().GetRoot().Parent.Description;    // .GetRoot();  //.GetList();    // .FindChild( .Get(category).Name;
+                                    //<div>@Categoryname</div>
+                                    var Categoryname = EPiServer.ServiceLocation.ServiceLocator.Current.GetInstance<EPiServer.DataAbstraction.CategoryRepository>().Get(category).Description;
+                                    <div>@Categoryname</div>
+                                }
+                            }*@
+                        @*Displaying Category Name without link*@
+                        @*@if (Model.CategoryList != null && Model.CategoryList.Count() > 0)
+                            {
+                                foreach (var category in Model.CategoryList)
+                                {
+                                    <a href="@category.Link" class="button button--sm button--clear-blue">@category.Name</a>
+                                }
+                            }*@
+                        @*@if (Model.CurrentPage.Category.Count > 0 && Model.CategoryPageList.Count> 0)
+                            {
+                                foreach (var categorylist in Model.CategoryPageList)
+                                {
+                                    <div>@categorylist.Name</div>
+                                    <div>@categorylist.Summary</div>
+                                }
+                            }*@
+                    </ul>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        <script type="text/javascript" src=@ojinAddThisScript></script>
+        <div class="back-to-top">
+            <a href="javascript:void(0)"><i class="fa fa-angle-up" aria-hidden="true"></i></a>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,21 @@
+﻿@using ANA.Site.Models.ViewModels
+
+@model CheckoutViewModel
+
+<div class="c-checkout__section">
+    <h2 class="c-checkout__section-title">@Html.Translate("/Shared/Address/BillingHeading")</h2>
+    <section class="e-checkout-address" data-require="./src/views/checkout-address-view" data-address-type="billing">
+        <div class="e-checkout-address__content" data-address-panel="">
+            <label class="e-checkout-address__select e-form__label e-form__label--select" for="@Html.IdFor(m => m.BillingAddressId)" data-formfield="" style="display: none;">
+                <span class="e-form__label-text">@Html.Translate("/Shared/Address/ChooseSavedAddress")</span>
+                @Html.DropDownListFor(m => m.BillingAddressId, Enumerable.Empty<SelectListItem>(), new { @class = "e-form__input e-form__input--select", data_address_select = "", placeholder = Html.Translate("/Shared/Address/PleaseSelect") })
+            </label>
+            <a href="#" class="e-checkout-address__action e-checkout-address__action--add" data-address-add="" data-lightbox-title="@Html.Translate("/Shared/Address/Form/Label/AddBillingAddress")">
+                <span>+</span> @Html.Translate("/Shared/Address/AddNewAddress")
+            </a>
+            @{ await Html.RenderPartialAsync("_AddressDisplay"); }
+            <a href="#" class="e-checkout-address__action" data-address-edit="" data-lightbox-title="@Html.Translate("/Shared/Address/Form/Label/EditBillingAddress")"></a>
+            <a class="e-checkout-address__action" href="#" data-address-edit-confirm="">@Html.Translate("/Shared/Address/EditAddress")</a>
+        </div>
+    </section>
+</div>    

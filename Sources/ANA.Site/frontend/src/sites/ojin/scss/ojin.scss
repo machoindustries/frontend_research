@@ -1,0 +1,52 @@
+// OJIN stylesheet entry.
+//
+// Ported from the Vue CLI project's src/entryPointForBackendBuild.js, which
+// bundled these same files in this same order. Vue itself was never part of
+// the CMS build — the .vue components were only ever the preview app — so the
+// port drops Vue, webpack and babel entirely and keeps the SCSS and the five
+// plain-JS modules.
+//
+// The three files below were injected into EVERY stylesheet by vue.config.js's
+// `additionalData`, which is why 14 of the 20 component files use $variables
+// and mixins they never import. Sass `@import` is global-scope, so importing
+// them once here makes them available to everything that follows. Doing it via
+// Vite's `additionalData` instead would leak them into the default and campaign
+// trees, which share this build.
+@import "assets/breakpointsVars";
+@import "assets/colors";
+@import "assets/varsMixins";
+
+@import "assets/reset";
+@import "assets/typography";
+@import "assets/buttons";
+@import "assets/global";
+@import "assets/base";
+
+/* Home */
+@import "components/navigationMenu";
+@import "components/breadCrumb";
+@import "components/currentTopic";
+@import "components/featuredTopics";
+@import "components/additionalItems";
+@import "components/footer";
+
+/* Table of contents */
+@import "components/introText";
+@import "components/volumes";
+
+/* Columns */
+@import "components/columns";
+
+/* Topics */
+@import "components/topicsFT";
+@import "components/topicsList";
+
+/* Article detail */
+@import "components/articleHeadline";
+@import "components/articleContent";
+
+/* Letters to editor */
+@import "components/LettersList";
+
+/* Search */
+@import "components/search";

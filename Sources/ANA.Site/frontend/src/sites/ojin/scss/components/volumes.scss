@@ -1,0 +1,20 @@
+.ojin-volume {
+    
+    &__number {
+        padding-bottom: 10px;
+
+        &:last-child {
+            padding-bottom: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+@media (min-width: $breakpoint-min-1200) {
+    .ojin-volume {
+        padding: 0 100px 100px 0;
+    }
+}

@@ -1,0 +1,39 @@
+.cta-mask {
+    background-color: #2C998A;
+    font-weight: 500;
+    color: white;
+    font-size: 1.5rem;
+    line-height: 2.1875rem;
+    letter-spacing: 0.0313rem;
+  
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .image-mask {
+        border-radius:  0 100rem 100rem 0;
+        position: relative;
+        background-size: cover; background-position: center center;
+    }
+
+    .content {
+        padding: 2rem;
+    }
+
+    .logo-button-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+
+        button {
+            margin: .5rem .25rem;
+        }
+        
+        img {
+            max-height: 80px;
+            margin: .5rem .25rem;
+        }
+    }
+
+}

@@ -1,0 +1,45 @@
+﻿@using EPiServer.Editor
+@using EPiServer.Forms.Core
+@using EPiServer.Forms.EditView
+@using EPiServer.Forms.Implementation.Elements
+
+@model FormStepBlock
+
+@{
+    var isViewModeInvisibleElement = Model is IViewModeInvisibleElement;
+    var extraCSSClass = isViewModeInvisibleElement ? ConstantsFormsUI.CSS_InvisibleElement : string.Empty;
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+
+    <section class="Form__Element FormStep Form__Element--NonData @extraCSSClass">
+        <h3 class="FormStep__Title">@Model.EditViewFriendlyTitle</h3>
+        <p class="FormStep__Description">@Model.Description</p>
+    </section>
+}
+else
+{
+    if (!string.IsNullOrWhiteSpace(Model.Label) || !string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="col-12">
+
+            <div class="FormStep__Content">
+                @if (string.IsNullOrWhiteSpace(Model.FormElement.Form.Name))
+                {
+                    <h2 class="FormStep__Title">@Model.Label</h2>
+                }
+                else
+                {
+                    <h3 class="FormStep__Title">@Model.Label</h3>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <p class="FormStep__Description">@Model.Description</p>
+                }
+            </div>
+
+        </div>
+    }
+}

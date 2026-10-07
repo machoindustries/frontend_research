@@ -1,0 +1,79 @@
+.filters-training {
+  padding: 0rem 1rem;
+
+  @media(min-width: 1023px) {
+    padding: 0rem .5rem;
+  }
+
+  .filter-title {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.0313rem;
+    color: $media-content-social-card-font;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-title-mobile {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    letter-spacing: 0.0313rem;
+    color: $media-content-social-card-font;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    cursor: pointer;
+
+    .toggle-icon {
+      padding: 0rem .5rem;
+    }
+  }
+
+
+  .filter-accordion {
+    list-style: none;
+
+    .filter-link {
+      text-decoration: none;
+
+      .filter-category {
+        color: black;
+        line-height: 1.75rem;
+        font-size: 1rem;
+        border: none;
+
+        .category-icon {
+          padding: 0rem .5rem;
+        }
+      }
+    }
+
+    .filter-content {
+      border: none;
+      padding: 1rem 0rem 0rem 0rem;
+
+      .inputs-labels {
+        display: flex;
+        flex-direction: row;
+
+        @include filter-checkbox-inputs;
+      }
+
+      @include filter-checkbox-checked;
+
+      .nested-checkbox-wrapper {
+        padding: 0 0 0rem 1.5rem;
+      }
+    }
+
+    .filter-line {
+      width: 9.375rem;
+      height: 2px;
+      background-color: $media-content-social-card-font;
+      margin: 1rem 0rem;
+
+      &:last-child {
+        display: none;
+      }
+    }
+  }
+}

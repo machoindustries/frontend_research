@@ -1,0 +1,45 @@
+﻿@using ANA_HNHN.Models.Pages.Base
+@using EPiServer
+@using EPiServer.ServiceLocation;
+@using EPiServer.Web.Routing;
+@using ANA_HNHN.Models.Pages
+@using ANA_HNHN.Helpers
+@using Brightfind.Helper
+@model ANA_HNHN.Models.ViewModels.IPageViewModel<BasePageData>
+@{
+    var currentPageTitle = (!string.IsNullOrWhiteSpace(Model.CurrentPage.ShortTitle)) ? Model.CurrentPage.ShortTitle :
+                         (!string.IsNullOrWhiteSpace(Model.CurrentPage.Title)) ? Model.CurrentPage.Title : Model.CurrentPage.Name;
+    var pageAncestors = PageHelper.GetPageAncestors(Model.CurrentPage);
+}
+<div class="container">
+    <ul class="breadcrumbs">
+        @foreach (var item in pageAncestors)
+        {
+            var href = MediaHelper.GetUrl(item.ContentLink);
+            var contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
+            var currentReference = contentLoader.Get<BasePageData>(item.ContentLink);
+            var title = (!string.IsNullOrWhiteSpace(currentReference.ShortTitle)) ? currentReference.ShortTitle :
+            (!string.IsNullOrWhiteSpace(currentReference.Title)) ? currentReference.Title : item.Name;
+            if (item.PageTypeName == "FolderPage")
+            {
+                <li>
+                    <a>
+                        @title
+                    </a>
+                    /
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a href="@href">
+                        @title
+                    </a>
+                    /
+                </li>
+            }
+        }
+        <li class="breadcrumb-active">@currentPageTitle</li>
+    </ul>
+</div>
+

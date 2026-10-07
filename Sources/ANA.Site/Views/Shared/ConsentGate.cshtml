@@ -1,0 +1,164 @@
+﻿@model ANA.Site.Models.Blocks.ConsentGateSettingsBlock
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consent Required</title>
+    <style>
+            html, body {
+                margin: 0;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            @@font-face {
+                font-family: "SourceSansProRegular";
+                src: url("/assets/fonts/SourceSansPro-Regular.woff") format("woff"), url("/assets/fonts/SourceSansPro-Regular.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @@font-face {
+                font-family: "SourceSansProBold";
+                src: url("/assets/fonts/SourceSansPro-Bold.woff") format("woff"), url("/assets/fonts/SourceSansPro-Bold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @@font-face {
+                font-family: "SourceSansProSemiBold";
+                src: url("/assets/fonts/SourceSansPro-Semibold.woff") format("woff"), url("/assets/fonts/SourceSansPro-Semibold.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            .consent-backdrop {
+                position: fixed;
+                inset: 0;
+                background: #193E4B;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                padding: 24px;
+                box-sizing: border-box;
+                animation: consent-fade-in 0.25s ease-out;
+            }
+
+            .consent-modal {
+                background: #fff;
+                max-width: 480px;
+                font-family: "SourceSansProRegular", Arial, Helvetica, sans-serif;
+                width: 100%;
+                max-height: calc(100vh - 48px);
+                overflow-y: auto;
+                padding: 40px 40px 32px;
+                border-radius: 8px;
+                box-sizing: border-box;
+                text-align: center;
+                animation: consent-modal-in 0.25s ease-out;
+            }
+
+            .consent-modal__logo {
+                width: 128px;
+                margin: 0 auto 20px;
+                display: block;
+            }
+
+            .consent-modal__eyebrow {
+                font-size: 24px;
+                font-family: "SourceSansProBold", Arial, Helvetica, sans-serif;
+                font-weight: 600;
+                margin: 0 0 8px;
+                color: #193E4B;
+            }
+
+            .consent-modal__body {
+                text-align: left;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #2F3638;
+                margin-top: 16px;
+            }
+
+            .consent-modal label {
+                display: block;
+                text-align: left;
+                margin-top: 20px;
+                font-size: 14px;
+            }
+
+            .consent-modal button {
+                width: 100%;
+                background: #CB3727;
+                font-family: "SourceSansProBold", Arial, Helvetica, sans-serif;
+                color: #fff;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 6px;
+                font-size: 15px;
+                cursor: pointer;
+                margin-top: 16px;
+            }
+
+                .consent-modal button:disabled {
+                    background: #ccc;
+                    cursor: not-allowed;
+                }
+    </style>
+</head>
+<body>
+    <form id="antiForgeryForm" style="display:none">
+        @Html.AntiForgeryToken()
+    </form>
+    <div class="consent-backdrop" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+        <div class="consent-modal" id="consentModal">
+            <img src="/assets/img/logos/ana.svg" alt="American Nurses Association" class="consent-modal__logo" />
+            <p class="consent-modal__eyebrow">Before you continue</p>
+            <h2 id="consentTitle">@Model.Title</h2>
+            <div class="consent-modal__body">@Html.Raw(Model.Body?.ToHtmlString())</div>
+            <label>
+                <input type="checkbox" id="consentCheckbox" /> @Model.CheckboxLabel
+            </label>
+            <button id="acceptBtn" disabled>@Model.ButtonText</button>
+        </div>
+    </div>
+    <script>
+            (function() {
+                var checkbox = document.getElementById('consentCheckbox');
+                var button = document.getElementById('acceptBtn');
+                var modal = document.getElementById('consentModal');
+
+                checkbox.addEventListener('change', function() {
+                    button.disabled = !checkbox.checked;
+                });
+
+                var focusable = modal.querySelectorAll('input, button');
+                document.addEventListener('keydown', function(e) {
+                    if (e.key !== 'Tab') return;
+                    var first = focusable[0], last = focusable[focusable.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault(); last.focus();
+                    } else if (!e.shiftKey && document.activeElement === last) {
+                        e.preventDefault(); first.focus();
+                    }
+                });
+                checkbox.focus({ preventScroll: true });
+                modal.scrollTop = 0;
+
+                button.addEventListener('click', function() {
+                    var token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+                    fetch('/consent/accept', {
+                        method: 'POST',
+                        headers: { 'RequestVerificationToken': token }
+                    }).then(function(res) {
+                        if (res.ok) window.location.reload();
+                    });
+                });
+            })();
+    </script>
+</body>
+</html>

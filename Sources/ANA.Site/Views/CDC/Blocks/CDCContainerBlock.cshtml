@@ -1,0 +1,30 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCContainerBlock
+
+<div class="@Model.GetCssClass() pt-2 pb-3">
+    @if (Model.BlockSection1.HasContent())
+    {
+        <div class="grid-x">
+            @Html.PropertyFor(i => i.BlockSection1, new { HasContainer = false, HasItemContainer = false })
+        </div>
+    }
+    @if (Model.BlockSection2.HasContent())
+    {
+        <div class="grid-x mt-2">
+            @Html.PropertyFor(i => i.BlockSection2, new { HasContainer = false, HasItemContainer = false })
+        </div>
+    }
+    @if (Model.BlockSection3.HasContent())
+    {
+        <div class="grid-x mt-2">
+            @Html.PropertyFor(i => i.BlockSection3, new { HasContainer = false, HasItemContainer = false })
+        </div>
+    }
+    @if (Model.Buttons.HasContent())
+    {
+        <div class="grid-x mt-2 mb-3 justify-center">
+            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCButtonList.cshtml", Model.Buttons)
+        </div>
+    }
+</div>

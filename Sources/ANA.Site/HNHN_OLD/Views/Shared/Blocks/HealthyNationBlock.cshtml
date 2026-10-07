@@ -1,0 +1,124 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HealthyNationBlock
+
+@{
+    string sectionClass = (ViewData["SectionClass"] ?? "").ToString();
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .healthy-nation .link-edit {
+            display: none;
+        }
+
+        .preview-display .healthy-nation .edit-box {
+            margin-left: 30px;
+        }
+
+        .preview-display .healthy-nation .link-edit {
+            display: block;
+            font-size: 1.0rem;
+            height: 20px;
+            text-align: center;
+            width: 40px;
+            z-index: 999;
+        }
+    </style>
+}
+
+<section class="container @(!string.IsNullOrWhiteSpace(sectionClass)?sectionClass:"")">
+    <div class="section hnhn-model">
+        <h2 class="hnhn-model__heading wow fadeInDown">@Html.PropertyFor(m => m.Heading)</h2>
+
+        <div class="model__block">
+            @Html.PropertyFor(m => m.StepOne, new { StepCount = 1 })
+            @*<div class="model__item wow fadeInDown">
+                    <div class="model__sequence">
+                        <img src="images/engage-circle.svg" alt="Lorem ipsum.">
+                    </div>
+                    <h3 class="model__heading"> Engage <span class="highlight"> Nurses on 3 Levels</span> </h3>
+                    <button class="toggle-model__list collapsed" aria-expanded="false" type="button" data-toggle="collapse" data-target="#infographic1"></button>
+                    <ul class="model__list collapse" id="infographic1">
+                        <li>
+                            <div class="model__list__name">Individual</div>
+                            <span class="model__icon"><img src="images/icons/infographic-individual-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Organizational</div>
+                            <span class="model__icon"><img src="images/icons/inforgraphic-org-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Interpersonal</div>
+                            <span class="model__icon"><img src="images/icons/infographic-interpersonal-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                    </ul>
+                </div>*@ <!-- END .model__item -->
+
+            @Html.PropertyFor(m => m.StepTwo, new { StepCount = 2 })
+            @*<div class="model__item wow fadeInDown">
+                    <div class="model__sequence">
+                        <img src="images/improve-circle.svg" alt="Lorem ipsum.">
+                    </div>
+                    <h3 class="model__heading"> Improve <span class="highlight"> Their Health In Key Areas</span> </h3>
+
+                    <button class="toggle-model__list collapsed" aria-expanded="false" type="button" data-toggle="collapse" data-target="#infographic2"></button>
+                    <ul class="model__list collapse" id="infographic2">
+                        <li>
+                            <div class="model__list__name">Activity</div>
+                            <span class="model__icon"><img src="images/icons/infographic-activity-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Rest</div>
+                            <span class="model__icon"><img src="images/icons/infographic-rest-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Nutrition</div>
+                            <span class="model__icon"><img src="images/icons/infographic-nutrition-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Quality of Life</div>
+                            <span class="model__icon"><img src="images/icons/infographic-qol-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                        <li>
+                            <div class="model__list__name">Safety</div>
+                            <span class="model__icon"><img src="images/icons/infographic-safety-icon.svg" alt="Lorem ipsum."></span>
+                        </li>
+                    </ul>
+                </div>*@ <!-- END .model__item -->
+
+            @Html.PropertyFor(m => m.StepThree, new { StepCount = 3 })
+            @*<div class="model__item wow fadeInDown">
+                    <div class="model__sequence">
+                        <img src="images/create-circle.svg" alt="Lorem ipsum.">
+                    </div>
+                    <h3 class="model__heading"> Create <span class="highlight"> a Health Nurse Population, and in turn...</span> </h3>
+
+                    <button class="toggle-model__list collapsed" aria-expanded="false" type="button" data-toggle="collapse" data-target="#infographic3"></button>
+                    <ul class="model__list collapse" id="infographic3">
+                        <li>
+                            <div class="model__list__name model__list__name--padding">A Healthier Workforce</div>
+                        </li>
+                        <li>
+                            <div class="model__list__name model__list__name--padding">Effective, Safe Sustainable Health Care</div>
+                        </li>
+                        <li>
+                            <div class="model__list__name model__list__name--padding">Role Models of Health</div>
+                        </li>
+                        <li>
+                            <div class="model__list__name model__list__name--padding">Educators and Advocates for Health</div>
+                        </li>
+                    </ul>
+                </div>*@ <!-- END .model__item -->
+
+            <div class="infographic-arrow wow fadeIn">
+                <img src="~/Static/images/infographic-arrow.svg" alt="infographic arrow">
+            </div>
+        </div>
+
+        <h2 class="hnhn-model__heading hnhn-model__heading--blue">@Html.PropertyFor(m => m.Caption) </h2>
+    </div>
+</section>

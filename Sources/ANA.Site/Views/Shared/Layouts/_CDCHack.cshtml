@@ -1,0 +1,75 @@
+﻿@using ANA.Site.Models.CDC.Pages
+@model ANA.Site.Models.ViewModels.IPageViewModel<CDCPageBase>
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+
+    string containerStyle = Model != null && Model.CurrentPage != null && Model.CurrentPage.DisableBottomMargin
+        ? "" : "mb-3";
+}
+
+
+@section HeadEnd{
+    <script src="https://kit.fontawesome.com/2b5f9029cc.js" crossorigin="anonymous"></script>
+    <link href="/assets/css/cdc.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div class="grid-container @containerStyle" data-module-core="resource-modal">
+    <div class="grid-x">
+        <header class="top-anchor">
+            <h1 class="hide" aria-hidden="true">@Model.CurrentPage.Heading</h1>
+        </header>
+        @RenderBody()
+        @if (!Model.CurrentPage.DisableGlobalBlocks)
+        {
+            @Html.PropertyFor(i => i.Layout.T2PHomePage.GlobalPageBlocks, new { HasContainer = false, HasItemContainer = false })
+        }
+        @await Html.PartialAsync("~/Views/CDC/Partials/_CDCRegisterForm.cshtml", Model)
+    </div>
+</div>
+@await Html.PartialAsync("~/Views/CDC/Blocks/CDCDisclaimerHack.cshtml", Model)
+
+
+@section BodyEnd{
+    @* jQuery must load before slick and the inline slick call below.
+       Previously this pulled 3.6.0 from code.jquery.com while cdc.js bundled
+       its own private 3.5.1 via webpack's ProvidePlugin/expose-loader — two
+       jQuery instances on every CDC page. Now the whole site shares one
+       global 3.7.1 (backlog items 10 and 20). *@
+    <script src="/bundles/jquery"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script type="text/javascript">
+        const slickopts = {
+            dots: true,
+            prevArrow: '<div class="slide-arrow prev-arrow"><span class="chevron left"></span></div>',
+            nextArrow: '<div class="slide-arrow next-arrow"><span class="chevron right"></span></div>',
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            rows: 1,
+            infinite: false,
+            responsive: [
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    },
+                },
+                {
+                    breakpoint: 640,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        rows: 1,
+                    },
+                }],
+        };
+        $('.resource-carousel').slick(slickopts);
+    </script>
+
+    @* cdc.js is an ES module: Vite emits it from src/templates/campaign and it
+       imports shared chunks, so it needs type="module". It is deferred and
+       therefore runs after the inline slick call above, which is fine — its
+       entry uses $(document).ready(), which jQuery replays if DOM ready has
+       already passed. *@
+    <script type="module" src="/assets/js/cdc.js" asp-append-version="true"></script>
+}

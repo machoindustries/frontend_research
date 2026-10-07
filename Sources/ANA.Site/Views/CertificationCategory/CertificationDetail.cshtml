@@ -1,0 +1,29 @@
+﻿@using ANA.Site.Business.Extensions
+@using Geta.Optimizely.Extensions
+@model ANA.Site.Models.ViewModels.ProductPartialViewModel
+
+<div class="@Model.PartialCssClass">
+    <div class="c-product-detail c-product-detail--course">
+        <figure href="#" class="c-product-detail__figure">
+            <span class="icon--icon-profile c-product-detail__figure-icon"></span>
+            @if (!string.IsNullOrEmpty(Model.BannerText))
+            {
+                <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                    <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                    <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                </div>
+            }
+        </figure>
+        <div class="c-product-detail__info">
+            <h3 class="c-product-detail__info-title">
+                <a href="@Model.Product.ContentLink.GetFriendlyUrl()">@Model.Product.Heading</a>
+            </h3>
+            @Html.Raw(Model.Product.IntroText.ToHtmlString().Truncate(100)) 
+        </div>
+        <div class="c-product-detail__controls">
+            <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="e-button e-button--submit e-button--white e-button c-product-detail__controls-button" data-tracked-cta>More info</a>
+
+        </div>
+
+    </div>
+</div>

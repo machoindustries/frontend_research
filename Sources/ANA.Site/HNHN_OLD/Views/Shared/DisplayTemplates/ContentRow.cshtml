@@ -1,0 +1,43 @@
+﻿@using ANA.Site.HNHN_OLD.Helpers
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@using ANA.Site.HNHN.Models.Blocks
+
+@{
+    var modelAsContentArea = Model as ContentArea;
+}
+@{
+    string columnSize = (ViewData["ColumnSize"] ?? "md").ToString();
+    string groupClass = (ViewData["GroupClass"] ?? "").ToString();
+    string maxItemsString = (ViewData["MaxItemsPerRow"] ?? "").ToString();
+
+    int maxItems = 3;
+    if (!int.TryParse(maxItemsString, out maxItems)) { maxItems = 3; }
+
+    if (modelAsContentArea != null && modelAsContentArea.Items.Any())
+    {
+        var contentItems = modelAsContentArea.Items.GetContentItems<BaseBlockData>();
+        int rowCount = (int)Math.Ceiling(contentItems.Count() / (float)maxItems);
+
+        for (int i = 0; i < rowCount; i++)
+        {
+            <div class="row @groupClass">
+                @{
+                    var currentItems = contentItems.Skip(i * maxItems).Take(maxItems);
+                    int colsCount = (12 / currentItems.Count());
+                    int currentCol = 0;
+                    foreach (var item in currentItems)
+                    {
+                        <div class="col-@columnSize-@colsCount wow @Html.GetContentColumnFadeClass(currentCol, maxItems)" data-wow-duration="1.3s">
+                            @{ Html.RenderContentData(item, true); }
+                        </div>
+                        currentCol++;
+                    }
+                }
+            </div>
+        }
+    }
+}

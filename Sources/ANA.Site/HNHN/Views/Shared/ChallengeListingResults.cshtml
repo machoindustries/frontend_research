@@ -1,0 +1,40 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@using ANA_HNHN.Services.Search.Models
+@model IEnumerable<ChallengeSearchHit>
+@{
+    var criteria = (SearchCriteriaModel)ViewData["criteria"];
+}
+
+<div class="row" id="challenge-listings">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 search__item search__item--challenges">
+                <div class="card">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" />
+                    }
+                    else
+                    {
+                        <div class="img-placeholder"></div>
+                    }
+                    <div class="card-body d-flex flex-column flex-grow-1 p-0">
+                        @if (item.Category.HasValue)
+                        {
+                            <div class="search__category-list">
+                                <a href="" data-page-key=@item.Category.Value.Key aria-label="@item.Category.Value.Value Category">@item.Category.Value.Value</a>
+                            </div>
+                        }
+                        <h4 class="search__item-title">@item.Title</h4>
+                        <div class="mt-auto">
+                            @item.StartDate
+                        </div>
+                    </div>
+                    <a class="absolute-link" href="@item.Url" role="button" aria-label="@item.Title Link" tabindex="0"></a>
+                </div>
+            </div>
+        }
+    }
+</div>

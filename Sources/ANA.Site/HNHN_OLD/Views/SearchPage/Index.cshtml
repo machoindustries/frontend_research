@@ -1,0 +1,82 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Models.Blocks
+@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Models.ViewModels
+@using Geta.Optimizely.Extensions
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+
+@model SearchViewModel
+@{
+    Layout = "~/HNHN_OLD/Views/Shared/Layouts/_Root.cshtml";
+    var queryString =  _httpContextAccessor.HttpContext?.Request.Query["q"] ?? string.Empty;
+    var httpMethod = (ContentHelper.PageIsInEditMode() ? FormMethod.Post.ToString().ToLower() : FormMethod.Get.ToString().ToLower());
+}
+<div class="span8 grayHead searchHeading">
+    <h2 class="heading wow fadeInLeftFast">Search</h2>
+</div>
+<div class="row searchContainer">
+    <div style="width:100%;">
+        <form action="@Url.ContentUrl(Model.CurrentPage.GetFriendlyUrl())?q=@queryString" method="@httpMethod">
+            <input type="text" tabindex="1" name="q" value="@queryString" class="searchInput fadeInRightFast" />
+            <input type="submit" class="btn btn-primary fadeInLeft" style="margin-left:20px;" tabindex="2" value="Search" />
+        </form>
+        @if (@Model.Results != null)
+        {
+            <div class="row">
+                <div class="span8 grayHead">
+                    <h2 class="heading wow fadeInLeft">Search Results</h2>
+                </div>
+            </div>
+            if (Model.Results.Any())
+            {
+                <div class="row">
+                    <div class="wow fadeInLeft">
+                        @foreach (var item in Model.Results.Items)
+                        {
+                            <div class="listResult">
+                                <h3><a href="@item.ContentLink.GetFriendlyUrl()">@item.Name</a></h3>
+                                <p>@item.Name.TruncateAtWord(20)</p>
+                                <hr />
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="wow fadeInLeft">
+                        <div class="resultsnotfound">
+                            @if (string.IsNullOrEmpty(queryString))
+                            {
+                                <p>Sorry! Your search didn't match any content. Some suggestions:</p>
+                            }else{
+                                <p>Sorry! Your search for "@queryString" didn't match any content. Some suggestions:</p>
+                            }
+
+                            <ul>
+                                <li>
+                                    Make sure all words are spelled correctly.
+                                </li>
+                                <li>
+                                    Try entering different keywords.
+                                </li>
+                                <li>
+                                    Try using more general keywords.
+                                </li>
+                                <li>
+                                    Try fewer keywords.
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+

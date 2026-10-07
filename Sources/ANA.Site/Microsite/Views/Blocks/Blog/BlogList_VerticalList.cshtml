@@ -1,0 +1,26 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Blog.BlogListViewModel
+
+<div class="popular-today cell small-12 medium-4">
+    <h2 class="popular-today__header">@Model.CurrentContent.Heading</h2>
+    <div class="popular-today__date" data-module-dynamic="current-date">@DateTime.Now.ToString("dddd, MMMM dd, yyyy")</div>
+    @{
+        var i = 0;
+        foreach (var blog in Model.BlogPages)
+        {
+            i++;
+            <a class="popular-today__card" href="@blog.GetFriendlyUrl()">
+                <div class="popular-today__card__number">
+                    <span>@i</span>
+                </div>
+                <h4 class="popular-today__card__lead-in">
+                    @blog.Heading
+                </h4>
+            </a>
+        }
+    }
+</div>

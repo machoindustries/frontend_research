@@ -1,0 +1,25 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Callout.CalloutBlock
+
+<div class="grid-x featured-content">
+    <div class="featured-content__image-wrapper large-offset-2 large-5 medium-offset-2 medium-8 cell">
+        @if (Model.Image != null)
+        {
+            var coverImage = Model.Image.Get<ImageFile>();
+            <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="featured-content__image" />
+        }
+    </div>
+    <div class="featured-content__card large-6 medium-offset-4 medium-7 cell anim-waypoint">
+        @*<h5 class="featured-content__category">category</h5>*@
+        <h2 class="featured-content__title">@Html.PropertyFor(m => m.Heading)</h2>
+        <p class="featured-content__lead-in">
+            @Html.PropertyFor(m => m.Description)
+        </p>
+        <a id="@Model.ReadMoreLinkTrackId" href="@Model.ReadMoreLink.GetSafeFriendlyUrl()" class="featured-content__button"><span>Learn More</span></a>
+    </div>
+</div>

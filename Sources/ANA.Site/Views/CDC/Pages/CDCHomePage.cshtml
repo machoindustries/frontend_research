@@ -1,0 +1,31 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using Geta.Optimizely.Extensions;
+@model PageViewModel<CDCHomePage>
+@if (Model.CurrentPage.NavHack)
+{
+    Layout = "~/Views/Shared/Layouts/_CDCHack.cshtml";
+}
+else
+{
+    Layout = "~/Views/Shared/Layouts/_CDC.cshtml";
+}
+
+@if (Model != null && Model.CurrentPage != null && Model.CurrentPage.HomepageHero != null)
+{
+    var hero = Model.CurrentPage.HomepageHero.Get<CDCLandingHero>();
+    @await Html.PartialAsync("~/Views/CDC/Blocks/CDCLandingHero.cshtml", hero)
+}
+
+@await Html.PartialAsync("~/Views/CDC/Partials/_CDCAnnouncementBanner.cshtml", Model)
+@if (Model.CurrentPage.NavHack)
+{
+    @await Html.PartialAsync("~/Views/CDC/Partials/_CDCNavigationHack.cshtml", Model)
+}
+else
+{
+    @await Html.PartialAsync("~/Views/CDC/Partials/_CDCNavigation.cshtml", Model)
+}
+
+@Html.PropertyFor(i => i.CurrentPage.Blocks, new { HasContainer = false, HasItemContainer = false }) 

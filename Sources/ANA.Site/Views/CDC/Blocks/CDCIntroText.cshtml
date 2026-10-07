@@ -1,0 +1,84 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCIntroText
+
+<div class="intro-header-with-button grid-x cell small-12 @Model.GetCssClass()">
+    @if (Model.Button == null)
+    {
+        <div class="heading-wrapper">
+            <h4 class="heading">@Model.Heading</h4>
+        </div>
+        <p class="cell small-12 sub-heading">@Model.Content</p>
+    }
+    else
+    {
+        <div class="heading-wrapper">
+            <h4 class="heading">@Model.Heading</h4>
+            @{
+                RenderLargeScreenButton();
+            }
+        </div>
+        <p class="cell small-12 large-9 sub-heading">@Model.Content</p>
+        RenderSmallScreenButton();
+    }
+</div>
+
+@functions {
+void RenderLargeScreenButton()
+{
+    if (Model.Button != null)
+    {
+        var buttonContent = Model.Button.GetContent();
+        if (buttonContent is ButtonBlock)
+        {
+            var button = buttonContent as ButtonBlock;
+
+            <div class="show-for-medium button-container">
+                <button class="button-hollow-blue">
+                    <a href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame">@button.Text</a>
+                </button>
+            </div>
+        }
+        if (buttonContent is CDCRegisterButtonBlock)
+        {
+            var button = buttonContent as CDCRegisterButtonBlock;
+
+            <div class="show-for-medium button-container">
+                <button class="button-hollow-blue" data-open="modal-registration" aria-controls="modal-registration" aria-haspopup="true" tabindex="0">
+                    @button.RegisterText
+                </button>
+            </div>
+        }
+
+    }
+}
+
+void RenderSmallScreenButton()
+{
+    if (Model.Button != null)
+    {
+        var buttonContent = Model.Button.GetContent();
+        if (buttonContent is ButtonBlock)
+        {
+            var button = buttonContent as ButtonBlock;
+
+            <div class="hide-for-medium">
+                <button href="@button.ButtonUrl.GetFriendlyUrl()" class="button-hollow-blue">
+                    @button.Text
+                </button>
+            </div>
+        }
+        if (buttonContent is CDCRegisterButtonBlock)
+        {
+            var button = buttonContent as CDCRegisterButtonBlock;
+
+            <div class="hide-for-medium">
+                <button class="button-hollow-blue" data-open="modal-registration" aria-controls="modal-registration" aria-haspopup="true" tabindex="0">
+                    @button.RegisterText
+                </button>
+            </div>
+        }
+    }
+}
+}

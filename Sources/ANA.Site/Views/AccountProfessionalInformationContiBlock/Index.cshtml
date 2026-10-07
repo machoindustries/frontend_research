@@ -1,0 +1,355 @@
+﻿@{
+    ViewBag.Title = "ProfessionalInformationConti";
+}
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<link href="~/Styles/MyAccount_PI.css" rel="stylesheet" />
+<link href="~/assets/css/screen.css" rel="stylesheet" />
+<script type="text/javascript">
+    var PIEthnicityDefaultValues = [];
+    var DPIEthnicityValues = [];
+    var PIEthnicityValues = [];
+    var PIGenderDefaultValues = [];
+    var DPIGenderValues = [];
+    var PIGenderValues = [];
+    var PILicenseStatesDefaultValues = [];
+    var DPILicenseStatesValues = [];
+    var PILicenseStatesValues = [];
+    var PIDDefaultValues = [];
+    var DPIDvalue = [];
+    var PIDvalues = [];
+    var PILicenseYearDefaultValues = [];
+    var DPILicenseYearValues = [];
+    var PILicenseYearValues = [];
+
+    var LicencseYear;
+    var LicencseState;
+    var Ethnic;
+    var Gender;
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $(document).ready(function () {
+
+            $(document).ajaxStart(function () {
+                $('#wait').show();
+            });
+            $(document).ajaxStop(function () {
+                $('#wait').hide();
+            });
+
+            $(document).ajaxError(function () {
+                $("#wait").show();
+            });
+            GetUserDemographicInfo();
+
+
+
+            $(".license").click(function () {
+                if (document.getElementById('licenseYes').checked) {
+                    $("#PIC").show();
+                }
+                else {
+                    $("#PIC").hide();
+                }
+
+            });
+            $(".currentlystudent").click(function () {
+                if (document.getElementById('currentlyYes').checked) {
+                    $("#schoolnur").show();
+                }
+                else {
+                    $("#schoolnur").hide();
+                }
+
+            });
+        });
+    });
+    function OnSubmitClick() {
+
+
+        var list = new Array();
+        list.push("DEGREE" + ":" + ($("input[name='Stu']:radio:checked").val() == "no" ? "" : $("input[name='chklistitem2']:radio:checked").val()));
+        list.push("GENDERCODE" + ":" + $(".gender option:selected").val());
+        list.push("ETHNICITYCODE" + ":" + $(".ethnicity option:selected").val());
+        list.push("STATECODE" + ":" + ($("input[name='Boolean']:radio:checked").val() == "no" ? "" : $(".state option:selected").val()));
+        list.push("Comments" + ":" + ($("input[name='Boolean']:radio:checked").val() == "no" ? "" : $('.licenseNumber').val()));
+        list.push("LICENSEYAER" + ":" + ($("input[name='Boolean']:radio:checked").val() == "no" ? "" : $('.licenseYear').val()));
+
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/SaveDemographic",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                data: JSON.stringify(list),
+                type: "POST",
+                success: function (data, status, xhr) {
+                    window.location = "/my-account/my-personal-benefits";
+                }
+            });
+    }
+
+    function GetUserDemographicInfo() {
+        $.ajax(
+            {
+
+                url: "/AccountProfessionalInformationContiBlock/GeUserDemographicInformation",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    BindProfessionalInfoLicenseYear();
+                }
+            });
+    }
+
+    function BindProfessionalInfoEthnicity() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/GetProfessionalInfoEthnicity",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    // debugger;
+                    var obj = JSON.parse(data.Result);
+                    $('#Ethnicity').empty();
+                    var listItems = '';
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        listItems += "<option class = 'profes Ethnicity' value='" + obj.PositionDescription.PositionDescr[i]["Code"] + "'>" + obj.PositionDescription.PositionDescr[i]["Description"] + "</option>";
+
+                    }
+
+                    $('#Ethnicity').html(listItems);
+
+                    $('#Ethnicity').val(data.PCheck);
+                    BindProfessionalInfoGender();
+                }
+
+            });
+
+    }
+    function BindProfessionalInfoGender() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/GetProfessionalInfoGender",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    // debugger;
+                    var obj = JSON.parse(data.Result);
+
+                    var listItems = '';
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        listItems += "<option class = 'profes Gender' value='" + obj.PositionDescription.PositionDescr[i]["Code"] + "'>" + obj.PositionDescription.PositionDescr[i]["Description"] + "</option>";
+
+                    }
+                    $('#Gender').removeData();
+                    $('#Gender').html(listItems);
+
+                    $('#Gender').val(data.PCheck);
+                }
+
+
+            });
+
+
+    }
+    function BindProfessionalInfoRNLicenseState() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/GetProfessionalInfoRNLicenseState",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    // debugger;
+                    var obj = JSON.parse(data.Result);
+                    $('#RNLState').empty();
+                    var listItems = '';
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        listItems += "<option class = 'profes State' value='" + obj.PositionDescription.PositionDescr[i]["Subcode"] + "'>" + obj.PositionDescription.PositionDescr[i]["Description"] + "</option>";
+
+                    }
+                    //debugger;
+                    $('#RNLState').html(listItems);
+
+                    $('#RNLState').val(data.PCheck);
+                    BindProfessionalInfoDegree();
+
+                }
+
+            });
+    }
+    function BindProfessionalInfoDegree() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/GetProfessionalInfoDegree",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.Result);
+                    $('#degree').empty();
+                    var table = $('<table class=table_width ID="ProfessionalInfo"></table>');
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        table.append("<tr>"
+                            + "<td class='td_width'>" + "<input type='radio' name='chklistitem2' class='Profd Radiobutton-style' value=" + obj.PositionDescription.PositionDescr[i]["Code"] + " id=chllist" + obj.PositionDescription.PositionDescr[i]["Code"] + " />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Code"] + " id = lbl" + obj.PositionDescription.PositionDescr[i]["Code"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"].replace('â€™', "'") + "</td>");
+
+                    }
+
+                    $('#degree').html(table);
+
+                    $("input[name='" + "chklistitem2" + "'][value='" + data.PCheck + "']").prop('checked', true);
+                    if (data.PCheck != "") {
+                        $("input[name='" + "Stu" + "'][value='" + "yes" + "']").prop('checked', true);
+                        $("#schoolnur").show();
+                    }
+                    BindProfessionalInfoEthnicity();
+
+                    if (!(document.getElementById('currentlyYes').checked)) {
+                        (document.getElementById('currentlyNo').checked) = true;
+                    }
+                }
+
+            });
+    }
+    function BindProfessionalInfoLicenseYear() {
+
+        $.ajax(
+            {
+                url: "/AccountProfessionalInformationContiBlock/GetProfessionalInfoLicenseYear",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+
+                    dataYear = (data.Result);
+                    $('#Year').empty();
+                    var listItems = '';
+                    listItems += "<option  value=''>---Select---</option>";
+                    for (var i = 0; i < dataYear.length; i++) {
+                        listItems += "<option  value='" + dataYear[i]["Text"] + "'>" + dataYear[i]["Value"] + "</option>";
+
+                    }
+
+                    $('#LNYears').html(listItems);
+                    $('#LNYears').val(data.LicYear);
+                    $('.licenseNumber').val(data.LicenseNumber);
+
+                    $("input[name='" + "Boolean" + "'][value='" + "yes" + "']").prop('checked', true);
+                    $("#PIC").show();
+                    BindProfessionalInfoRNLicenseState();
+
+                    if ($('.licenseYear').val() != null) {
+                        (document.getElementById('licenseYes').checked) = true;
+                        (document.getElementById('licenseNo').checked) = false;
+                        $("#PIC").show();
+                    }
+                    else if ($('.licenseYear').val() == null) {
+                        (document.getElementById('licenseYes').checked) = false;
+                        (document.getElementById('licenseNo').checked) = true;
+                        $("#PIC").hide();
+                    }
+                }
+
+            });
+
+    }
+
+
+
+</script>
+<div id="wait" class="e-spinner e-spinner" data-loading-spinner="">
+    <svg class="e-spinner__spinner" width="96px" height="96px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;">
+        <circle cx="50" cy="50" fill="none" stroke="#009cde" stroke-width="5" r="32" stroke-dasharray="150.79644737231007 52.26548245743669" transform="rotate(354.079 50.0002 50.0002)">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+        </circle>
+    </svg>
+</div>
+
+<div class="c-account__section">
+
+    <h4 class="sub_title">Professional Information (Continued)</h4>
+    <div>
+        <div class="form-group">
+
+            <span class="e-form__label">Have you been licensed as an RN for the first time ever within the last five years?:</span>
+            <div>
+                <input type="radio" name="Boolean" value="yes" class="Profd Radiobutton-style license e-richtext" id="licenseYes" /> Yes
+            </div><div style="clear:both;height:6px"> </div>
+            <div>
+                <input type="radio" name="Boolean" value="no" class=" Profd Radiobutton-style license e-richtext" id="licenseNo" /> No
+            </div>
+        </div>
+        <div>&nbsp;</div>
+        <div id="PIC" style="display:none">
+            <div>
+                <span>First Year of RN License:</span>
+                <select class="licenseYear" id="LNYears" key="Year"></select>
+            </div>
+            <div>&nbsp;</div>
+            <div>
+                <span>RN License Number:</span>
+                <input class="e-form__label--text licenseNumber" type="text" />
+            </div>
+            <div>&nbsp;</div>
+            <div>
+                <span>RN License State:</span>
+                <select class="e-form__label--select-no-margin state" id="RNLState"></select>
+            </div>
+
+        </div>
+        <div>&nbsp;</div>
+    </div>
+    <div>&nbsp;</div>
+    <div>
+        <div>
+            <span>Are you currently a student in a school of nursing ?</span>
+
+            <div>
+                <input type="radio" name="Stu" value="yes" class="Profd Radiobutton-style currentlystudent e-richtext" id="currentlyYes" /> Yes<br />
+            </div><div style="clear:both;height:6px"> </div><div>
+                <input type="radio" name="Stu" value="no" class="Profd Radiobutton-style currentlystudent e-richtext" id="currentlyNo" /> No
+            </div>
+        </div>
+
+        <div id="schoolnur" style="display:none">
+            <div>
+                <span class="e-form__label">What nursing degree are you pursuing?</span>
+                <div id="degree"></div>
+            </div>
+        </div>
+    </div>
+    <div>&nbsp;</div>
+    <div>
+        <div>
+            <p><span class="e-form__label">The following information is voluntary for reporting purposes only.</span></p>
+        </div>
+
+        <div>
+            <span>Race /Ethnic Identity : </span>
+            <select class="e-form__label--select-no-margin ethnicity" id="Ethnicity"></select>
+        </div>
+        <div>&nbsp;</div>
+        <div>
+
+            <span>Gender :  </span>
+
+            <select class="e-form__label--select-no-margin gender right" id="Gender"></select>
+        </div>
+
+        <div>&nbsp;</div>
+    </div>
+
+    <div class="form_save">
+        <br />
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" id="Savecontinue" onclick="OnSubmitClick()" value="Save & Continue" data-submit-address="">
+
+    </div>
+</div>

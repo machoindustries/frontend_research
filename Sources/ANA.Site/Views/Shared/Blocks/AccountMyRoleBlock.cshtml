@@ -1,0 +1,16 @@
+﻿@model ANA.Site.Models.Blocks.AccountMyRoleBlock
+
+<div class="c-account__section">
+    <h4 class="c-account__title"> @Html.PropertyFor(m => m.Heading)</h4>
+    <div class="grid grid--full">
+        <div class="grid__item seven-eighths">
+            <p class="c-account__text c-account__text--no-margin"> @Html.PropertyFor(m => m.Roles)</p>
+        </div>
+        <div class="grid__item one-eighth text-right">
+            <a href="#">edit</a>
+        </div>
+    </div>
+    <div>
+        @Html.PropertyFor(m => m.NoResultsMessage)
+    </div>
+</div>

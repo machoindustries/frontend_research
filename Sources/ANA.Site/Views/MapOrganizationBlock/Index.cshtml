@@ -1,0 +1,218 @@
+﻿@using EPiServer.Find.Helpers
+@using ANA.Site.Business.Enums;
+@model ANA.Site.Models.ViewModels.MapViewModel
+
+@{ 
+    string dnwldBttnText = String.Empty;
+    if (Model != null && Model.CurrentBlock != null)
+    {
+        switch (Model.CurrentBlock.SelectOrganization)
+        {
+            case MapOrganizationEnum.Pathway:
+                dnwldBttnText = "DOWNLOAD PATHWAY ORGANIZATIONS";
+                break;
+            case MapOrganizationEnum.Magnet:
+                dnwldBttnText = "DOWNLOAD MAGNET FACILITIES";
+                break;
+            case MapOrganizationEnum.Accredited:
+                dnwldBttnText = "DOWNLOAD ACCREDITED ORGANIZATIONS";
+                break;
+            default:
+                dnwldBttnText = String.Empty;
+                break;
+
+        }
+    }
+}
+
+@* Fix for DT2-144 *@
+<style>
+    div.gm-style > div {
+        cursor: pointer !important;
+    }
+</style>
+
+<section class="grid__item" data-require="./src/views/map-page-view" data-map-page-type="@Model.CurrentBlock.SelectOrganization.ToLowerCaseUnderscoreString()">
+    <div class="grid grid--center">
+        <div class="grid__item">
+            <div class="e-org-filters">
+                @if (Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Pathway || Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Magnet || Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Accredited)
+                {
+                    <div style="margin-left:40%;">
+                        @Html.ActionLink(dnwldBttnText, "DownloadFormatMapData", "MapOrganizationBlock", new { type = @Model.CurrentBlock.SelectOrganization }, new { @class = "e-button--blue",@style="width:40%;" })
+                    </div>
+                }
+                <div class="grid">
+                    @if (Model.CurrentBlock.SelectOrganization != MapOrganizationEnum.State)
+                    {
+                        <div class="grid__item one-whole large--one-third" data-location-filter-container="">
+                            <label class="e-form__label e-form__label--select" data-formfield>
+                                <select class="e-form__input e-form__input--select" data-location-filter-inusa="" id="InUSA" name="InUSA">
+                                    <option value="USA">USA</option>
+                                    <option value="INT">International</option>
+                                </select>
+                            </label>
+                        </div>
+                    }
+                 
+                    <div class="e-org-filters__item grid__item one-whole large--one-third" data-location-filter-container="">
+                        <label class="e-form__label e-form__label--select" for="org-filter-state" data-formfield>
+                            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.StateList, new { @class = "e-form__input e-form__input--select", data_location_filter_state = "" })
+                        </label>
+                    </div>
+
+                    @if (Model.CurrentBlock.SelectOrganization != MapOrganizationEnum.State)
+                    {
+                        <div class="grid__item one-whole large--one-third" data-location-filter-container="" style="display: none;">
+                            <label class="e-form__label e-form__label--select" data-formfield>
+                                @Html.DropDownListFor(m => m.Country, (List<SelectListItem>)ViewBag.CountryList, new { @class = "e-form__input e-form__input--select", data_location_filter_country = "" })
+                            </label>
+                        </div>
+                    }
+
+                    @* Part of DT2-257 *@
+
+                    @if (Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Accredited)
+                    {
+                        <div class="grid__item one-whole large--one-third">
+                            <label class="e-form__label e-form__label--select">
+                                <select class="e-form__input e-form__input--select" data-location-filter-type="">
+                                    <option value="">All Types</option>
+                                    <option value="@MapOrganizationAccreditation.ProviderFlag">Providers</option>
+                                    <option value="@MapOrganizationAccreditation.ApproverFlag">Approvers</option>
+                                    @*DT2-800 REMOVE Joint Accreditation Providers from the Accreditation type drop-down and map results.*@
+                                    @*<option value="@MapOrganizationAccreditation.JointFlag">Joint Accreditation Providers</option>*@
+                                    <option value="@MapOrganizationAccreditation.PTAPFlag">Practice Transition Accreditation Program (PTAP)</option>
+                                    @*ADO 17332 xni Add APPFA to the Accreditation type drop-down and map results.*@
+
+                                    <option value="@MapOrganizationAccreditation.APPFAFlag">Advanced Practice Provider Fellowship Accreditation (APPFA)</option>
+                                </select>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="e-map">
+        <div class="e-map__map" data-map>
+            <p>Loading map&hellip;</p>
+        </div>
+    </div>
+    <div class="grid grid--center">
+        @if (Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.State)
+        {
+            <div class="grid__item one-whole large--eight-twelfths" data-location-results-container style="display: none;">
+                <div class="e-state-org-item grid" data-location-results-output>
+                    <div class="grid__item one-whole">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__name" data-location-results-name>Organisation name</h3>
+                            <a href="#" target="_blank" class="e-state-org-item__map-link" data-view-on-map-link>View on map</a>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">Key Personnel:</h3>
+                            <ul class="e-state-org-item__info-list" data-location-results-key-personnel>
+                                <li class="e-state-org-item__info-list-item">N/A</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">Address:</h3>
+                            <ul class="e-state-org-item__info-list" data-location-results-address>
+                                <li class="e-state-org-item__info-list-item">Address line one</li>
+                                <li class="e-state-org-item__info-list-item">Address line two</li>
+                                <li class="e-state-org-item__info-list-item">Address line three</li>
+                                <li class="e-state-org-item__info-list-item">State</li>
+                                <li class="e-state-org-item__info-list-item">Zip Code</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">Web:</h3>
+                            <a href="#" class="e-state-org-item__info-item e-state-org-item__info-item--link" data-location-results-website>organisation.com</a>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">Phone:</h3>
+                            <a href="tel:#" class="e-state-org-item__info-item e-state-org-item__info-item--link" data-location-results-phone></a>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">Email:</h3>
+                            <a href="mailto:#" class="e-state-org-item__info-item e-state-org-item__info-item--link" data-location-results-email></a>
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole large--one-half">
+                        <div class="e-state-org-item__section">
+                            <h3 class="e-state-org-item__info-title">&nbsp;</h3>
+                            <div class="e-state-org-item__info-item" data-location-results-comments></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Accredited)
+        {
+            <div class="grid__item one-whole large--three-quarters" data-location-results-container style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name of organization</th>
+                            <th>Address</th>
+                            <th>Website</th>
+                            <th>Accreditation type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody data-location-results-output></tbody>
+                </table>
+            </div>
+        }
+
+
+
+        @if (Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Magnet || Model.CurrentBlock.SelectOrganization == MapOrganizationEnum.Pathway)
+        {
+
+
+            <div class="grid__item one-whole large--three-quarters" data-location-results-container style="display: none;">
+
+                
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name of organization</th>
+                            <th>Address</th>
+                            <th>Designation Year</th>
+                            <th>Redesignation Years</th>
+                        </tr>
+                    </thead>
+                    <tbody data-location-results-output></tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+
+<script>
+
+    @*$.ajax({
+        url: '@Url.Action("DownloadFormatMapData", "MapOrganizationBlock")',
+        data: { type: @Model.CurrentBlock.SelectOrganization  },
+        type: "GET",
+        success: function (data) {
+
+
+        }*@
+
+
+</script>

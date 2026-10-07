@@ -1,0 +1,78 @@
+@using ANA_HNHN.Models.Pages.Base
+@using Brightfind.Helper
+@model ANA_HNHN.Models.ViewModels.IPageViewModel<BasePageData>
+@{
+    var socialMediaLinks = Model.Layout.SocialMediaLinks;
+    var footerLogo = Model.Layout.FooterLogo;
+}
+<footer>
+    <div class="container">
+        <div class="row footer__nav">
+            <div class="col-md-4 pe-auto pe-md-5">
+                @if (footerLogo != null)
+                {
+                    <a href="@Url.ContentUrl(footerLogo.Button.ButtonLink)" aria-label="@footerLogo.Button.ButtonText" target="@footerLogo.Button.ButtonTarget">
+                        @{
+                            var imageUrl = MediaHelper.GetUrl(footerLogo.Image);
+                            var altText = MediaHelper.GetImageAltText(footerLogo.Image);
+                        }
+                        <img loading="lazy" src="@imageUrl" alt="@altText">
+                    </a>
+                }
+                <p>
+                    @if (Model.Layout.FooterCta != null)
+                    {
+                        <a class="btn btn-primary" href="@Url.ContentUrl(Model.Layout.FooterCta.ButtonLink)" target="@Model.Layout.FooterCta.ButtonTarget">@Model.Layout.FooterCta.ButtonText</a>
+                    }
+                </p>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    @if (Model.Layout.FooterNavigation != null && Model.Layout.FooterNavigation.Any())
+                    {
+                        @foreach (var menuItem in Model.Layout.FooterNavigation)
+                        {
+                            <div class="col-6 col-lg mt-4 mt-lg-0">
+                                <strong>@menuItem.Text</strong>
+                                <ul>
+                                    @if (menuItem.SubItems != null && menuItem.SubItems.Any())
+                                    {
+                                        @foreach (var child in menuItem.SubItems)
+                                        {
+                                            <li>
+                                                <a href="@child.Href" target="@child.Target">@child.Text</a>
+                                            </li>
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row footer__bottom">
+            <div class="col-md order-2 order-md-1 footer__utility-nav">
+                @Html.Raw(Model.Layout.CopyrightInformation)
+            </div>
+            <div class="col-md-auto order-1 order-md-2 mb-4 mb-md-0 footer__social-links">
+                <ul>
+                    @if (socialMediaLinks != null && socialMediaLinks.Any())
+                    {
+                        foreach (var links in socialMediaLinks)
+                        {
+                            var icons = MediaHelper.GetUrl(links.Image);
+                            var altText = MediaHelper.GetImageAltText(links.Image);
+                            <li>
+                                <a href="@links.Button.ButtonLink" aria-label="@links.Button.ButtonText" target="@links.Button.ButtonTarget">
+                                    <img src="@icons" alt="@altText" />
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>

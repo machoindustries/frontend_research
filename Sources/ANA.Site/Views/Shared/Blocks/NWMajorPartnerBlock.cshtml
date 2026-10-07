@@ -1,0 +1,44 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using ANA.Site
+@using Geta.Optimizely.Extensions
+
+@model CDCPartnersBlock
+
+@{
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+}
+
+
+<div class="grid-constraint">
+    <div class="grid">
+        <div class="grid__item one-whole large--two-thirds pad--large--one-third">
+            <div class="e-major-partner-grid__heading">
+                @Html.PropertyFor(i => i.Heading)
+            </div>
+            <div class="e-major-partner-grid @Model.GetCssClass()">
+                @if (Model.Partners.HasContent())
+                {
+                    var logos = Model.Partners.FilteredItems.Select(i => i.LoadContent()).OfType<LogoBlock>();
+                    foreach (var logo in logos)
+                    {
+                        <div>
+                            @if (logo.LogoLink != null)
+                            {
+                            <a href="@logo.LogoLink.GetFriendlyUrl()">
+                                @Html.PropertyFor(i => logo.Logo)
+                            </a>
+                            }
+                            else
+                            {
+                            @Html.PropertyFor(i => logo.Logo)
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+</div>
+</div>

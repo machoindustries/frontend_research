@@ -1,0 +1,50 @@
+// Standalone chevron
+//
+// Replaces /assets/img/vector-arrow.svg, which was referenced by the resource
+// filters and the mobile search/filter toggles but never existed in the repo —
+// it 404'd on the live site (backlog item 26).
+//
+// The carousel already drew a chevron from a rotated border box, but that rule
+// is scoped to `.resource-carousel .slide-arrow` and does nothing elsewhere.
+// The same geometry is reproduced here unscoped so the filter toggles can use
+// it. The carousel's rules are more specific and continue to win, so its arrows
+// are unaffected.
+//
+// Direction is set by a modifier. The default points down, matching how the old
+// arrow asset was used; `.flip-icon` / `.flip-search-icon` rotate the element
+// 180deg to point it up, which is what filter-resources.js toggles.
+
+.chevron {
+    display: inline-block;
+    // the toggles are clickable; keep the hit area from collapsing
+    line-height: 1;
+
+    &::before {
+        border-color: #CF4520;
+        border-style: solid;
+        border-width: 0.25rem 0.25rem 0 0;
+        content: '';
+        display: inline-block;
+        height: 0.6rem;
+        position: relative;
+        transform: rotate(135deg);
+        vertical-align: middle;
+        width: 0.6rem;
+    }
+
+    &.up::before {
+        transform: rotate(-45deg);
+    }
+
+    &.down::before {
+        transform: rotate(135deg);
+    }
+
+    &.left::before {
+        transform: rotate(-135deg);
+    }
+
+    &.right::before {
+        transform: rotate(45deg);
+    }
+}

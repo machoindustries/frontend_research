@@ -1,0 +1,42 @@
+---
+style: 'gold-background-blue-hover'
+heading: 
+  header: "FEATURED RESOURCES"
+card:
+  -
+    id: "dsklajfwer"
+    card-url: 'x'
+    img-url: "https://picsum.photos/200/300?grayscale"
+    img-alt: 'alt'
+    video-url: "https://www.youtube.com/embed/tgbNymZ7vqY"
+    youtube-img: "./assets/img/youtube-1.svg"
+    taxonomy: "Healthcare Associated Infections"
+    card-header: "What is Project Firstline?"
+  -
+    id: "dsklajfwer"
+    card-url: 'x'
+    img-url: "https://picsum.photos/200/300?grayscale"
+    img-alt: 'alt'
+    download-url: "x"
+    download-img: "./assets/img/download-icon.svg"
+    taxonomy: "Vaccination Safety"
+    card-header: "Core Infection Prevention and Control Practices for Safe Health Practices"
+  -
+    id: "dsklajfwer"
+    card-url: 'x'
+    img-url: "https://picsum.photos/200/300?grayscale"
+    img-alt: 'alt'
+    external-link-url: "https://loremipsum.io/"
+    external-link-img: "./assets/img/external-link.svg"
+    taxonomy: "Infection Basics"
+    card-header: "Control the Spread of Delta"
+  -
+    id: "dsklajfwer"
+    card-url: 'x'
+    img-url: "https://picsum.photos/200/300?grayscale"
+    img-alt: 'alt'
+    external-link-url: "https://loremipsum.io/"
+    external-link-img: "./assets/img/external-link.svg"
+    taxonomy: "Infection Basics"
+    card-header: "Control the Spread of Delta"
+

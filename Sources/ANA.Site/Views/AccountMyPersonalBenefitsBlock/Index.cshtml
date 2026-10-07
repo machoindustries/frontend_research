@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "PersonalBenfits";
+}
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<link href="~/Styles/MyAccount_PI.css" rel="stylesheet" />
+<link href="~/assets/css/screen.css" rel="stylesheet" />
+<script type="text/javascript">
+    var selectedvalue = 0;
+    var catexselect = 0;
+    var cateyselect = 0;
+    var spixselect = 0;
+    var spiyselect = 0;
+    var caspxselect = 0;
+    var caspyselect = 0;
+    var EmpHeader = '';
+    var PageHeader = '';
+    var MPBdefaultvalues = '';
+    var MPBvalues = [];
+    var MPBNewvalue = [];
+    var DMPBvalue = [];
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $(document).ready(function () {
+
+            $(document).ajaxStart(function () {
+                $('#wait').show();
+            });
+            $(document).ajaxComplete(function () {
+                $('#wait').hide();
+            });
+            BindData();
+
+
+
+        });
+    });
+
+    function BindData() {
+
+        $.ajax(
+            {
+                url: "/AccountMyPersonalBenefitsBlock/GetPersonalBenefits",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+
+
+
+                    var obj = JSON.parse(data);
+                    $('#mpb').empty();
+                    var table = $('<table class="mpb_width" ID="PersonalBenfits"></table>');
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+                        table.append("<tr>"
+                            + "<td class = 'mpb_tablewidth'>" + "<input type='checkbox' class = 'Checkbox-style' name='chklistitem' value=" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + " id = lbl" + obj.PositionDescription.PositionDescr[i]["Subcode"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"] + "</td>"
+                            + "</tr>");
+                    }
+
+                    $('#mpb').html(table);
+                    $("input:checkbox").change(function () {
+                        var ischecked = $(this).is(':checked');
+                        var Description = $("#lbl" + $(this).val()).text();
+                        if (!ischecked) {
+                            if (isExist(MPBdefaultvalues.PositionDescription.PositionDescr, $(this).val())) {
+                                var item = {}
+                                item["Description"] = Description;
+                                item["Subcode"] = $(this).val();
+                                DMPBvalue.push(item);
+                            }
+
+                        }
+                        else if (ischecked) {
+                            for (var idel = 0; idel < DMPBvalue.length; idel++) {
+                                if (DMPBvalue[idel] == $(this).val()) {
+                                    DMPBvalue.splice(idel, 1);
+                                }
+                            }
+
+                            var item = {}
+                            item["Description"] = Description;
+                            item["Subcode"] = $(this).val();
+                            MPBvalues.push(item);
+
+                        }
+                    });
+                    $.ajax(
+                        {
+                            url: "/AccountMyPersonalBenefitsBlock/CheckPersonalBenefits",
+                            contentType: 'application/json; charset=utf-8',
+                            datatype: 'json',
+                            type: "POST",
+                            success: function (data, status, xhr) {
+                                var objcheck = JSON.parse(data);
+                                MPBdefaultvalues = objcheck;
+
+                                if (typeof objcheck.PositionDescription.PositionDescr != "undefined") {
+                                    for (var check = 0; check < objcheck.PositionDescription.PositionDescr.length; check++) {
+                                        var subcode = objcheck.PositionDescription.PositionDescr[check].OptionShortSubName
+
+                                        $("input[name='" + "chklistitem" + "'][value='" + subcode + "']").prop('checked', true);
+
+                                    }
+                                }
+
+                            }
+                        });
+
+                    function isExist(arr, str) {
+                        for (var i = 0; i < arr.length; i++) {
+                            if (arr[i].OptionShortSubName === str) {
+
+
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                    $('.form_save').show();
+                }
+            });
+
+    }
+
+    function SaveFormData() {
+
+        callProxy("/AccountMyPersonalBenefitsBlock/DeletePersonalBenefits", DMPBvalue);
+
+        callProxy("/AccountMyPersonalBenefitsBlock/SavePersonalBenefits", MPBvalues);
+
+        window.location = "/my-account/subject-matter-expertise";
+
+
+    }
+
+
+    //Ajax call: pass the URL and data that should be posted.
+    //Dt: 12/28/2017
+    function callProxy(url, value) {
+        $.ajax(
+            {
+                url: url,
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                data: JSON.stringify(value),
+                type: "POST",
+                success: function (data, status, xhr) {
+
+                }
+            });
+    }
+
+</script>
+<div id="wait" class="e-spinner e-spinner" data-loading-spinner="">
+    <svg class="e-spinner__spinner" width="96px" height="96px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;">
+        <circle cx="50" cy="50" fill="none" stroke="#009cde" stroke-width="5" r="32" stroke-dasharray="150.79644737231007 52.26548245743669" transform="rotate(354.079 50.0002 50.0002)">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+        </circle>
+    </svg>
+</div>
+
+<div class="c-account__section">
+
+    <h4 class="sub_title">My Personal Benefits</h4>
+
+
+    <div class="checkbox1">
+        <p><strong><span class="color">Which ANA Personal benefits areas of interest to you? Check all that apply:</span></strong></p>
+
+    </div>
+    <div class="checkbox">
+        <div id="mpb">
+        </div>
+    </div>
+
+    <div class="form_save" style="display:none;">
+        <br />
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" id="Savecontinue"
+               onclick="SaveFormData()" value="Save & Continue" data-submit-address="">
+
+    </div>
+
+
+</div>

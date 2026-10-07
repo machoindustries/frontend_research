@@ -1,0 +1,24 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model ContentArea
+
+@{
+    var blocks = Model.FilteredItems.Select(i => i.LoadContent());
+}
+
+@foreach (var block in blocks)
+{
+    if (block is ButtonBlock)
+    {
+        var button = block as ButtonBlock;
+        <a class="button-link cell shrink mt-1" href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame" title="@button.Text">
+            <div>@button.Text</div>
+        </a>
+    }
+    else if (block is CDCRegisterButtonBlock)
+    {
+        var button = block as CDCRegisterButtonBlock;
+        await Html.RenderPartialAsync("CDCRegisterButtonBlock", button);
+    }
+}

@@ -1,0 +1,150 @@
+﻿@using ANA.Site.Models.Commerce.Products
+@using EPiServer.Editor
+@using ANA.Site.Models.ViewModels
+@model AnaCategoryViewModel
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+<div data-require="./src/views/product-listing-view">
+
+    <div class="c-container-block c-container-block--heading b-vst--medium b-vsb--large">
+        <div class="grid-constraint">
+            <div class="grid grid--center">
+                <div class="grid__item one-whole">
+                    <h1 class="c-container-block__heading c-container-block__heading--lines c-container-block__heading--large">
+                        <span>@Html.PropertyFor(x => x.CurrentPage.Heading)</span>
+                    </h1>
+                </div>
+                @if (Model.CurrentPage.IntroText != null
+                 && !Model.CurrentPage.IntroText.IsEmpty
+                 && Model.CurrentPage.IntroText.ToString().Length > 0
+                 || ContentHelper.PageIsInEditMode())
+                {
+                    <div class="c-container-block__intro grid__item one-whole medium--eight-twelfths">
+                        <div class="e-richtext">
+                            @Html.PropertyFor(x => x.CurrentPage.IntroText)
+                        </div>
+                    </div>
+                }
+
+                @* DTX-2 - Sitewide Ad Zone *@
+                @{
+                    var leaderboardAd = ANA.Site.Business.Helpers.SettingsHelper.GetLeaderboardAd();
+                    if (!string.IsNullOrWhiteSpace(leaderboardAd))
+                    {
+                        <div class="dynamic-ad-container dynamic-ad-container-leaderboard">
+                            @Html.Raw(leaderboardAd)
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        @Html.PropertyFor(x => x.CurrentPage.Adverts, new { CssClass = "content-area" })
+        @Html.PropertyFor(x => x.CurrentPage.FeaturedProducts, new { CssClass = "content-area" })
+
+        <div class="grid-constraint">
+
+            <div class="grid">
+                <div class="grid__item one-whole" data-require="./src/views/filter-view">
+
+                    <h2 class="c-product-search-form__title">
+                        <span class="c-product-search-form__title-copy--desktop">@Html.Translate("/productlisting/filterby")</span>
+                        <span class="c-product-search-form__title-copy--mobile">@Model.TotalResults @Html.Translate("/productlisting/results")</span>
+                    </h2>
+                    <form method="GET" action="#FilterForm" class="c-product-search-form" data-require="./src/views/form-view" id="FilterForm" data-filter-form="">
+
+                        <div class="grid">
+                            <div class="grid__item one-whole medium--five-twelfths">
+                                @if (Model.CurrentPage.FilterCategories == null || !Model.CurrentPage.FilterCategories.Any())
+                                {
+                                    <label for="listing-search" class="e-form__label e-form__label--text">
+                                        <input type="text" name="q" id="listing-search"
+                                               class="e-form__input e-form__input--text"
+                                               placeholder="@Html.Translate("/productlisting/typehere")"
+                                               data-formfield-text
+                                               value="@Model.SearchQuery"
+                                               data-filter-search-field="" />
+                                        <span class="c-product-search-form__input-label">@Html.Translate("/productlisting/searchbykeyword")</span>
+                                        <button type="submit" class="c-product-search-form__button"></button>
+                                    </label>
+                                }
+                                else
+                                {
+                                    var listOptions = Model.CurrentPage.FilterCategories.Select(x => x.Equals("*") ? new SelectListItem { Text = "All Results", Value = string.Empty } : new SelectListItem { Text = x, Value = x, Selected = x.Equals(Model.CurrentPage.DefaultFilter ?? string.Empty) }).ToList();
+                                    if (!Model.CurrentPage.HideAllResultsFilter)
+                                    {
+                                        listOptions.Insert(0, new SelectListItem { Text = "All Results", Value = string.Empty, Selected = !listOptions.Any(x => x.Selected) });
+                                    }
+                                    if (!listOptions.Any(x => x.Selected))
+                                    {
+                                        var opt = listOptions.FirstOrDefault(x => x.Value.Equals(string.Empty));
+                                        if (opt != null)
+                                        {
+                                            opt.Selected = true;
+                                        }
+                                    }
+                                    <label class="e-form__label e-form__label--select" for="@Html.IdFor(p => p.Filter)">
+                                        <span class="e-form__label-text">@Html.Translate("/productlisting/filterby")</span>
+                                        @Html.DropDownListFor(m => m.Filter, listOptions, new { @class = "e-form__input e-form__input--select", onchange = @"form.submit();" })
+                                    </label>
+                                }
+                            </div>
+                            <div class="grid__item one-whole medium--one-twelfth c-product-search-form__results">
+                                <div class="c-product-search-form__results-count">
+                                    <span class="c-product-search-form__results-count-text">@Model.TotalResults @Html.Translate("/productlisting/results")</span>
+                                </div>
+                            </div>
+                            <div class="grid__item one-whole medium--three-twelfths">
+                                <label class="e-form__label e-form__label--select" for="@Html.IdFor(p => p.ResultPage)">
+                                    <span class="e-form__label-text">@Html.Translate("/NewsListPage/ResultsPerPage")</span>
+                                    @Html.DropDownListFor(m => m.ResultPage, (List<SelectListItem>)ViewBag.ResultList, new { @class = "e-form__input e-form__input--select", onchange = @"form.submit();", data_results_per_page = "" })
+                                </label>
+                            </div>
+                            <div class="grid__item one-whole medium--three-twelfths">
+                                <label class="e-form__label e-form__label--select e-form__label--select-no-margin" for="@Html.IdFor(p => p.SortBy)">
+                                    <span class="e-form__label-text">@Html.Translate("/NewsListPage/SortBy")</span>
+                                    @Html.DropDownListFor(m => m.SortBy, (List<SelectListItem>)ViewBag.SortByList, new { @class = "e-form__input e-form__input--select", onchange = @"form.submit();", data_sort_by = "" })
+                                </label>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="content-area">
+            <div class="block containerblock">
+                <div class="c-container-block">
+                    <div class="grid-constraint">
+                        <div class="c-container-block__content grid grid--flex">
+                            @{
+                                int totalItemsOnPreviousPages = Model.ResultPage * (Model.Paging.PageNumber - 1);
+                                int index = 0;
+                            }
+                            @foreach (var item in Model.Listings)
+                            {
+                                var firstVariant = item.VariantsModel.Where(x => x != null).OrderBy(x => x.DiscountedPrice).FirstOrDefault();
+                                if (firstVariant != null)
+                                {
+                                    <div class="block grid__item one-whole small--one-half medium--one-third large--one-quarter">
+                                        @{
+                                            string partialName = item.Product is CertificationProduct ? "_CertificationProduct" : "_Product";
+                                        }
+                                        @{ await Html.RenderPartialAsync(partialName, item, new ViewDataDictionary(ViewData) { { "listingIndex", totalItemsOnPreviousPages + index } }); }
+                                    </div>
+                                }
+                                index++;
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.Listings != null && Model.Listings.Any())
+        {
+            await Html.RenderPartialAsync("Pagination", Model.Paging);
+        }
+        @Html.PropertyFor(x => x.CurrentPage.Blocks, new { CssClass = "content-area" })
+
+    </div>
+</div>

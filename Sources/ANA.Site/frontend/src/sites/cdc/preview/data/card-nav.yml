@@ -1,0 +1,26 @@
+---
+card:
+-
+  background: "./assets/img/orange-rec.svg"
+  image: "./assets/img/Alt3.PNG"
+  alt: "alt3 image"
+  title: "Training & Courses"
+  content: "A free, comprehensive online course curriculum to expand your knowledge on IPC guidelines, COVID-19 precautions, and best practices."
+  url: "x"
+  url-caption: "Review the catalog"
+-
+  background: "./assets/img/green-rec.svg"
+  image: "./assets/img/Alt1.PNG"
+  alt: "alt1 image"
+  title: "On-the-Go Resources"
+  content: "Gain practical tips on the go with 2-10 minutes videos from CDC expert Dr. Michael Bell. Topics include the ins and outs of PPE, tips to reduce transmission, and an introduction to Project Firstline."
+  url: "x"
+  url-caption: "See the resources"
+-
+  background: "./assets/img/blue-rec.svg"
+  image: "./assets/img/Alt2.PNG"
+  alt: "alt2 image"
+  title: "Learn More"
+  content: "Project Firstline is a collaborative effort led by the CDC, with ANA, to bring together diverse health care and public health collaborators to provide infection control training."
+  url: "x"
+  url-caption: "About Project Firstline"

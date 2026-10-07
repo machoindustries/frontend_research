@@ -1,0 +1,144 @@
+.jump-nav {
+  width: 100%;
+  position: sticky;
+  top: 0px;
+  left: 0;
+  background-color: white;
+  z-index: 99;
+  padding: 1rem 0;
+  border-bottom: 1.5px solid $font-dark-blue2;
+  margin-bottom: -1px; // make bottom border overlap with top border on the next component
+
+  #jump-nav-expand {
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    color: #27a9e1;
+    font-weight: 800;
+    margin: 0;
+    padding: 0;
+
+    h5 {
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+
+    &:after {
+      content: "\F103";
+
+      position: absolute;
+      right: 0;
+      top: 0.5rem;
+      font-size: 2em;
+      font-family: icons;
+      height: 2rem;
+      width: 2rem;
+      display: inline;
+      font-weight: 900;
+      color: $logo-blue;
+      margin-right: 0.6rem;
+      transition: transform 300ms ease-in-out;
+      margin-bottom: 0.25rem;
+    }
+
+
+    @include breakpoint(large up) {
+      cursor: initial;
+      color: inherit;
+
+      h5 {
+        margin-bottom: 1rem;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+  }
+
+  .jump-links {
+    display: none;
+    background-color: $white;
+    padding: 1rem 0 0;
+    width: 100%;
+
+
+    > a.nav-arrow-link {
+      display: block;
+      flex: 0 0 0;
+      text-align: left;
+      margin-left: 0;
+      margin-right: 2rem;
+      margin-bottom: .5rem;
+      white-space: nowrap;
+      color: #27a9e1;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:before {
+        content: "\F103";
+        font-size: 1em;
+        font-family: icons;
+        height: 1rem;
+        width: 1rem;
+        display: inline;
+        font-weight: 900;
+        color: $logo-blue;
+        margin-right: 0.1rem;
+        transition: transform 300ms ease-in-out;
+        margin-bottom: 0.25rem;
+      }
+
+
+      @include breakpoint(large up) {
+        padding: 0;
+      }
+    }
+
+    @include breakpoint(large up) {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      line-height: 1.7rem;
+      width: 85%;
+
+      > div {
+        display: block;
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  &.expanded {
+    #jump-nav-expand {
+      &:after {
+        content: "\F104";
+      }
+    }
+
+    .jump-links {
+      display: block;
+
+      @include breakpoint(large up) {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+    }
+  }
+
+  .jump-back {
+    display: block;
+    text-align: right;
+    width: 15%;
+
+    a.nav-arrow-link {
+      text-align: right;
+      margin-left: auto;
+      margin-right: 0;
+
+     }
+  }
+}

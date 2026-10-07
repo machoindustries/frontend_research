@@ -1,0 +1,5 @@
+﻿@model ANA.Site.Models.CustomerAccountModels.Address
+
+<address>
+    <strong>@Html.Translate("/Shipment/ShippingTo")</strong> @String.Format("{0}, {1} {2}", Model.Address1, Model.ZipCode, Model.City)
+</address>

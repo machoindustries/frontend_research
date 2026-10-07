@@ -1,0 +1,24 @@
+{
+  "selectors": [
+    "*",
+    ".c-footer",
+    ".c-header",
+    ".sticky-wrapper",
+    ":after",
+    ":before",
+    "a",
+    "a:visited",
+    "blockquote",
+    "h1",
+    "h2",
+    "h3",
+    "img",
+    "p",
+    "pre",
+    "thead",
+    "tr"
+  ],
+  "atRules": [],
+  "fontFaces": [],
+  "keyframes": []
+}

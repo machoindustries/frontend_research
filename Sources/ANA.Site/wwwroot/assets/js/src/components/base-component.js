@@ -1,0 +1,1 @@
+import{t}from"../../chunks/eventemitter3-CKbO9so4.js";var s=class extends t{constructor(){super(),this.state={},this.defaultOptions={}}init(t,s){this.$el=t,this.options=Object.assign({},this.defaultOptions,s),this.initChildren(),this.addAriaAttributes(),this.addListeners()}initChildren(){}addAriaAttributes(){}addListeners(){}};export{s as default};

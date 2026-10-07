@@ -1,0 +1,14 @@
+<nav class="{{add-class}}" role="navigation" aria-label="Main Navigation">
+  <h2 class="hide" aria-hidden="true">Main Navigation</h2>
+  
+  <ul>
+    {{#each header.main-nav}}
+      <li>
+        <a href="{{url}}">
+          {{{title}}}
+        </a>
+      </li>
+    {{/each}}
+  </ul>
+    
+</nav>

@@ -1,0 +1,259 @@
+﻿@using ANA_HNHN.Models.Media
+@using Brightfind.Helper
+@using EPiServer.ServiceLocation
+@model ANA_HNHN.Models.ViewModels.PageCollectionBlockViewModel
+@{
+    var backgroundColor = Model.CollectionBlock.Color;
+    if(backgroundColor == "blue")
+    {
+        backgroundColor = "light-blue";
+    }
+}
+
+@switch (Model.CollectionBlock.View)
+{
+    case "ThreePagesandOneFeaturedPage":
+        <section class="page-block page-block--featured bg-@backgroundColor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 page-block__main-intro">
+                        @Html.PropertyFor(m => m.CollectionBlock.IntroContent)
+                    </div>
+                    <div class="col-xl-8">
+                        @{
+                            var currentPage = Model.CollectionItems.FirstOrDefault();
+                            var playButton = currentPage?.DisplayPlayButton;
+                        }
+                        @if (currentPage != null)
+                        {
+                            <article class="page-block--featured-wrap" data-aos="fade-up" data-aos-once="true">
+                                @if (!string.IsNullOrEmpty(currentPage.TeaserImage))
+                                {
+                                    if (playButton ?? false)
+                                    {
+                                        <a class="page-block__image-link page-block__image-link--video" href="@(currentPage.Link)">
+                                            <img loading="lazy" class="page-block__image" src="@currentPage.TeaserImage" alt="@currentPage.TeaserImageAltText">
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="page-block__image-link" href="@(currentPage.Link)">
+                                            <img loading="lazy" class="page-block__image" src="@currentPage.TeaserImage" alt="@currentPage.TeaserImageAltText">
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a class="page-block__image-link" href="@(currentPage.Link)">
+                                        <div class="img-placeholder" arial-label="Image Placeholder"></div>
+                                    </a>
+                                }
+                                <p class="page-block__category"><a href="@(Model.SearchPageUrl)?f=@currentPage.CategoryId">@(currentPage.Category)</a></p>
+                                <h3 class="page-block__title"><a href="@(currentPage.Link)">@currentPage.Title</a></h3>
+                                <div class="page-block__paragraph">@Html.Raw(currentPage.TeaserText)</div>
+                            </article>
+                        }
+                    </div>
+                    <div class="col-xl-4 d-flex flex-column justify-content-between" data-aos="fade-down" data-aos-once="true">
+                        @foreach (var page in Model.CollectionItems.Skip(1).Take(3))
+                        {
+                            <article class="page-block-article">
+                                @if (!String.IsNullOrEmpty(page.ThumbnailImage))
+                                {
+                                    <div class="page-block-article__image-wrap">
+                                        <a href="@(page.Link)">
+                                            <img loading="lazy" class="page-block-article__image" src="@(page.ThumbnailImage)" alt="@(page.ThumbnailImageAltText)" />
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="page-block-article__image-wrap">
+                                        <div class="img-placeholder" arial-label="Image Placeholder"></div>
+                                    </div>
+                                }
+                                <div class="page-block-article__text-wrap">
+                                    @if (!string.IsNullOrEmpty(page.Category))
+                                    {
+                                        <p class="page-block__category"><a href="@(Model.SearchPageUrl)?f=@(page.CategoryId)">@(page.Category)</a></p>
+                                    }
+                                    <h4 class="page-block-article__title"><a href="@(page.Link)">@(page.Title)</a></h4>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                    <div class="col-12 page-block__view-all">
+                        @if (Model.Link != null)
+                        {
+                            <a title="@Model.LinkText" href="@Url.ContentUrl(Model.Link)" target="@Model.LinkTarget">
+                                @Model.LinkText
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+    case "CardCollectionRow":
+        <section class="page-cards page-cards--horizontal bg-@backgroundColor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 page-cards__main-intro">
+                        @Html.PropertyFor(m => m.CollectionBlock.IntroContent)
+                    </div>
+                    <div class="page-cards__slant" aria-hidden="true"></div>
+                    <div class="col page-cards__wrap">
+                        @foreach (var item in Model.CollectionItems)
+                        {
+                            <article>
+                                @if (!string.IsNullOrEmpty(item.TeaserImage))
+                                {
+                                    <img loading="lazy" class="page-cards__image" src="@item.TeaserImage" alt="@item.TeaserImageAltText">
+                                }
+                                else
+                                {
+                                    <div class="img-placeholder" arial-label="Image Placeholder"></div>
+                                }
+                                <h3 class="page-cards__title">@(item.Title)</h3>
+                                <a class="absolute-link" href="@item.Link" aria-label="Article Link"></a>
+                            </article>
+                        }
+                    </div>
+                    <div class="col-12 page-block__view-all">
+                        @if (Model.Link != null)
+                        {
+                            <a title="@Model.LinkText" href="@Url.ContentUrl(Model.Link)" target="@Model.LinkTarget">
+                                @Model.LinkText
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+    case "TwoColumnCardCollection":
+        <section class="page-cards page-cards--vertical bg-@backgroundColor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 page-cards__main-intro">
+                        @Html.PropertyFor(m => m.CollectionBlock.IntroContent)
+                    </div>
+                    <div class="col page-cards__wrap">
+                        @foreach (var item in Model.CollectionItems)
+                        {
+                            <article>
+                                @if (!string.IsNullOrEmpty(item.TeaserImage))
+                                {
+                                    <div>
+                                        <img loading="lazy" class="page-cards__image" src="@item.TeaserImage" alt="@item.TeaserImageAltText">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <div class="img-placeholder" arial-label="Image Placeholder"></div>
+                                    </div>
+                                }
+                                <div>
+                                    @if (!string.IsNullOrEmpty(item.Category))
+                                    {
+                                        <p class="page-block__category"><a href="@(Model.SearchPageUrl)?f=@item.CategoryId">@item.Category</a></p>
+                                    }
+                                    <h3 class="page-cards__title">@(item.Title)</h3>
+                                    <a class="absolute-link" href="@item.Link" aria-label="Article Link"></a>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                    <div class="col-12 page-block__view-all">
+
+                        @if (Model.Link != null)
+                        {
+                            <a title="@Model.LinkText" href="@Url.ContentUrl(Model.Link)" target="@Model.LinkTarget">
+                                @Model.LinkText
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+    case "ImageOnlyCollection":
+        <section class="page-block page-block--image section--squiggle bg-@backgroundColor">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 page-block__main-intro">
+                        @Html.PropertyFor(m => m.CollectionBlock.IntroContent)
+                    </div>
+                    <div class="page-block__image-wrap">
+                        @foreach (var item in Model.CollectionItems)
+                        {
+                            <div class="page-block__image">
+                                <a href="@item.Link">
+                                    <img loading="lazy" src="@item.TeaserImage" alt="@item.TeaserImageAltText" />
+                                </a>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-12 page-block__view-all">
+
+                        @if (Model.Link != null)
+                        {
+                            <a title="@Model.LinkText" href="@Url.ContentUrl(Model.Link)" target="@Model.LinkTarget">
+                                @Model.LinkText
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </section>
+        break;
+    case "HeroCarousel":
+        <section class="section--no-gap bg-@backgroundColor">
+            <div id="page-block-carousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach (var item in Model.CollectionItems)
+                    {
+                        <div class="page-block-carousel__item  carousel-item" data-bs-interval="7000">
+                            <div class="page-block-carousel__inner">
+                                <div class="page-block-carousel__text">
+                                    @if (!string.IsNullOrEmpty(item.Category))
+                                    {
+                                        <div class="page-block-carousel__category">
+                                            <a href="@(Model.SearchPageUrl)?f=@item.CategoryId">@item.Category</a>
+                                        </div>
+                                    }
+                                    <h2 class="page-block-carousel__heading">
+                                        <a href="@item.Link">@(item.Title)</a>
+                                    </h2>
+                                </div>
+                                <div class="page-block-carousel__image-wrap">
+                                    @if (!string.IsNullOrEmpty(item.MainImage))
+                                    {
+                                        <img loading="lazy" class="page-block-carousel__image" src="@item.MainImage" alt="@item.MainImageAltText">
+                                    }
+                                    else
+                                    {
+                                        <div class="img-placeholder"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="page-block-carousel__controls">
+                    <div class="carousel-indicators">
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#page-block-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#page-block-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        break;
+}

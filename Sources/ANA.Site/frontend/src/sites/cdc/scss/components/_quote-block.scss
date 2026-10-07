@@ -1,0 +1,25 @@
+.quote-block {
+    font-size: 1.25rem;
+    line-height: 2.25rem;
+    letter-spacing: .5;
+    color: $white;
+    padding: 2rem 2rem 2rem 7rem;
+    position: relative;
+    background-color: $font-dark-blue2;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .name {
+        font-weight: 700;
+    }
+
+    img {
+        height: 4.025rem;
+        width: 4.25rem;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+    }
+}

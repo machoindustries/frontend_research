@@ -1,0 +1,74 @@
+ .testimonial-card {
+     width: 100%;
+     font-size: 0.875rem;
+     line-height: 1.5625rem;
+     color: $white;
+     background-color: $font-dark-blue2;
+     margin: 3rem 0;
+     padding: 4rem 2rem 2rem 2rem;
+     display: flex;
+     flex-direction: column;
+     
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+     @media(min-width: $medium){
+         width: 46%;
+         margin: 3rem 1%;
+     }
+
+     @media(min-width: $large){
+        flex-grow: 1;
+    }
+
+
+         .img-container {
+             position: relative;
+             height: 0rem;
+             margin-bottom: 2rem;
+            
+            img {
+                height: 8.75rem;
+                width: 8.75rem;
+                border-radius: 50%;
+                object-fit: cover;
+                position: absolute;
+                top: -2.3rem;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+         }
+
+         .has-image {
+             height: 2.125rem;
+         }
+
+        .quote-container {
+            position: relative;
+
+            .quotation-marks {
+                border-radius: 0;
+                width: 4.5rem;
+                height: 4.0625rem;
+                position: absolute;
+                top: -25px;
+                left: -12px;
+            }
+
+            div {
+                position: relative;
+                z-index: 10;
+            }
+        }
+
+        .name {
+            font-weight: 700;
+            margin: 1rem 0 .25rem 0;
+        }
+
+        .organization {
+            padding-left: .5rem;
+        }
+     
+ }

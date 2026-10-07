@@ -1,0 +1,21 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Landing.LandingHeroBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-hero grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="cell small-12 @(Model.CenterText ? "medium-12 ana-hero--col-1": "")">
+            <div class="ana-hero--heading">
+                @Html.PropertyFor(m => m.Heading)
+            </div>
+            <div class="ana-hero--subHeading1">
+                @Html.PropertyFor(m => m.SubHeading1)
+            </div>
+            <div class="ana-hero--subHeading2">
+                @Html.PropertyFor(m => m.SubHeading2)
+            </div>
+            <div class="ana-hero--content">
+                @Html.PropertyFor(m => m.Content)
+            </div>
+        </div>
+    </div>
+</div>

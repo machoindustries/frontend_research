@@ -1,0 +1,48 @@
+﻿@model ANA.Site.Models.ViewModels.CtaBlockViewModel
+
+<div class="item">
+    @if (Model.HasGridIcon)
+    {
+        <div class="e-circled-icon">
+            @if (Model.HasHeadingUrl)
+            {
+                <a href="@Model.HeadingUrl" class="e-blue-ui-icon e-blue-ui-icon--@Model.GridIcon">
+                    <span class="sr-only">@Model.Heading</span>
+                </a>
+            }
+        </div>
+    }
+
+    @if (Model.HasHeadingUrl)
+    {
+        <p class="title">
+            <a href="@Model.HeadingUrl">
+                @Model.Heading
+            @if(Model.HasIcon)
+            {
+                <span class="icon--icon-@(Model.Icon)"></span>
+            }
+        </a>
+    </p>
+}
+
+    @if (Model.HasContent)
+    {
+        @Html.PropertyFor(m => m.Content)
+    }
+
+    @if (Model.HasTags)
+    {
+        <div class="tags">
+            @foreach (var tag in Model.Tags)
+            {
+                <div class="e-tag e-tag--blue">
+                    @if (tag.HasUrl)
+                    {
+                        <a href="@tag.Url">@tag.Name</a>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

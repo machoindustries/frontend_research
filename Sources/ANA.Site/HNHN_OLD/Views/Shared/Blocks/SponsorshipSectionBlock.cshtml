@@ -1,0 +1,149 @@
+﻿@using ANA.Site.HNHN_OLD.Helpers
+@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using Defs = ANA.Site.HNHN.Global.Definitions
+@using ANA.Site.HNHN.Models.Blocks
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Helpers
+@model ANA.Site.HNHN.Models.Blocks.SponsorshipSectionBlock
+
+<section class="section section--light-bg sponsorship-level ">
+    <div class="container container-extra">
+        <h2 class="heading heading--center wow fadeInDown">@Html.PropertyFor(m => m.Heading)</h2>
+        @* @Html.PropertyFor(m => m.ContentItems,
+           new {
+               Tag = "ContentRow", // Commented out for template cyclic issue 
+               GroupClass = "columns",
+               MaxItemsPerRow = 3,
+               ColumnSize = Defs.Layout.GetCalloutColumnClass(Defs.Layout.BootstrapColumnWidth.Small)
+           }
+       ) *@
+
+        @{
+            string columnSize = Defs.Layout.GetCalloutColumnClass(Defs.Layout.BootstrapColumnWidth.Small);
+            string groupClass = "columns";
+            int maxItems = 3;
+
+            @if (Model.ContentItems != null && Model.ContentItems.Items.Any())
+            {
+                var contentItems = Model.ContentItems.Items.GetContentItems<BaseBlockData>();
+                int rowCount = (int)Math.Ceiling(contentItems.Count() / (float)maxItems);
+
+                for (int i = 0; i < rowCount; i++)
+                {
+                    <div class="row @groupClass">
+                        @{
+                            var currentItems = contentItems.Skip(i * maxItems).Take(maxItems);
+                            int colsCount = (12 / currentItems.Count());
+                            int currentCol = 0;
+                            foreach (var item in currentItems)
+                            {
+                                <div class="col-@columnSize-@colsCount wow @Html.GetContentColumnFadeClass(currentCol, maxItems)" data-wow-duration="1.3s">
+                                    @{
+                                        Html.RenderContentData(item, true);
+                                    }
+                                </div>
+                                currentCol++;
+                            }
+                        }
+                    </div>
+                }
+            }
+        }
+
+
+
+
+        @*<div class="row">
+                <div class="col-sm-4">
+                    <h4 class="sponsorship-level__heading">$500,000 Sponsorship</h4>
+                    <ul class="sponsorship-level__list">
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="sponsorship-level__heading">
+                        $1 Million Sponsorship
+                        <em>Limited to 2</em>
+                    </h4>
+                    <ul class="sponsorship-level__list">
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="sponsorship-level__heading">
+                        $2 Million Sponsorship
+                        <em>Limited to 1</em>
+                    </h4>
+                    <ul class="sponsorship-level__list">
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur adipisicing.</a></li>
+                        <li><a href="#">Lorem ipsum dolor sit amet, consectetur.</a></li>
+                    </ul>
+                </div>
+            </div>*@
+
+        <div class="divider"></div>
+
+        @Html.PropertyFor(m => m.BottomContent)
+        @*<h4>II. Process to become a partner</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta autem obcaecati nihil porro ut saepe doloribus at enim, ea error nam cupiditate. Expedita dolorum tenetur, nihil, fugit ducimus assumenda sunt ex voluptatibus aspernatur odio voluptas repellendus impedit asperiores, veniam laborum provident quia aperiam dolores, nam aliquid eaque cum? Illum vel nisi rerum dolorum quaerat ad veniam omnis a quos doloribus natus ipsum minus reprehenderit, nam, quidem amet. Error libero vitae repellat, mollitia velit non! Voluptates eaque dolor, soluta amet totam.</p>*@
+
+
+
+        @if ((Model.CallToActionButtons != null && Model.CallToActionButtons.Items.Any()) || ContentHelper.PageIsInEditMode())
+        {
+            <div class="btn-groups btn-groups--center" @Html.EditAttributes(m => m.CallToActionButtons)>
+                <div class="btns-wrap">
+                    @Html.DisplayFor(m => m.CallToActionButtons)
+                </div>
+            </div>
+        }
+        @*<div class="btn-groups btn-groups--center">
+
+                <div class="btns-wrap">
+
+                    <a href="#" class="btn btn-primary btn-hnhn">Become a Sponsor</a>
+
+                </div>
+            </div>*@
+
+    </div>
+</section>

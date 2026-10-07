@@ -1,0 +1,243 @@
+﻿﻿@using ANA.Site.Business.Helpers
+@using ANA.Site.Business.Constants
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Interfaces
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+@using EPiServer.Framework.Web.Mvc.Html
+@using EPiServer.Globalization
+@using EPiServer.Web
+@using Geta.Optimizely.Extensions;
+@using ANA.Site.Business.State
+@using ANA.Site.Models.Commerce.Categories
+@using ANA.Site.Models.Commerce.Products
+
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@{
+    var currentCulture = ContentLanguage.PreferredCulture;
+}
+
+<!DOCTYPE html>
+<!--[if IE 7]>    <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="@currentCulture.Name"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie10 lt-ie9" lang="@currentCulture.Name"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="@currentCulture.Name"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js@(ContentHelper.PageIsInEditMode() /*|| RequestSegmentContext.CurrentContextMode == ContextMode.Preview*/ ? " episerver-edit-mode" : "")" lang="@currentCulture.Name">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@(Model.CurrentPage.MetaTitle ?? (Model.CurrentPage.Heading ?? string.Empty + " | " + Model.Layout.SiteName ?? string.Empty))</title>
+    <meta name="description" content="@(Model.CurrentPage.MetaDescription ?? Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+
+    <link rel="canonical" href="@(string.IsNullOrEmpty(Model.CurrentPage.CanonicalLink) ? SiteDefinition.Current.SiteUrl.ToString().TrimEnd('/') + Model.CurrentPage.ContentLink.GetFriendlyUrl(false, true) : Model.CurrentPage.CanonicalLink)" />
+
+    <meta property="og:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@(SiteDefinition.Current.SiteUrl.ToString().TrimEnd('/') + Model.CurrentPage.ContentLink.GetFriendlyUrl(false, true))" />
+    @{
+        ImageFile imageData = null;
+        if (Model.CurrentPage.OpenGraphImage != null)
+        {
+            imageData = Model.CurrentPage.OpenGraphImage.Get<ImageFile>();
+        }
+        if (imageData == null && Model.Layout.DefaultSocialImage != null)
+        {
+            imageData = Model.Layout.DefaultSocialImage.Get<ImageFile>();
+        }
+        if (imageData != null)
+        {
+            <meta property="og:image" content="@imageData.GetCroppedImageUrl(1200, 630, true)" />
+            <meta name="twitter:image" content="@imageData.GetCroppedImageUrl(300, 300, true)" />
+        }
+    }
+    <meta property="og:site_name" content="@Model.Layout.SiteName" />   
+    <meta property="og:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+    <meta property="article:published_time" content="@Model.CurrentPage.StartPublish.Value.ToString("s")" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@("@" + (Model.Layout.TwitterSite ?? "ananursingworld"))" />
+    <meta name="twitter:title" content="@(Model.CurrentPage.SocialTitle ?? Model.CurrentPage.Name)" />
+    <meta name="twitter:description" content="@(Model.CurrentPage.SocialDescription ?? Model.CurrentPage.Description)" />
+
+    @if (!string.IsNullOrEmpty(Model.CurrentPage.DisableIndexing))
+    {
+        <meta name="robots" content="@Model.CurrentPage.DisableIndexing" />
+    } else
+    {
+        <meta name="robots" content="@Model.CurrentPage.MetaRobots" />
+    }
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+
+    <meta name="theme-color" content="#C92027" />
+
+    <link rel="shortcut icon" href="/assets/img/logos/favicon.ico" type="image/x-icon" />
+
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900italic,900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="/styles/screen" asp-append-version="true" />
+    <link rel="stylesheet" href="/styles/print" media="print" asp-append-version="true" />
+
+    @* jQuery loads here, in <head>, so every script later in the document
+       shares one current instance. It used to load near </body>, which meant
+       block views rendering in the body had no jQuery yet — six of them worked
+       around that by pulling ~/Scripts/jquery-1.11.1.js inline, a version
+       affected by CVE-2020-11022 / CVE-2020-11023. Same fix already applied to
+       _HubRoot.cshtml (backlog items 20 and 31). *@
+    <script src="/bundles/jquery"></script>
+
+    <script src="/bundles/moderniz" asp-append-version="true"></script>
+
+    <!--[if gt IE 8]><!-->
+    @Html.RequiredClientResources("Header")
+    <!--<![endif]-->
+
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.GlobalHeadScripts))
+    {
+        @Html.Raw(Model.Layout.GlobalHeadScripts)
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.HeadScripts))
+    {
+        @Html.Raw(Model.CurrentPage.HeadScripts)
+    }
+
+    @RenderSection("HeadEnd", required: false)
+</head>
+
+@{
+    var bodyClasses = new List<string>
+{
+        "body",
+        Model.CurrentPage.PageTypeName.ToValidClassName(),
+        Model.CurrentPage.BodyCssClass
+    };
+}
+
+<body data-require="./src/views/page-view" id="top" class="@string.Join(" ", bodyClasses.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray())"
+      data-logged-in-user-id="@UserState.CurrentProfile.CustomerId"
+      data-logged-in-user-member-status="@UserState.CurrentProfile.MemberType"
+      data-logged-in-user-registered-state="@UserState.CurrentProfile.State"
+      data-page-heading="@Model.CurrentPage.Heading">
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.GlobalBodyScripts))
+    {
+        @Html.Raw(Model.Layout.GlobalBodyScripts)
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.BodyScripts))
+    {
+        @Html.Raw(Model.CurrentPage.BodyScripts)
+    }
+    @await Html.RenderEPiServerQuickNavigatorAsync()
+    @Html.FullRefreshPropertiesMetaData()
+
+    @if (!Model.Layout.IsHeaderHidden)
+    {
+        await Html.RenderPartialAsync("Header", Model);
+    }
+
+    <main class="main cf" id="content">
+        @{
+            var custServiceLinks = Model.CurrentPage as ICustomerServiceLinks;
+
+            if ((Model.Layout.IsBreadcrumbVisible && Model.Layout.Breadcrumbs.Count() >= 2) || (custServiceLinks != null && custServiceLinks.ShowCustomerServiceLinks))
+            {
+                <div class="grid">
+
+                    @{
+                        var showBreadcrumb = Model.Layout.IsBreadcrumbVisible && Model.Layout.Breadcrumbs.Count() >= 2;
+                        var custServiceGridClasses = showBreadcrumb ? "grid__item one-whole medium--one-half" : "grid__item one-whole";
+                    }
+
+                    @if (showBreadcrumb)
+                    {
+                        <div class="grid__item one-whole medium--one-half">
+                            @{await Html.RenderPartialAsync("Breadcrumbs", Model);}
+                        </div>
+                    }
+
+                    @if (custServiceLinks != null && custServiceLinks.ShowCustomerServiceLinks)
+                    {
+                        <div class="@custServiceGridClasses">
+                            @{await Html.RenderPartialAsync("CustomerServiceLinks", custServiceLinks);}
+                        </div>
+                    }
+                </div>
+            }
+        }
+
+        @RenderBody()
+        @*@{await Html.RenderPartialAsync("_FoundationPopup", Model);}*@
+
+    </main>
+
+    @if (!Model.Layout.IsFooterHidden)
+    {
+        await Html.RenderPartialAsync("Footer", Model);
+    }
+
+    @if (Model.Layout.DisplayGridOverlay)
+    {
+        await Html.RenderPartialAsync("GridOverlay");
+    }
+
+    @{
+        var cats = (Model.CurrentPage as ICategorizable).GetPageCategories();
+        var personalisationInfo = Context.GetPersonalisationInfo();
+    }
+
+    <div style="display:none;"
+         data-gtm-content-groups-info=""
+         data-gtm-content-groups-brand="@cats.GetValue("Brand")"
+         data-gtm-content-groups-theme="@cats.GetValue("Theme")"
+         data-gtm-content-groups-audience="@cats.GetValue("Audience")"
+         data-gtm-content-groups-userpurpose="@cats.GetValue("User Purpose")"
+         data-gtm-content-groups-topic="@cats.GetValue("Topic")"></div>
+
+    @{
+        var pOldCart = personalisationInfo.GetValue("OldCart");
+        var pHasMemberPrice = personalisationInfo.GetValue("HasMembershipPrice");
+        var oldCart = !string.IsNullOrWhiteSpace(pOldCart) && pOldCart.ToLower() == "y" ? "Yes" : "No";
+        var hasMembershipPrice = !string.IsNullOrWhiteSpace(pHasMemberPrice) && pHasMemberPrice.ToLower() == "y" ? "Yes" : "No";
+    }
+
+    <div style="display:none;"
+         data-gtm-personalisation-info=""
+         data-gtm-personalisation-checkedroles="@personalisationInfo.GetValue("CheckedRoles")"
+         data-gtm-personalisation-oldcart="@oldCart"
+         data-gtm-personalisation-hasmembershipprice="@hasMembershipPrice"
+         data-gtm-personalisation-state="@personalisationInfo.GetValue("State")"></div>
+
+    @{ await Html.RenderPartialAsync("_LightboxAddedToCartConfirmation"); }
+
+
+    @*@Scripts.Render("~/bundles/entryjs")*@
+
+    <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+    <script type="module" src="/assets/js/entry.js" asp-append-version="true"></script>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Layout.GlobalFooterScripts))
+    {
+        @Html.Raw(Model.Layout.GlobalFooterScripts)
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.FooterScripts))
+    {
+        @Html.Raw(Model.CurrentPage.FooterScripts)
+    }
+
+    <!--[if gt IE 8]><!-->
+    @Html.RequiredClientResources("Footer")
+    <!--<![endif]-->
+
+    @* @if (Model.Layout.AddThisKey != "")
+    {
+        Go to www.addthis.com/dashboard to customize your tools
+        TEMP KEY: ra-59a008db77513704
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=@Model.Layout.AddThisKey"></script>
+    } *@
+
+    @RenderSection("BodyEnd", required: false)
+
+</body>
+</html>

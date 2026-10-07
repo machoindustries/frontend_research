@@ -1,0 +1,9 @@
+﻿@using ANA.Site.Business.Extensions
+
+@{
+    var modelAsString = Model as string;
+}
+@if (modelAsString != null)
+{
+    @Html.Raw(modelAsString.ReplaceSpecialCharacters())
+}

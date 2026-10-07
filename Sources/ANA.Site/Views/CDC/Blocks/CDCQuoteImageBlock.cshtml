@@ -1,0 +1,17 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCQuoteImageBlock
+
+<article class="testimonial-card @Model.GetCssClass()">
+    <div class="content-container">
+        @if (Model.Image != null)
+        {
+            <div class="img-container hasimg">
+                @Html.PropertyFor(i => i.Image)
+            </div>
+        }
+        <div class="quote-container">
+            <img class="quotation-marks" src="/assets/img/quotes.png" alt="image of quotation marks">
+            <div>@Html.Raw(Model.Text)</div>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,188 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using EPiServer.Commerce.Catalog.ContentTypes
+@using Geta.Optimizely.Extensions;
+@using EPiServer
+@using ANA.Site.Models.Commerce.Variants
+@using ANA.Site.Models.Commerce.Products
+@using Global = ANA.Site.Global
+@using ANA.Site.Models.Blocks
+
+@model ANA.Site.Models.ViewModels.EnrollmentViewModel
+@{
+    var variantContent = Model.Entry as VariationContent;
+    var parentProduct = variantContent?.GetParentProducts()?.FirstOrDefault()?.GetContent() as AnaProductBase;
+    var productCategory = parentProduct?.GetOriginalType().Name.Replace("Product", string.Empty) ?? string.Empty;
+    var productFormat = string.Empty;
+
+    if (!string.IsNullOrWhiteSpace(Model.BookFormat))
+    {
+        productFormat = Model.BookFormat;
+    }
+    else
+    {
+        productFormat = productCategory;
+    }
+    var productType = "";
+    var learnProduct = parentProduct as LearnBase;
+    if (learnProduct != null)
+    {
+        productType = learnProduct.Type;
+    }
+    else if (parentProduct is WorkshopProduct)
+    {
+        productType = "Workshop";
+    }
+
+}
+@{ await Html.RenderPartialAsync("Blocks/ContainerBlock", new ContainerBlock
+    {
+        AdditionalCssClass = "b-vst--medium b-vsb--small",
+        Heading = Model.Heading,
+        HeadingAdditionalCssClass = "c-container-block__heading--large"
+
+    });
+}
+
+<div class="c-enrollment__section c-order-detail__items" style="letter-spacing:normal" data-require="./src/views/account-enrollments-view" product-code="@Model.Code" order-enrollment-limit="@Model.OrderEnrollmentLimit" upload-file-size-limit="@Model.UploadFileSizeLimit" data-product-format="@productFormat">
+    <div class="c-grid-overlay__col grid__item c-enrollment__bulkimage">
+        <div class="c-order-item__content c-order-item__content--figure-title">
+            <figure class="c-order-item__figure  @(string.IsNullOrWhiteSpace(Model.ImageUrl) ? " c-order-item__figure--icon" : string.Empty)">
+                @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                {
+                    using (Html.BeginConditionalLink(!string.IsNullOrWhiteSpace(Model.Url), new HtmlString(Model.Url), Model.DisplayName, "c-order-item__link"))
+                    {
+                        <img src="@Model.ImageUrl?width=37&height=55" title="@Model.DisplayName" alt="@Model.DisplayName" class="c-order-item__image" />
+                    }
+                }
+                else
+                {
+                    <span class="@(parentProduct?.GetIconClass() ?? " icon--icon-profile") c-order-item__figure-icon"></span>
+                }
+                @if (!string.IsNullOrEmpty(parentProduct?.EntityBanner))
+                {
+                    <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@parentProduct.EntityBanner.ToLower()">
+                        <span class="c-product-detail__entity-banner-pretext ">Presented by</span>
+                        <span class="c-product-detail__entity-banner-text">@parentProduct.EntityBanner</span>
+                    </div>
+                }
+            </figure>
+            <div class="c-order-item__title">
+                <span class="c-order-item__product-type">@productType</span>
+                @using (Html.BeginConditionalLink(!string.IsNullOrWhiteSpace(Model.Url), new HtmlString(Model.Url), Model.DisplayName, "c-order-item__link"))
+                {
+                    @Model.DisplayName
+                }
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.BookFormat))
+            {
+                <div class="c-enrollment__format">
+                    <div class="c-order-item__format-name">@Model.BookFormat</div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="c-enrollment__section--buttonlayout">
+
+        <Button id="myEnrollmentTop" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Add New Recipient" data-account-enrollment-add>@Html.Translate("/MyAccount/Enrollment/New")</Button>
+
+        <Button id="sampleDownload" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Download Template" data-account-enrollment-download-sample>@Html.Translate("/MyAccount/Enrollment/DownloadExcelTemplate")</Button>
+
+        <form class="c-enrollment__formupload" id="uploadForm" style="display:none;">
+
+            <div style="width: 100%">
+                <div><label class="c-enrollment__formupload--msg">Supported file format - CSV file ONLY.</label></div>
+                <div>
+                    <div><input id="Uploadhidden" type="hidden" class="e-button e-button--submit e-button--blue e-form__submit" data-account-enrollment-confirm /></div>
+
+                    <div><input id="browseUpload" type="file" class="e-button e-button--submit e-button--blue e-form__submit" data-account-enrollment-browseupload accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" value="Upload" /></div>
+                    <div><label id="lblfileName" class="c-enrollment__formupload--display"></label></div>
+                </div>
+            </div>
+        </form>
+
+        <Button id="uploadFile" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Upload" data-account-enrollment-uploadfile>@Html.Translate("/MyAccount/Enrollment/UploadExcelFile")</Button>
+
+    </div>
+    <table data-account-enrollments-table class="c-enrollment__gridalign">
+        <thead>
+            <tr class="c-enrollment__th">
+                <th class="c-enrollment__th--header grid__item"></th>
+                <th>@Html.Translate("/MyAccount/Enrollment/EmailAddress")</th>
+                <th>@Html.Translate("/MyAccount/Enrollment/FirstName")</th>
+                <th>@Html.Translate("/MyAccount/Enrollment/LastName")</th>
+                <th class="c-enrollment__th--address">@Html.Translate("/MyAccount/Enrollment/Address")</th>
+                <th>@Html.Translate("/MyAccount/Enrollment/ItemPrice")</th>
+                <th></th>
+                <th>@Html.Translate("/MyAccount/Enrollment/Quantity")</th>
+                <th></th>
+                <th>@Html.Translate("/MyAccount/Enrollment/ItemTotal")</th>
+                <th class="c-enrollment__th--action">@Html.Translate("/MyAccount/Enrollment/Action")</th>
+            </tr>
+        </thead>
+        <tbody data-account-enrollment-list="" class="c-enrollment__tablelayout"></tbody>
+    </table>
+
+    <div class="c-enrollment__no-results" data-account-enrollments-no-results="">@Html.Translate("/MyAccount/Enrollment/NoResults")</div>
+    <div class="grid__item one-whole large--one-whole" data-account-enrollments-found="">
+        <div class="grid">
+            <div class="grid__item one-half c-enrollment__legend">
+                <div class="grid__item one-whole c-enrollment__legend">
+                    <span class="c-enrollment__displayicon--star" title="ANA Member"> </span>ANA Member
+                    <span class="c-enrollment__displayicon--x-cross" title="Unverified Address"> </span>Unverified Address
+                </div>
+            </div>
+            <div class="grid__item one-half">
+                <div class="c-cart-summary__row ">
+                    <div class="c-cart-summary__subtotal">
+                        <span class="c-cart-summary__subtotal-text" data-enrollment-summary-subtotal=""></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="c-enrollment__producttext">
+        <div class="e-richtext  c-enrollment__producttext-richtext">
+            @Html.PropertyFor(m => m.ANAAccountPurchaseInstruction)
+        </div>
+    </div>
+    <br />
+    <div class="c-enrollment__producttext">
+        <div class="e-richtext">
+            @Html.PropertyFor(m => m.SelfOrderReminder)
+        </div>
+    </div>
+    <br />
+    <div class="c-enrollment__productpage" data-account-enrollments-not-found="">
+        <a href=@Model.ProductPageURL id="goToProductPage" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Return to Catalog">@Html.Translate("/MyAccount/Enrollment/GoToProductsPage")</a>
+    </div>
+    <div class="c-enrollment__productpage" data-account-enrollments-found="">
+        <Button id="DeleteAll" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Delete All" data-account-enrollment-delete product-code="@Model.Code">@Html.Translate("/MyAccount/Enrollment/DeleteAll")</Button>
+        <Button class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Add To Cart" data-account-enrollments-addtocart-button="">@Html.Translate("/MyAccount/Enrollment/AddToCart")</Button>
+        <a href=@Model.ProductPageURL id="goToProductPage" class="e-button e-button--submit e-button--blue e-form__submit c-enrollment__section--buttonlayout-check" title="Return to Catalog">@Html.Translate("/MyAccount/Enrollment/GoToProductsPage")</a>
+    </div>
+
+    <div class="c-enrollment__producttext">
+        <div class="e-richtext c-enrollment__producttext-richtext"> @Html.PropertyFor(m => m.AddressAlert)</div>
+    </div>
+    <div class="c-enrollment__producttext" data-account-enrollments-found="">
+        <div class="e-richtext"> @Html.PropertyFor(m => m.PricingChangesNotification)</div>
+    </div>
+
+    <div class="c-enrollment__section--buttonlayout">
+        <a href="#myEnrollmentTop" title="Back to top">back to top</a>
+    </div>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m => m.LightboxEnrollment)
+    </div>
+    <div class="e-lightbox-source">
+        <div data-lightbox-src="addedtocartfromenrollment">
+            <h3>@Html.Translate("/Product/Lightbox/AddedToCart")</h3>
+            <a href="@SettingsHelper.GetSettings().CartPageReference.GetUri().ToString()" class="e-button e-button--anchor e-button--blue e-button c-enrollment__lightboxconfirm">@Html.Translate("/Product/Lightbox/GoToCart")</a>
+            <a href=@Model.ProductPageURL class="e-button e-button--anchor e-button--blue e-button c-enrollment__lightboxconfirm" data-modal-close="">@Html.Translate("/Product/Lightbox/ContinueShopping")</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.Blocks.Landing.LandingFooterBlock
+
+<div class="@Model.GetWrapperClasses()">
+    <div class="ana-footer grid-x grid-margin-x @Model.GetThemeClasses()" style="@Model.GetThemeStyles()">
+        <div class="cell small-12 medium-3 ana-footer--logo">
+            @Html.PropertyFor(m => m.FooterLogo)
+        </div>
+        <div class="cell small-12 medium-9 ana-footer--content">
+            @Html.PropertyFor(m => m.FooterText)
+        </div>
+    </div>
+</div>

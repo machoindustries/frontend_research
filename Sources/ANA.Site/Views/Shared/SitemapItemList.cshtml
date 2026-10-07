@@ -1,0 +1,24 @@
+@model IEnumerable<ANA.Site.Models.ViewModels.SitemapItem>
+
+<div class="grid__item one-whole medium--one-half large--one-third">
+
+    @foreach (var column in Model)
+    {
+        <nav class="c-sitemap-link-list c-sitemap-link-list--sitemap" data-require="./src/views/accordion-item-view" data-disable-at-breakpoint="768" data-sitemap="true">
+
+            <h2 class="c-sitemap-link-list__title">
+                <span class="c-sitemap-link-list__accordion-toggle" data-accordion-toggle></span>
+                <a class="c-sitemap-link__title-link" href="@column.Url">@column.Name</a>
+            </h2>
+
+            <ul class="c-sitemap-link-list__list e-accordion__item-content-wrapper" data-accordion-content>
+                @foreach (var child in column.List1)
+                {
+                    <li class="c-sitemap-link-list__item">
+                        <a href="@child.Url" class="c-sitemap-link-list__item-link">@child.Name</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

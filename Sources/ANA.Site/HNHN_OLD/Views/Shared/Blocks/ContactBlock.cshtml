@@ -1,0 +1,19 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.Blocks.ContactBlock
+
+@if (!string.IsNullOrWhiteSpace(Model.Heading) || ContentHelper.PageIsInEditMode())
+{
+    <h4>@Html.PropertyFor(m=> m.Heading)</h4>
+}
+<p>
+    <a href="tel:@Model.PhoneNumber" class="tel-number" @Html.EditAttributes(m=> m.PhoneNumber)>@Model.PhoneNumber</a><br>
+    <a href="mailto:@Model.EmailAddress" @Html.EditAttributes(m=> m.EmailAddress)>@Model.EmailAddress</a>
+</p>
+<address>
+    @Html.PropertyFor(m=> m.Recipient) <br>
+    @Html.PropertyFor(m => m.StreetAddress) <br>
+    @Html.PropertyFor(m => m.City), @Html.PropertyFor(m => m.State) @Html.PropertyFor(m => m.PostalCode)
+</address>

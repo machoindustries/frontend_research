@@ -1,0 +1,16 @@
+﻿@using EPiServer.Framework.Localization
+@model ANA.Site.Models.ViewModels.LoginPageViewModel
+
+<div class="container-fluid">
+    <div class="row">
+        @if ((bool)ViewData["IsReadOnly"])
+        {
+            @Html.Raw(String.Format("<div class=\"container\"><p class=\"text-center\">{0}</p></div>", LocalizationService.Current.GetString("/Readonly/Login")))
+        }
+        else
+        {
+            { await Html.RenderPartialAsync("RegisterAccount", Model.RegisterAccountViewModel); }
+            { await Html.RenderPartialAsync("Login", Model.LoginViewModel); }
+        }
+    </div>
+</div>

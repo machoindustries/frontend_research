@@ -1,0 +1,1 @@
+import{i as o}from"./rolldown-runtime-jxEyR9vv.js";import{t}from"./jquery-global-DBDRHZ8F.js";var e=o(t(),1);function r(o){"complete"!==document.readyState?(0,e.default)(window).on("load",o):window.setTimeout(o,0)}export{r as t};

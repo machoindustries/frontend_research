@@ -1,0 +1,140 @@
+.alternating-text-block {
+    margin: 1rem 0rem;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    &.atb-mirror {
+        .content-block {
+
+            @media (min-width: $large){
+                padding: 3.375rem 6.375rem 3.375rem  2.5rem;
+            }
+    
+            @media (min-width: $xlarge){
+                padding: 4rem 6rem 4rem 2.5rem;
+            }
+        }
+
+        .photo-block {
+            order: 1;
+        }
+
+        .img-container {
+            margin-left: -1.75rem;
+        }
+    }
+
+    &.orange-background-blue-hover {
+        background-color: #CF4520;
+
+        button:hover {
+            background-color: #123E67;
+        }
+    }
+
+    &.blue-background-orange-hover {
+        background-color: #123E67;
+
+        button:hover {
+            background-color: #CF4520;
+        }
+    }
+    .photo-block {
+        background-color: $white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .img-container {
+            width: calc(100% + 1.75rem);
+            padding-bottom: 81%;
+            position: relative;
+
+            &.mirror {
+                position: relative;
+                right: 1.75rem;
+            }
+
+        
+            img {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                object-fit: cover;
+                
+            }
+        }
+    }
+
+    .content-block {
+        color: $white;
+        padding:  2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 25rem;
+
+        @media (min-width: $medium){
+            padding: 3rem 2rem;
+        }
+
+        @media (min-width: $large){
+            padding: 3.375rem 1.3125rem 3.375rem 6.375rem;
+        }
+
+        @media (min-width: $xlarge){
+            padding: 4rem 1.3125rem 4rem 6.375rem;
+        }
+   
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 2.25rem;
+            letter-spacing: 0.0938rem;
+            color: $white;
+            text-transform: uppercase;
+        }
+
+        p {
+            padding: 1.5rem 0rem 1rem 0rem;
+            font-size: 1.125rem;
+            line-height: 2.125rem;
+
+            @media (min-width: $medium){
+                padding: 3rem 0rem 1rem 0rem;
+            }
+
+            @media (min-width: $large){
+                padding: 2.5rem 0rem 1rem 0rem;
+            }
+        }
+
+        button {
+            border: 2px solid $white;
+            background-color: transparent;
+            padding: .75rem 1.25rem;
+            display: flex;
+
+            &:hover {
+                border: 2px solid transparent;
+            }
+
+            a {
+                color: $white; 
+                text-transform: uppercase;
+                font-weight: 600;
+                line-height: 1.5rem;
+                letter-spacing: 0.0313rem; 
+                text-decoration: none;
+            }
+
+            img {
+                padding-left: .75rem;
+            }
+        }
+        
+    }
+}

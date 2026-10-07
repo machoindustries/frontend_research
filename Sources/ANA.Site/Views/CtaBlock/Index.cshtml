@@ -1,0 +1,77 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+
+@model ANA.Site.Models.ViewModels.CtaBlockViewModel
+
+<article class="c-cta-block">
+    <div class="c-cta-block__inner">
+
+        @if (Model.HasImage)
+        {
+            <img src="@Model.Image.Url" alt="@Model.Image.Description" class="c-cta-block__image" />
+        }
+        else if (Model.HasIcon)
+        {
+            <div class="c-cta-block__icon-wrap">
+                <span class="icon--icon-@(Model.Icon)"></span>
+            </div>
+        }
+        
+        <div class="c-cta-block__content-wrapper">
+            <h3 class="c-cta-block__heading @(!Model.HasImage && Model.HasIcon ? "c-cta-block__heading--icon" : "")" @Html.EditAttributes(x => x.Heading)>
+                @if (Model.HasHeadingUrl)
+                {
+                    <a class="c-cta-block__heading-link" href="@Model.HeadingUrl">@Model.Heading</a>
+                }
+                else
+                {
+                    @Model.Heading
+                }
+            </h3>
+        
+            @if (Model.HasDate || ContentHelper.PageIsInEditMode())
+            {
+                <div class="c-cta-block__date" @Html.EditAttributes(x => x.Date)>
+                    @if (Model.HasDate)
+                    {
+                    <time>@Model.Date.Value.Date.ToAnaFormatString()</time>
+                    }
+                </div>
+            }
+        
+            @if (Model.HasAuthors || ContentHelper.PageIsInEditMode())
+            {
+                <div class="c-cta-block__authors" @Html.EditAttributes(x => x.Authors)>@Model.Authors</div>
+            }
+
+            @if (Model.HasContent || ContentHelper.PageIsInEditMode())
+            {
+                <div class="c-cta-block__content e-richtext">
+                    @Html.PropertyFor(m => m.Content)
+                </div>
+            }
+
+            @if (Model.HasTags)
+            {
+                <div class="c-cta-block__tags">
+                    @foreach (var tag in Model.Tags)
+                    {
+                    <div class="e-tag e-tag--blue">
+                        @if (tag.HasUrl)
+                        {
+                            <a href="@tag.Url">@tag.Name</a>
+                        }
+                        else
+                        {
+                            @tag.Name
+                        }
+                    </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+</article>

@@ -1,0 +1,11 @@
+---
+img-src: "https://picsum.photos/300/200"
+img-alt: "alt for image"
+title: "CDC Project firstline"
+content: "CDC’s Project Firstline is a collaborative of diverse healthcare and public health partners that aims to provide engaging, innovative, and effective infection control training for millions of frontline U.S. healthcare workers and members of the public health workforce. "
+button-url: "https://picsum.photos/"
+has-external-link: "_blank"
+external-link-icon: "./assets/img/external-link.svg"
+button-text: "LEARN MORE AT CDC.GOV"
+styles: "blue-background-orange-hover"
+styles-1: "orange-background-blue-hover"

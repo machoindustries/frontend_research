@@ -1,0 +1,63 @@
+﻿@using EPiServer.Forms.Helpers.Internal
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site
+@using ANA.Site.Business.Extensions
+
+@model ChoiceElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var labelText = Model.Label;
+    var items = Model.GetItems().ToList();
+    var submittedValue = Model.GetSubmittedValue() as string;
+    var helpText = Model.GetHelpText();
+    var inputType = Model.AllowMultiSelect ? "checkbox" : "radio";
+    var errorMessage = Model.GetErrorMessage();
+
+    string[] entries = null;
+
+    if (!string.IsNullOrWhiteSpace(submittedValue))
+    {
+        entries = submittedValue.Split(',');
+    }
+}
+
+@if (items.Any())
+{
+
+
+    <fieldset class="e-form__fieldset">
+        <legend class="e-form__legend">@labelText</legend>
+
+        @foreach (var item in items)
+        {
+            var defaultCheckedString = Model.GetDefaultSelectedString(item);
+            var checkedString = string.IsNullOrEmpty(defaultCheckedString) ? string.Empty : "checked";
+
+            if (!string.IsNullOrWhiteSpace(submittedValue))
+            {
+                defaultCheckedString = "";
+
+                if (entries != null)
+                {
+                    checkedString = entries.Any(s => s == item.Value) ? "checked" : "";
+                }
+                else
+                {
+                    checkedString = submittedValue == item.Value ? "checked" : "";
+                }
+            }
+            <label class="e-form__label e-form__label--@inputType" data-formfield>
+                <span class="e-form__label-text">@item.Caption</span>
+                <input type="@inputType" class="e-form__input e-form__input--@inputType" name="@formElement.ElementName" value="@item.Value" @checkedString @defaultCheckedString>
+                <span class="e-form__fake-@inputType"></span>
+            </label>
+        }
+    </fieldset>
+}
+<div class="e-form__validation-errors" data-validation-error="" data-validation-for="@formElement.ElementName">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div id="@formElement.ElementName-error" class="error-msg">@errorMessage</div>
+    }
+</div>

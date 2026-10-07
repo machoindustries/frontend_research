@@ -1,0 +1,28 @@
+﻿@model ANA.Site.Models.ViewModels.AccountLicensesViewModel
+
+<div class="c-account__section" data-require="./src/views/account-licenses-view">
+    <h4 class="c-account__title">@Html.PropertyFor(m => m.Heading)</h4>
+    <p class="c-account__text">@Html.PropertyFor(m => m.Description)</p>
+    <div class="c-account__summary">
+        <a href="#" id="myLicensesTop" class="c-account__cta--add-new" title="Add a new license" data-account-license-add>@Html.Translate("/MyAccount/License/New")</a>
+    </div>
+    <table data-account-licenses-table style="display: none;">
+        <thead>
+        <tr>
+            <th>@Html.Translate("/MyAccount/License/LicenseNo")</th>
+            <th>@Html.Translate("/MyAccount/License/Type")</th>
+            <th>@Html.Translate("/MyAccount/License/Country")</th>
+            <th>@Html.Translate("/MyAccount/License/State")</th>
+            <th>@Html.Translate("/MyAccount/License/Begin")</th>
+            <th>@Html.Translate("/MyAccount/License/Expiry")</th>
+            <th>@Html.Translate("/MyAccount/License/Options")</th>
+        </tr>
+        </thead>
+        <tbody data-account-licenses-list=""></tbody>
+    </table>
+    <div class="c-account__no-results" data-account-licenses-no-results="">@Html.Translate("/MyAccount/Membership/NoResults")</div>
+    <a href="#myLicensesTop" title="Back to top" data-account-licenses-table="">back to top</a>
+    <div class="e-lightbox-source">
+        @Html.EditorFor(m => m.LightboxLicense, Model.States)
+    </div>
+</div>

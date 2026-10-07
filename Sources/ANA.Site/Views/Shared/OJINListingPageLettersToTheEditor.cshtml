@@ -1,0 +1,99 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using System.Configuration;
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+@{
+    var LettersToTheEditorPageID = Model.Layout.LettersToTheEditorPageID;
+    var lettersToTheEditorPageID = 0;
+    if (@LettersToTheEditorPageID != null)
+    {
+        lettersToTheEditorPageID = Convert.ToInt32(LettersToTheEditorPageID);
+    }
+}
+
+@if (Model != null)
+{
+    var cpContentID = Model.CurrentPage.ContentLink.ID;
+    var letterOfContent = false;
+    <section class="pt-3 pt-md-4 mt-5">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="ojin-lettersList">
+                    @if (Model.RelatedListingPage.Count > 0)
+                    {
+                        //if (@Html.PropertyFor(m => m.CurrentPage.Name).ToString() == "Letters to the Editor")
+                        if (cpContentID == lettersToTheEditorPageID)
+                        {
+                            //var myFinalLetterList = Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPName == "Letters to the Editor" && x.CDPageHeading != null);
+                            var myFinalLetterList = Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPID == lettersToTheEditorPageID && x.CDPageHeading != null);
+                            var myContentGroup = myFinalLetterList.GroupBy(r => new { r.LtrCategoryID, r.LtrCategoryName }).ToList();
+
+                            foreach (var contentgrp in myFinalLetterList)
+                            {
+                                <h2>@contentgrp.LPHeading</h2>
+                                break;
+                            }
+                        }
+                    }
+
+                    @if (Model.RelatedListingPage.Count > 0)
+                    {
+                        if (cpContentID == lettersToTheEditorPageID)
+                        {
+                            var myFinalLetterList = Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPID == lettersToTheEditorPageID && x.CDPageHeading != null); //&& x.CategoryDateForOrderBy != default(DateTime)); // != 1/1/0001 12:00:00 AM);
+                            //var myFinalLetterList1 = myFinalLetterList.GroupBy(r => new { r.LtrCategoryID });
+                            var myContentGroup = myFinalLetterList.GroupBy(r => new { r.LtrCategoryID, r.LtrCategoryName , r.CategoryDateForOrderBy}).OrderByDescending(r => r.Key.CategoryDateForOrderBy).ToList().Distinct();
+                            //myContentGroup = myContentGroup.Where(r => r.Key.CategoryDateForOrderBy != default(DateTime));
+
+                            foreach (var contentgrp in myContentGroup.Where(r => r.Key.CategoryDateForOrderBy != default(DateTime)))
+                            {
+                                <div class="ojin-lettersList__item">
+                                    <h3>@contentgrp.Key.LtrCategoryName</h3>
+                                    <ul>
+                                        @foreach (var cdpParentdetails in myFinalLetterList.Where(r => r.LtrCategoryID == contentgrp.Key.LtrCategoryID && r.LtrCategoryCDParentID > 0 && r.LtrCategoryCDChildID == 0).OrderByDescending(r => r.CDPPubDate).Distinct())
+                                        {
+                                            <li class="grid-item">
+                                                <div class="grid-item__content">
+                                                    <div class="grid-item__title">
+                                                        <a href="@Url.PageUrl(@cdpParentdetails.CDPPageUrl)">@cdpParentdetails.CDPPageTitle</a>
+                                                    </div>
+                                                    <div class="ojin-lettersList__editor">@(cdpParentdetails.CDPAuthors + "(" + @cdpParentdetails.CDPPubDate.Date.ToString("MMMM dd, yyyy") + ")" )</div>
+                                                </div>
+                                                @foreach (var cdpReplydetails in myFinalLetterList.Where(r => r.LtrCategoryCDParentID == cdpParentdetails.LtrCategoryCDParentID && r.LtrCategoryCDChildID > 0).OrderByDescending(r => r.CDPPubDate))
+                                                {
+                                                    <div class="ojin-lettersList__reply">
+                                                        <div class="grid-item__title">
+                                                            <a href="@Url.PageUrl(@cdpReplydetails.CDPPageUrl)">@cdpReplydetails.CDPPageTitle</a>
+                                                        </div>
+                                                        <div class="ojin-lettersList__editor">@(cdpReplydetails.CDPAuthors + "(" + @cdpReplydetails.CDPPubDate.Date.ToString("MMMM dd, yyyy") + ")" ) </div>
+                                                    </div>
+                                                }
+
+                                            </li>
+                                            letterOfContent = true;
+                                        }
+
+                                    </ul>
+                                </div>
+                            }
+                        }
+                    }
+
+
+
+                </div>
+            </div>
+            @if (Model.RightRail != null && letterOfContent)
+            {
+                <div class="col-lg-3 ojin-advContainer">
+                    @{ await Html.RenderPartialAsync("Blocks/OJINTopicCategoryListingPageRightRail", Model.RightRail); }
+                </div>
+            }
+
+        </div>
+    </section>
+}
+
+

@@ -1,0 +1,124 @@
+﻿@model ANA.Site.Hub.Models.Pages.ViewModels.HubSearchPageViewModel
+
+@if (Model.Resources.Any())
+{
+<div class="search-items-wrapper" id="searchWrapper">
+
+    @foreach (var resourceCard in Model.Resources)
+        {
+    <a href="@resourceCard.FriendlyUrl" class="item">
+        <div class="item-container">
+            <img src="@resourceCard.ThumbnailImageUrl" alt="@resourceCard.ThumbnailImageAlt" class="item-picture">
+            @if (!string.IsNullOrWhiteSpace(resourceCard.ReadWatchListenTime))
+                    {
+            <div class="item-label">@resourceCard.ReadWatchListenTime</div>
+                    }
+            <div class="item-info-wrapper">
+                <h4 class="item-title">
+                    @resourceCard.Title
+                </h4>
+                <p class="item-text">
+                    @resourceCard.MediaType <span>@resourceCard.PublishedDate</span>
+                </p>
+            </div>
+        </div>
+    </a>
+        }
+</div>
+
+    if (!string.IsNullOrWhiteSpace(Model.NextPageUrl))
+    {
+<div class="load-more-wrapper" id="loadMore">
+    <a class="button-primary" href="@Model.NextPageUrl" id="hubSearchPageLoadMore">LOAD MORE</a>
+</div>
+    }
+
+    @Html.Hidden("ScrollPosition", (object)ViewBag.ScrollPosition)
+    
+<ul class="filters-list d-none" id="filterList">
+    <li class="filters-item">
+        <label class="checkbox-label">
+            <span id="all"> All </span>(<span>@Model.TotalMatching</span>)
+            <input type="checkbox" name="all" id="chkAll" hidden="" class="sr-only">
+            <span class="option-label" for="chkAll"></span>
+        </label>
+    </li>
+    @foreach (var categoryFilter in Model.SearchFilters.FilterSets)
+        {
+            foreach (var filter in categoryFilter.Filters)
+            {
+                if (filter.Count <= 0 || string.IsNullOrWhiteSpace(filter.Label)) { continue; }
+                var filterIsSelected = filter.IsSelected ? "checked" : "";
+                var filterCount = string.IsNullOrWhiteSpace(Model.SearchText) ? filter.Count.ToString() : Model.Resources.Count(p => p.MediaType == filter.Label).ToString();
+                if (!string.IsNullOrWhiteSpace(Model.SearchText) && int.Parse(filterCount) == 0) { continue; }
+    <li class="filters-item">
+        <label class="checkbox-label" for="@filter.LabelId">
+            <span id="@filter.Label.ToLower()">@filter.Label</span> (<span>@filterCount</span>)
+            <input type="checkbox" id="@filter.LabelId" name="@filter.Label" class="sr-only @(filter.IsSelected ? "checked" : "")" @filterIsSelected hidden>
+            <label class="option-label" for="@filter.LabelId"></label>
+        </label>
+    </li>
+            }
+        }
+</ul>
+
+<p class="items-count d-none" id="itemCount">
+    <span class="item-page-size">@Model.PageSize</span> of
+    <span class="item-total-matching">@Model.TotalMatching items</span>
+</p>
+    if (Model.ShowHeader)
+    {
+<div class="search-results-container d-none" id="searchResultHeader">
+    <h1 class="search-results-title">Search Results</h1>
+    <p class="search-results-count">
+        <span class="search-result-match-count">@Model.TotalMatching</span>
+        results for “<span class="search-text">@Model.SearchText</span>”
+    </p>
+</div>
+    }
+
+<input type="hidden" id="hdnPageSizeVal" name="hdnPageSizeVal" value="@Model.PageSize" />
+<input type="hidden" id="hdnTotalMatchingVal" name="hdnTotalMatchingVal" value="@Model.TotalMatching" />
+<input type="hidden" id="hdnShowSearchHeader" name="hdnShowSearchHeader" value="@Model.ShowHeader" />
+<input type="hidden" id="hdnSearchText" name="hdnSearchText" value="@Model.SearchText" />
+<input type="hidden" id="hdnShowLoadMore" name="hdnShowLoadMore" value="@Model.ShowLoadMoreButton" />
+}
+else
+{
+<div class="search-items-wrapper" id="searchWrapper">
+
+    <p class="not-found-text">No results found</p>
+
+</div>
+<ul class="filters-list d-none" id="filterList">
+    <li class="filters-item">
+        <label class="checkbox-label">
+            <span id="all"> All </span>(<span>0</span>)
+            <input type="checkbox" name="all" id="chkAll" hidden="" class="sr-only">
+            <span class="option-label" for="chkAll"></span>
+        </label>
+    </li>
+    @foreach (var categoryFilter in Model.SearchFilters.FilterSets)
+        {
+            foreach (var filter in categoryFilter.Filters)
+            {
+                if (filter.Count <= 0 || string.IsNullOrWhiteSpace(filter.Label)) { continue; }
+                var filterIsSelected = filter.IsSelected ? "checked" : "";
+                var filterCount = string.IsNullOrWhiteSpace(Model.SearchText) ? filter.Count.ToString() : Model.Resources.Count(p => p.MediaType == filter.Label).ToString();
+                if (!string.IsNullOrWhiteSpace(Model.SearchText) && int.Parse(filterCount) == 0) { continue; }
+    <li class="filters-item">
+        <label class="checkbox-label" for="@filter.LabelId">
+            <span id="@filter.Label.ToLower()">@filter.Label</span> (<span>0</span>)
+            <input type="checkbox" id="@filter.LabelId" name="@filter.Label" class="sr-only @(filter.IsSelected ? "checked" : "")" @filterIsSelected hidden>
+            <label class="option-label" for="@filter.LabelId"></label>
+        </label>
+    </li>
+            }
+        }
+</ul>
+
+<p class="items-count d-none" id="itemCount">
+    <span class="item-page-size">@Model.PageSize</span> of
+    <span class="item-total-matching">@Model.TotalMatching items</span>
+</p>
+}

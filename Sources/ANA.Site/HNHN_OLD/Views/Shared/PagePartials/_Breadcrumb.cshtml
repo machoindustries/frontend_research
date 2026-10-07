@@ -1,0 +1,32 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@using ANA.Site.HNHN.Business
+
+@model ANA.Site.HNHN.Models.ViewModels.IPageViewModel<ANA.Site.HNHN.Models.Pages.BasePageData>
+
+    <!-- Breadcrumb -->
+
+    <ol class="breadcrumb">
+        @foreach (var pageData in Model.CurrentPage.GetPageAncestors())
+        {
+            <li>
+                @if (pageData.IsContainer)
+                {
+                    @pageData.Page.Name
+                }
+                else
+                {
+                <a href="@Url.ContentUrl(pageData.Page.ContentLink)">@pageData.Page.Name</a>
+                }
+            </li>
+        }
+        <li class="active">@Model.CurrentPage.Name</li>
+        @*<li><a href="#">Home</a></li>
+
+            <li><a href="#">Main Category Page</a></li>
+
+
+
+            <li class="active">About</li>*@
+    </ol>

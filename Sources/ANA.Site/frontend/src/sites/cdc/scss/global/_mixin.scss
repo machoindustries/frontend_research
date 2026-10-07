@@ -1,0 +1,60 @@
+@import "./vars";
+
+/**
+ * Mixins
+ */
+
+/**
+ * Best Cross-browser solution for really long words
+ * browsers that can use hyphens will,
+ * and those that can't will break the word where necessary anyway
+ */
+@mixin hyphens() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/**
+ * Replace text with an image, such as the logos in the header and footer.
+ * Allows the text to be read by screen readers but disappear visually.
+ */
+@mixin image-replacement() {
+    text-indent: -200vw;
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+
+/**
+ * Creates an after pseudo-element that extends the inherited background color of the parent element
+ * the full width of the screen
+ */
+@mixin full-bleed-bckgrnd() {
+  position: relative;
+  &:after {
+  	content: '';
+  	position: absolute;
+  	height: 100%;
+  	width: 100vw;
+  	top: 0;
+  	left: 50%;
+    background-color: inherit;
+    background-image: inherit;
+  	transform: translateX(-50%);
+    z-index: 1;
+    background-size: cover;
+    background-position: center;
+  }
+
+  & > *{
+    position: relative;
+    z-index: 5;
+  }
+}
+
+@mixin ana-montserrat() {
+  font-family: 'Montserrat', sans-serif;
+}

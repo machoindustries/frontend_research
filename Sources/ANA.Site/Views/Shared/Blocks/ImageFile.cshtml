@@ -1,0 +1,49 @@
+﻿@using ANA.Site
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Media.ImageFile
+    
+@{
+    var tag = (Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string) ?? string.Empty;
+
+    var gridClass = tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator)
+        ? ANA.Site.Global.StringConstants.GridClass8ColRight
+        : ANA.Site.Global.StringConstants.GridClass8ColCentre;
+
+    var imageUrl = Model.ContentLink.GetFriendlyUrl();
+    var qsChar = imageUrl.Contains("?") ? "&" : "?";
+}
+
+<section class="c-media-block c-media-block--8col">
+    <div class="grid-constraint">
+        
+        <div class="grid">
+            <div class="grid__item @gridClass">
+                
+                <div class="grid">
+                    <div class="grid__item one-whole">
+                        <figure class="c-media-block__figure">
+                            <picture>
+                                <source srcset="@($"{imageUrl}{qsChar}width=867")" media="(min-width: 1280px)">
+                                <source srcset="@($"{imageUrl}{qsChar}width=748")" media="(min-width: 1024px)">
+                                <source srcset="@($"{imageUrl}{qsChar}width=867")" media="(min-width: 720px)">
+                                <source srcset="@($"{imageUrl}{qsChar}width=748")" media="(min-width: 480px)">
+                                <img src="@($"{imageUrl}{qsChar}width=422")" alt="@(Model.AltText ?? Model.CaptionTitle ?? Model.Caption)" class="c-media-block__image" />
+                            </picture>
+                        </figure>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.CaptionTitle))
+                    {
+                        <div class="c-media-block__caption grid__item one-whole">
+                            <div class="c-media-block__caption-content">
+                                <h2 class="c-media-block__heading">@Model.CaptionTitle</h2>
+                                <p class="c-media-block__description">@Model.Caption</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>    
+        </div>
+
+    </div>
+</section>

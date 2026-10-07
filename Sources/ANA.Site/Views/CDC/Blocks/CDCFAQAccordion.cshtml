@@ -1,0 +1,48 @@
+@using ANA.Site.Models.CDC.Blocks
+@model CDCFAQAccordion
+
+@{
+    IEnumerable<IContent> blocks = new List<IContent>();
+    blocks = (IEnumerable<IContent>)(this.Model.Cards != null && Model.Cards.FilteredItems != null
+        ? Model.Cards.FilteredItems.Select(i => ((IContent) i.LoadContent()))
+        : blocks);
+}
+
+<section class="faq-accordion small-12 @Model.GetCssClass()">
+    <h4>@Model.Heading</h4>
+    <ul class="accordion" data-accordion data-allow-all-closed="true">
+        @foreach (var block in blocks)
+        {
+            if (block is CDCPlainTextBlock)
+            {
+                RenderFAQPlainTextBlock(block as CDCPlainTextBlock);
+            }
+            else if (block is CDCTextBlock)
+            {
+                RenderFAQTextBlock(block as CDCTextBlock);
+            }
+        }
+    </ul>
+</section>
+
+@functions {
+void RenderFAQPlainTextBlock(CDCPlainTextBlock block)
+{
+    <li class="accordion-item" data-accordion-item>
+        <a href="#" class="accordion-title">@block.Heading</a>
+        <div class="accordion-content" data-tab-content>
+            <p>@block.Content</p>
+        </div>
+    </li>
+}
+
+void RenderFAQTextBlock(CDCTextBlock block)
+{
+    <li class="accordion-item" data-accordion-item>
+        <a href="#" class="accordion-title">@block.Heading</a>
+        <div class="accordion-content" data-tab-content>
+            @Html.Raw(block.Content)
+        </div>
+    </li>
+}
+}

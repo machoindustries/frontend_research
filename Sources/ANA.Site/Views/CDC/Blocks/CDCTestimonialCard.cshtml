@@ -1,0 +1,25 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCTestimonialCard
+
+<article class="testimonial-card">
+    <div class="content-container">
+        @if (Model.Image != null)
+        {
+            <div class="img-container hasimg">
+                @Html.PropertyFor(i => i.Image, new { @class = "card-img" })
+            </div>
+        }
+        <div class="quote-container">
+            <img class="quotation-marks" src="/assets/img/quotes.png" alt="image of quotation marks">
+            <div>@Html.Raw(Model.Text)</div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Author))
+        {
+            <div class="name"><span>- </span>@Model.Author</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Organization))
+        {
+            <div class="organization">@Model.Organization</div>
+        }
+    </div>
+</article>

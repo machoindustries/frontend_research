@@ -1,0 +1,7 @@
+@using EPiServer.ServiceLocation
+@using Microsoft.Extensions.DependencyInjection
+@model ANA.Site.Models.Media.ImageFile
+@{
+    var resolver = ServiceLocator.Current.GetService<IUrlResolver>();
+}
+<img src="@resolver.GetUrl(Model.ContentLink)" alt="@Model.AltText" title="@Model.Name" class="image-file"/>

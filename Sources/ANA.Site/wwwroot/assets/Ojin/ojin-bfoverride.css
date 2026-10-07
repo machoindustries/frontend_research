@@ -1,0 +1,19 @@
+
+
+#top {
+  width: 100%;
+}
+
+#topright,
+#topright p,
+#topright strong {
+    font-size: 11px
+}
+
+    #topright h1 {
+        font-size: 20px;
+    }
+
+#topright h2 {
+    font-size: 13px;
+}

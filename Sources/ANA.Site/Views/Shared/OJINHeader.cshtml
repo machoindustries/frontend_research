@@ -1,0 +1,76 @@
+@using System.Configuration
+@using System.Web
+@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.State
+@using ANA.Site.Settings
+@using EPiServer.Cms.Shell
+@using Geta.Optimizely.Extensions;
+@using Geta.Net.Extensions
+@using ANA.Site.Microsite.Extensions
+@using ANA.Site.Models.Blocks
+@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.OJIN.OJINInterfaces.IOJINCommonProperties>
+@*@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>*@
+
+@inject IAppSettings _appSettings;
+
+@{
+    var joinButton = Model.Layout.OJINSiteSettingsPage.CTAButton.GetContentItems<ButtonBlock>();
+}
+
+<header class="ojin-header">
+
+    <div class="ojin-header__desktop container">
+        <div class="ojin-header__top d-flex align-items-center">
+            @if (Model.Layout.SiteLogo != null)
+            {
+                <div class="logo mr-auto"><a href="@Model.Layout.SiteLogo.Link"><img src="@Model.Layout.SiteLogo.ImageUrl" alt="@Model.Layout.SiteLogo.Alt" class="lazyload" /></a></div>
+            }
+            <div class="ojin-header__btnCon">
+
+                @foreach (var button in joinButton)
+                {
+                    <a class="site-header-utility__button btn btn--primary" href="@button.ButtonUrl.GetFriendlyUrl()" target="@button.TargetFrame" title="@button.Text">
+                        <span>@button.Text</span>
+                    </a>
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="@($"{_appSettings.LogoutUrl}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true,true) + "?act=logout")}")"
+                       class="btn btn--secondary">@Html.Translate("/header/logout")</a>
+                }
+                else if (@Model.Layout.OJINSiteSettingsPage.LoginPage != null)
+                {
+                    var loginURL = Model.Layout.OJINSiteSettingsPage.LoginPage.ToString();
+                    <a href="@($"{loginURL}?returnurl={HttpUtility.UrlEncode(Model.CurrentPage.ContentLink.GetFriendlyUrl(true,true))}")" class="btn btn--secondary">@Html.Translate("/header/login")</a>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("OJINNavigation", Model)
+
+    <div class="ojin-header__mobile">
+        <div class="ojin-header__mobileWrapper">
+            <div class="ojin-header__hamburger">
+                <a href="javascript:void(0)"><img src="~/assets/Ojin/img/hamburger.svg" alt="" class="lazyload" /> </a>
+            </div>
+            <div class="ojin-search-mobile">
+                <form action="@Model.Layout.SearchPage" method="post">
+                    <input type="text" placeholder="Search" name="q">
+                    <button type="submit"><img src="~/assets/Ojin/img/search.svg" alt="search" class="lazyload" /></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @if (Model.Layout.MobileLogo != null)
+    {
+        <div class="ojin-header__mobLogo">
+            <img src="@Model.Layout.MobileLogo.ImageUrl" alt="@Model.Layout.MobileLogo.Alt" class="lazyload" />
+        </div>
+    }
+    @if (Model.Layout.OJINSiteSettingsPage.Notification != null && Model.Layout.OJINSiteSettingsPage.Notification.Count > 0)
+    {
+        @await Html.PartialAsync("OJINAlertBlock", Model)
+    }
+</header>

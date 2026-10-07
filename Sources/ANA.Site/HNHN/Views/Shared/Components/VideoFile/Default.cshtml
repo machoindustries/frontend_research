@@ -1,0 +1,5 @@
+@model ANA_HNHN.Models.ViewModels.VideoViewModel
+
+<video controls poster="@Model.PreviewImageUrl">
+    <source src="@Url.Content(Model.Url)" type="video/mp4"/>
+</video>

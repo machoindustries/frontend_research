@@ -1,0 +1,50 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.ViewModels.CallToActionViewModel
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .link-edit {
+            display: none;
+        }
+
+        .preview-display .edit-box {
+            margin-left: 30px;
+        }
+
+        .preview-display .link-edit {
+            display: block;
+            font-size: 1.0rem;
+            height: 20px;
+            text-align: center;
+            width: 40px;
+            z-index: 999;
+        }
+
+        .preview-display .image-edit {
+            float: left;
+            margin-left: 10px;
+            min-height: 40px;
+        }
+    </style>
+}
+
+@{
+    var btnViewData = (ViewData["BtnClass"] ?? "").ToString();
+    var btnClass = (!string.IsNullOrWhiteSpace(btnViewData) ? btnViewData : "btn-primary btn-hnhn");
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <div class="clearfix edit-box">
+        <span class="link-edit" @Html.EditAttributes(m => m.Link)>Edit link</span>
+        <a href="#" class="btn @btnClass"  @Html.EditAttributes(m => m.Text)>@Html.PropertyFor(m => m.Text)</a>
+    </div>
+}
+else
+{
+    <a href="@Url.ContentUrl(Model.Link)" class="btn @btnClass">@Model.Text</a>
+}

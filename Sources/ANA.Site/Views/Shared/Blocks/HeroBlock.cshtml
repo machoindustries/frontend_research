@@ -1,0 +1,100 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.ViewModels.HeroBlockViewModel
+@using EPiServer.ServiceLocation
+@using Geta.Optimizely.Extensions;
+@using EPiServer.Web.Routing;
+
+@model ANA.Site.Models.Blocks.HeroBlock
+
+@{
+    var heroBlockViewModelFactory = ServiceLocator.Current.GetInstance<HeroBlockViewModelFactory>();
+    var heroBlockViewModel = heroBlockViewModelFactory.CreateViewModel(this.Model);
+}
+
+
+@{
+    var mode = ViewData["Mode"];
+    var carouseltab = string.Empty;
+
+    if (mode != null && (string)mode == "carousel")
+    {
+        carouseltab = $"<div class='c-hero-carousel__tab'><span class='c-hero-carousel__tab-text'>{Model.CarouselHeading}</span></div>";
+    }
+
+    var heroStyle = ViewData["HeroStyle"] as string ?? "";
+
+    var rand = Guid.NewGuid().ToString();
+}
+
+<div class="c-home-hero" data-dot="@carouseltab">
+    <div class="hero">
+        @if (!string.IsNullOrWhiteSpace(Model.AdvancedStyles))
+        {
+            @Html.Raw(Model.AdvancedStyles)
+
+            if (Model.VideoUrl != null && !Model.VideoUrl.IsEmpty() || heroBlockViewModel.HasImage)
+            {
+                <div class="image" data-require="./src/views/video-view">
+                    @if (heroBlockViewModel.HasImage)
+                    {
+                        <img src="@Url.ContentUrl(Model.Image)" alt="@Model">
+                    }
+                    else if (heroBlockViewModel.HasYoutubeImage)
+                    {
+                        <a href="@Url.ContentUrl(Model.VideoUrl)" data-video-link>
+                            <img src="@heroBlockViewModel.YoutubeImage" alt="@Model">
+                            <div class="play-icon"></div>
+                        </a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div @(Model.RemoveFilter == false ? "class=text" : "class=no-text")>
+                @if (!string.IsNullOrWhiteSpace(Model.Heading))
+                {
+                    <h1>@Model.Heading</h1>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.Introduction))
+                {
+                    <p>
+                        @Html.Raw(Model.Introduction.Replace("\n", "<br />"))
+                    </p>
+                }
+                @if (Model.Cta != null && Model.Cta.ButtonUrl != null && Model.Cta.Text != null)
+                {
+                    <div class="button desktop-only">
+                        <a href="@Model.Cta.ButtonUrl.GetFriendlyUrl()" class="e-button--blue" target="@Model.Cta.TargetFrame">@Model.Cta.Text</a>
+                    </div>
+                }
+            </div>
+
+            if (Model.VideoUrl != null && !Model.VideoUrl.IsEmpty() || heroBlockViewModel.HasImage)
+            {
+                <div class="image" data-require="./src/views/video-view">
+                    @if (heroBlockViewModel.HasImage)
+                    {
+                        <img src="@Url.ContentUrl(Model.Image)" alt="@Model">
+                    }
+                    else if (heroBlockViewModel.HasYoutubeImage)
+                    {
+                        <a href="@Url.ContentUrl(Model.VideoUrl)" data-video-link>
+                            <img src="@heroBlockViewModel.YoutubeImage" alt="@Model.Heading">
+                            <div class="play-icon"></div>
+                        </a>
+                    }
+                </div>
+            }
+
+            if (Model.Cta != null && Model.Cta.ButtonUrl != null && Model.Cta.Text != null)
+            {
+                <div class="button mobile-only">
+                    <a href="@Model.Cta.ButtonUrl.GetFriendlyUrl()" class="e-button--blue" target="@Model.Cta.TargetFrame">@Model.Cta.Text</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+@Html.PropertyFor(x => x.Blocks)

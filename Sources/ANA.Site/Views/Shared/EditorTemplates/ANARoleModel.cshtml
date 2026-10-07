@@ -1,0 +1,14 @@
+﻿
+@using EPiServer.Personalization.VisitorGroups
+
+@model ANA.Site.Business.Personalization.ANARoleModel
+
+<div class="epi-criteria-grouping">
+    <span class="epi-criteria-inlineblock">
+        @* TODO, Test this Upgrade*@
+        @Html.EditorFor(x => x.Condition)
+    </span>
+    <span class="epi-criteria-inlineblock">
+        @Html.EditorFor(x => x.RoleName)
+    </span>
+</div>

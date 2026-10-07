@@ -1,0 +1,137 @@
+.image-text-social-link-block {
+    background-color: #7D4578;
+    margin: .25rem 0rem;
+    color: $white;
+    padding: 2rem;
+
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    @media(min-width: 640px) {
+        padding: 4rem;
+    }
+
+    @media(min-width: 1024px) {
+        padding: 4rem 8rem;
+    }
+
+    .heading {
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        line-height: 2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+
+
+    .img-container {
+        position: relative;
+        padding-bottom: 80%;
+        width: 100%;
+        height: 0;
+
+        img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            top: 0;
+            left: 0
+        }
+
+        .overlay {
+            background-color: transparent;
+            opacity: .5;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            top: 0;
+            left: 0;
+
+            &:hover {
+                background-color: #67BACA;
+            }
+        }
+    }
+
+    &.blue-theme {
+        background-color: #13619C;
+
+        .img-container .overlay:hover {
+            background-color: #67BACA;
+        }
+    }
+
+    &.teal-theme {
+        background-color: #67BACA;
+
+        .img-container .overlay:hover {
+            background-color: #67BACA;
+        }
+    }
+
+    &.orange-theme {
+        background-color: #FAAA51;
+
+        .img-container .overlay:hover {
+            background-color: #67BACA;
+        }
+    }
+
+    .content-container {
+        font-size: 0.75rem;
+        line-height: 2.125rem;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        @media(min-width: 1024px) {
+            padding-left: 2rem;
+        }
+
+        .headline {
+            font-size: 2rem;
+            line-height: 2.8125rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: $white;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .content {
+            font-size: 1.125rem;
+            line-height: 2.125rem;
+            font-weight: 400;
+            margin-top: .5rem;
+        }
+        
+        ul {
+            display: flex;
+            flex-direction: row;
+            list-style: none;
+            align-items: center;
+
+            li {
+                padding: 0rem .25rem;
+
+                &:first-child {
+                    padding: 0;
+                }
+            }
+
+            svg {
+                fill: $white;
+                height: 15px;
+                width: 15px;
+                cursor: pointer;
+                margin-left: 1rem;
+            }
+        }
+
+    }
+} 

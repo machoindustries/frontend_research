@@ -1,0 +1,43 @@
+<!--RESOURCES PAGE  -->
+<div class="grid-container">
+    <div class="grid-x">
+      <h1 class="small-12">Alternating Text Blocks</h1>
+      {{> alternating-text-block alternating-text-block}}
+      {{> alternating-text-block-mirror alternating-text-block}}
+      <header class="small-12 cell">
+        <h1>Resources/Training</h1>
+      <h1 class="small-12">PFL3-87 --- FAQ 3 Across</h1>
+      {{> 3-across-card-padded data=featured-resources}}
+      <h1>PFL3-75</h1>
+      {{> faq data=faq-dummy-data}}
+      
+      {{> cta-banner}}
+
+      {{> cta-mask}}
+
+      {{> related-news}}
+
+      {{> disclaimer disclaimer}}
+
+      {{> card-carousel}}
+
+      {{> card-nav}}
+      
+      <header class="small-12 cell">
+        <h1>Resources</h1>
+      </header>
+      <div class="small-12 cell grid-x">
+        <div class="cell small-12 large-3">
+          {{> filter-resources}}
+        </div>
+        <div class="cell small-12 large-9">
+          {{> filter-count-results}}
+          {{> 3-across-cards data=card-carousel}}
+          {{> resource-pagination}}
+        </div>
+      </div>
+    </div>
+</div>
+
+
+

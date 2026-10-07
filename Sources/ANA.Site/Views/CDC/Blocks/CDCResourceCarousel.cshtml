@@ -1,0 +1,11 @@
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@model CDCResourceCarouselViewModel
+
+<section class="resource-carousel grid-x align-center cell small-12">
+    @foreach (var resource in Model.Resources)
+    {
+        <div class="cell small-12 card-wrapper align-center medium-6 large-3 grid-x">
+            await @Html.PartialAsync("~/Views/CDC/Partials/_CDCResourceTopicsCard.cshtml", resource)
+        </div>
+    }
+</section>

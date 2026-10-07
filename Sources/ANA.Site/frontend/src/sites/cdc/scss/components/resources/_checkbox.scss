@@ -1,0 +1,53 @@
+// Shared checkbox/label styling for the resource filter accordions
+// (Topics/Type/Source and Training variants). Include filter-checkbox-inputs
+// inside .inputs-labels, and filter-checkbox-checked as a sibling of
+// .inputs-labels (matches the :checked + label adjacent-sibling selector).
+
+@mixin filter-checkbox-inputs {
+  .filter-checkbox[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .filter-label-sub {
+    cursor: pointer;
+    padding-bottom: .5rem;
+
+    .sub-category-icon {
+      padding: 0rem .5rem;
+    }
+  }
+
+  .filter-label {
+    display: flex;
+    align-items: center;
+    margin-top: 0.125rem;
+    margin-bottom: auto;
+  }
+
+    .filter-label::before {
+      content: '';
+      width: 1rem;
+      height: 1rem;
+      padding: 0rem;
+      border: 0.0625rem solid black;
+      margin-right: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+}
+
+@mixin filter-checkbox-checked {
+  .filter-checkbox:checked + .filter-label::before {
+    content: '✔';
+    // Fix: Montserrat is loaded via the Google Fonts Latin subset, which
+    // does not include dingbat/symbol glyphs like ✔ (U+2714). Without an
+    // explicit fallback here, browsers render the checkmark as a missing
+    // -glyph placeholder ("?" on Windows/Chrome).
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: transparent;
+    border: 1px solid black;
+  }
+}

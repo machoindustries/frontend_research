@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Fields>
+  <Column>
+	<EntityColumnName>Email</EntityColumnName>
+    <ColumnName>Email-Address</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+    <EntityColumnName>FirstName</EntityColumnName>
+    <ColumnName>First Name</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>LastName</EntityColumnName>
+    <ColumnName>Last Name</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	  <EntityColumnName>Addressline1</EntityColumnName>
+    <ColumnName>Address Line 1</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>Addressline2</EntityColumnName>
+    <ColumnName>Address Line 2</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>City</EntityColumnName>
+    <ColumnName>City</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	  <EntityColumnName>State</EntityColumnName>
+    <ColumnName>State</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>Country</EntityColumnName>
+    <ColumnName>Country</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>ZipCode</EntityColumnName>
+    <ColumnName>Zipcode</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+  <Column>
+	<EntityColumnName>Quantity</EntityColumnName>
+    <ColumnName>Quantity</ColumnName>
+    <IsRequired>YES</IsRequired>
+  </Column>
+ </Fields>

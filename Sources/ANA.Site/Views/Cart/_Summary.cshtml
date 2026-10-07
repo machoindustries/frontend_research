@@ -1,0 +1,126 @@
+﻿@using ANA.Site.Models.ViewModels
+@using Geta.Optimizely.Extensions;
+@model CartViewModel
+
+
+
+<div data-require="./src/views/cart-summary-view">
+    @{ await Html.RenderPartialAsync("_DonationsItem", Model); }
+
+    @*<div class="c-cart-summary grid" data-require="./src/views/cart-summary-view" data-hide-when-cart-empty data-failed-discount-title="@(Model.CurrentPage.FailedDiscountHeading ?? "Sorry")" data-failed-discount-text="@(Model.CurrentPage.FailedDiscountText ?? "The code you entered can not be redeemed at this time. Please note that shipping discounts can only be entered on the checkout page.")">*@
+    <div class="c-cart-summary grid" data-hide-when-cart-empty data-failed-discount-title="@(Model.CurrentPage.FailedDiscountHeading ?? "Sorry")" data-failed-discount-text="@(Model.CurrentPage.FailedDiscountText ?? "The code you entered can not be redeemed at this time. Please note that shipping discounts can only be entered on the checkout page.")">
+        <div class="grid__item one-whole large--one-half pad--large--one-half">
+            <div class="c-cart-summary__row c-cart-summary__row--border-bottom">
+                <div class="grid">
+                    <div class="grid__item one-half">
+                        <a href="@Model.ContinueShoppingUrl" class="c-cart-summary__action c-cart-summary__action--continue">@Html.Translate("/CartCheckout/Labels/ContinueShopping")</a>
+                    </div>
+                    <div class="grid__item one-half">
+                        <a href="#" class="c-cart-summary__action c-cart-summary__action--add c-cart-summary__action--right" data-add-discount-code>@Html.Translate("/CartCheckout/Labels/AddDiscountCode")</a>
+                    </div>
+                    <div class="grid__item one-whole" data-add-discount-code-panel>
+                        <div class="c-cart-summary__discount-panel">
+                            @using (Html.BeginForm("AddDiscount", "UserData", FormMethod.Post, new { @class = "c-cart-summary__modal-form", data_require = "./src/views/form-view" }))
+                            {
+                                <div data-anti-forgery-token-container>
+                                    @Html.AntiForgeryToken()
+                                </div>
+
+                                <div class="grid">
+                                    <div class="grid__item one-whole">
+                                        <label for="@Html.IdFor(p => p.DiscountCode)" class="c-cart-summary__discount-heading">@Html.Translate("/CartCheckout/Labels/EnterDiscountCode"):</label>
+                                    </div>
+                                    <div class="grid__item one-whole medium--two-thirds large--four-sixths">
+                                        @Html.TextBoxFor(m => m.DiscountCode, new { @class = "c-cart-summary__discount-input e-form__input e-form__input--text", data_add_discount_code_input = "" })
+                                    </div>
+                                    <div class="grid__item one-whole medium--one-third large--two-sixths">
+                                        <input class="e-button e-button--full" type="submit" value="@Html.Translate("/CartCheckout/Labels/ApplyDiscountCode")" data-apply-discount-code />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="grid__item one-whole">
+                        <ul class="c-cart-summary__discount-list" data-applied-discounts-list>
+                            <p class="c-cart-summary__discount-line"><em>@Html.Translate("/CartCheckout/Labels/AppliedPromotion"):</em> <span data-applied-discounts-total>-@Model.Summary.CouponDiscountTotal.ToString()</span></p>
+                            @foreach (var couponDiscount in Model.Summary.CouponDiscounts)
+                            {
+                                <li class="c-cart-summary__discount" data-applied-discount-code="@couponDiscount.DiscountCode">
+                                    <p class="c-cart-summary__discount-caveat">
+                                        @couponDiscount.DisplayName
+                                        @if (!string.IsNullOrEmpty(couponDiscount.DiscountCode))
+                                        {
+                                            <a href="@Url.Action("RemoveDiscount", "UserData", new {couponDiscount.DiscountCode})" class="c-cart-summary__discount-remove" data-applied-discount-remove>Remove</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="c-cart-summary__discount-remove"></span>
+                                        }
+                                    </p>
+                                </li>
+                            }
+                        </ul>
+
+                        @if (!string.IsNullOrEmpty(Model.Summary.AppliedMarketCodes))
+                        {
+                            <p class="c-cart-summary__discount-caveat">
+                                @Model.Summary.AppliedMarketCodes
+                                <span class="c-cart-summary__discount-remove"></span>
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid__item one-whole large--one-half pad--large--one-half">
+            <div class="c-cart-summary__row c-cart-summary__row--border-bottom">
+                <div class="c-cart-summary__subtotal">
+                    @Html.Translate("/CartCheckout/Labels/Subtotal"): <span class="c-cart-summary__subtotal-text" data-cart-summary-subtotal>@Model.Summary.SubTotal.ToString()</span>
+                </div>
+            </div>
+        </div>
+        <div class="grid__item one-whole c-cart-summary__row">
+            <div class="grid">
+                @if (Model.ShowJoinAna)
+                {
+                    <div class="grid__item one-whole large--one-half">
+                        @{ Html.RenderContentData(Model.CurrentPage.JoinPromoBlock.GetContent(), false); }
+                    </div>
+                }
+            <div class="grid__item one-whole large--one-half@(Model.ShowJoinAna ? "" : " push--large--one-half")">
+                @{ await Html.RenderPartialAsync("_Donations", Model); }
+            </div>
+                @using (Html.BeginForm("Checkout", "Cart",
+                    FormMethod.Post,
+                    new
+                    {
+                        @class = "grid__item one-whole",
+                        data_require = "./src/views/form-view"
+                    }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="grid">
+                        <div class="grid__item one-whole large--one-half pad--large--one-half">
+                            <div class="c-cart-summary__row c-cart-summary__row--border-top">
+                                <div class="grid grid--middle c-cart-summary__checkout">
+                                    <div class="grid__item one-half">
+                                        <a href="@Model.ContinueShoppingUrl" class="c-cart-summary__action c-cart-summary__action--continue">@Html.Translate("/CartCheckout/Labels/ContinueShopping")</a>
+                                    </div>
+                                    <div class="grid__item one-half">
+                                        <input class="e-button e-button--submit e-button--blue e-button c-cart-summary__button c-cart-summary__button--checkout" type="submit" value="@Html.Translate("/CartCheckout/Labels/Checkout")" data-tracked-cta>
+                                    </div>
+                                    <div class="grid__item one-whole">
+                                        <p class="c-cart-summary__checkout-caveat">
+                                            @Html.Translate("/CartCheckout/BulkPurchase") <a href="mailto:@Html.Translate("/CartCheckout/AnaSalesEmail")" class="c-cart-summary__checkout-caveat-link">@Html.Translate("/CartCheckout/AnaSalesEmail")</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

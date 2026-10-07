@@ -1,0 +1,81 @@
+﻿@using System.Globalization
+@using ANA.Site.Models.Blocks
+@model ANA.Site.Business.Interfaces.IHero
+
+@{ 
+    var heroCarouselAutoPlay = Model.HeroAutoPlay == true ? "true": "false";
+    var heroCarouselAutoPlayMs = Model.HeroAutoPlayTime > 0.0m ? Math.Round(Model.HeroAutoPlayTime * 1000) : 0;
+
+    var heroCarouselAutoPlayTime = heroCarouselAutoPlayMs > 0 ? heroCarouselAutoPlayMs.ToString(CultureInfo.CurrentCulture) : "";
+}
+
+@if (Model.HeroBlocks != null && Model.HeroBlocks.FilteredItems.Any())
+{
+    @*Part of DT2-140*@
+    <style>
+        @@media only screen and (max-width: 768px) {
+            .c-hero__heading { color: #003366 !important; }
+            .c-hero__intro-text { color: #000000 !important; }
+        }
+    </style>
+
+
+    switch (Model.HeroStyle)
+    {
+        case "Home":
+            if (Model.HeroBlocks.FilteredItems.Count() > 1)
+            {
+                <div class="c-hero-carousel c-hero-carousel--tabs" data-require="./src/views/hero-carousel-view" data-tabs data-carousel-autoplay="@heroCarouselAutoPlay" data-carousel-autoplay-time="@heroCarouselAutoPlayTime">
+                    <div class="c-hero-carousel__owl owl-carousel" data-carousel>
+
+                        @foreach (var hero in Model.HeroBlocks.FilteredItems.Select(x => x.LoadContent() as HeroBlock))
+                        {
+                            { await Html.RenderPartialAsync("Blocks/HeroBlock", hero, new ViewDataDictionary(this.ViewData) { { "AdditionalCssClass", "c-hero--carousel" }, { "Mode", "carousel" } }); }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                { await Html.RenderPartialAsync("Blocks/HeroBlock", Model.HeroBlocks.FilteredItems.FirstOrDefault().LoadContent() as HeroBlock); }
+            }
+            break;
+        case "Cutout":
+            {
+                await Html.RenderPartialAsync("Blocks/HeroBlock", Model.HeroBlocks.FilteredItems.FirstOrDefault().LoadContent() as HeroBlock,
+                    new ViewDataDictionary(this.ViewData)
+                    {
+                        { "AdditionalCssClass", "c-hero--cutout c-hero--cutout-left" },
+                        { "HeroStyle", Model.HeroStyle }
+                    });
+            }
+            break;
+        case "Enterprise":
+            {
+                await Html.RenderPartialAsync("Blocks/HeroBlock", Model.HeroBlocks.FilteredItems.FirstOrDefault().LoadContent() as HeroBlock,
+                    new ViewDataDictionary(this.ViewData)
+                    {
+                        { "AdditionalCssClass", "c-hero--cutout c-hero--cutout-tall" },
+                        { "HeroStyle", Model.HeroStyle }
+                    });
+            }
+            break;
+        default:
+            if (Model.HeroBlocks.FilteredItems.Count() > 1)
+            {
+                <div class="c-hero-carousel" data-require="./src/views/hero-carousel-view" data-tabs data-carousel-autoplay="@heroCarouselAutoPlay" data-carousel-autoplay-time="@heroCarouselAutoPlayTime">
+                    <div class="c-hero-carousel__owl owl-carousel" data-carousel>
+                        @foreach (var hero in Model.HeroBlocks.FilteredItems.Select(x => x.LoadContent() as HeroBlock))
+                        {
+                            { await Html.RenderPartialAsync("Blocks/HeroBlock", hero, new ViewDataDictionary(this.ViewData) { { "AdditionalCssClass", "c-hero--carousel" }, { "Mode", "carousel" } }); }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                { await Html.RenderPartialAsync("Blocks/HeroBlock", Model.HeroBlocks.FilteredItems.FirstOrDefault().LoadContent() as HeroBlock); }
+            }
+            break;
+    }
+}

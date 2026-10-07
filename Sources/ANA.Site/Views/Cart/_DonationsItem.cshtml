@@ -1,0 +1,126 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Commerce.Variants
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.ViewModels
+@using EPiServer
+@using EPiServer.Commerce.Catalog.ContentTypes
+@using Geta.Optimizely.Extensions
+@model CartViewModel
+
+@{
+    DonationViewModel selectedpacoption = null;
+    if (Model.IsPacDonationAvailable && Model.PacDonationOptions.Any())
+    { selectedpacoption = Model.PacDonationOptions.FirstOrDefault(p => p.IsSelected.Equals(true));
+    }
+    DonationViewModel selectedfoundationoption = null;
+    if (Model.IsFoundationDonationAvailable && Model.FoundationDonationOptions.Any())
+    { selectedfoundationoption = Model.FoundationDonationOptions.FirstOrDefault(p => p.IsSelected.Equals(true));
+    }
+
+    //determine style for background color based off number of items displayed in cart
+    var iseven = (Model.Shipment.CartItems.Count(i => i.IsVisible) & 1) == 0;
+    var pacstyle = iseven ? "even" : "odd";
+    var foundationstyle = iseven || (selectedpacoption != null) ? "even" : "odd";
+
+    var settings = SettingsHelper.GetSettings();
+
+    // Get logo defined in the CMS, but if null, get fallback file
+    var membershipLogo = settings?.MembershipCartLogo != null ? settings.MembershipCartLogo.GetFriendlyUrl() : "/assets/img/logos/ANA-logo-flame-portrait.png";
+
+    var foundationLogo = "/globalassets/logos/logo_anf_svg_new.svg";
+}
+    <span data-cart-line-items>
+
+        @if (selectedpacoption != null)
+            {
+                <li class="c-order-detail__items-row @pacstyle" data-order-item-row>
+                    <div class="c-cart-summary__donation-total">
+                    </div>
+                    <div class="grid c-order-item" data-require="./src/views/order-item-view">
+                        <div class="grid__item one-whole medium--six-twelfths">
+                            <div class="c-order-item__content c-order-item__content--figure-title">
+                                <figure class="c-order-item__figure c-order-item__figure--icon"
+                                        style="background-color:#fff;">
+                                    <img src="@membershipLogo" title="" alt="" class="c-order-item__image" style="max-height: 4.25rem;" />
+                                </figure>
+
+                                <div class="c-order-item__title">
+                                    <span class="c-order-item__author">@Html.Translate("/CartCheckout/Labels/PACDonation"):</span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dl class="c-order-item__content c-order-item__content--item-price">
+                                <dt class="c-order-item__row-label">Item price:</dt>
+                                <dd class="c-order-item__pricing" data-order-item-pricing=""><span class="c-order-item__pricing-price">@selectedpacoption.Amount</span></dd>
+                            </dl>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dd class="c-order-item__quantity">
+                                <div class="e-quantity-selector">
+                                    <a class="e-quantity-selector__remove" remove-data-pacdonation-code data-donation-code="@selectedpacoption.Code" href="#">Remove</a>
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dl class="c-order-item__content c-order-item__content--right c-order-item__content--item-total">
+                                <dt class="c-order-item__row-label">@Html.Translate("/CartCheckout/Labels/PlacedTotal"):</dt>
+                                <dd class="c-order-item__pricing">
+                                    <div class="c-order-item__pricing-price" data-item-row-price>@selectedpacoption.Amount</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </li>
+
+            }
+        
+
+        @if (selectedfoundationoption != null)
+            {
+                <li class="c-order-detail__items-row @foundationstyle" data-order-item-row>
+                    <div class="c-cart-summary__donation-total">
+                    </div>
+                    <div class="grid c-order-item" data-require="./src/views/order-item-view">
+                        <div class="grid__item one-whole medium--six-twelfths">
+                            <div class="c-order-item__content c-order-item__content--figure-title">
+                                <figure class="c-order-item__figure c-order-item__figure--icon"
+                                        style="background-color:#fff;">
+                                    <img src="@foundationLogo" title="" alt="" class="c-order-item__image" style="max-height: 4.25rem;" />
+                                </figure>
+                                <div class="c-order-item__title">
+                                    <span class="c-order-item__author">@Html.Translate("/CartCheckout/Labels/Donation"):</span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dl class="c-order-item__content c-order-item__content--item-price">
+                                <dt class="c-order-item__row-label">Item price:</dt>
+                                <dd class="c-order-item__pricing" data-order-item-pricing=""><span class="c-order-item__pricing-price">@selectedfoundationoption.Amount</span></dd>
+                            </dl>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dd class="c-order-item__quantity">
+                                <div class="e-quantity-selector">
+                                    <a class="e-quantity-selector__remove" remove-data-donation-code data-donation-code="@selectedfoundationoption.Code" href="#">Remove</a>
+                                </div>
+                            </dd>
+                        </div>
+                        <div class="grid__item one-whole medium--two-twelfths">
+                            <dl class="c-order-item__content c-order-item__content--right c-order-item__content--item-total">
+                                <dt class="c-order-item__row-label">@Html.Translate("/CartCheckout/Labels/PlacedTotal"):</dt>
+                                <dd class="c-order-item__pricing">
+                                    <div class="c-order-item__pricing-price" data-item-row-price>@selectedfoundationoption.Amount</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </li>
+            }
+        
+
+    </span>
+

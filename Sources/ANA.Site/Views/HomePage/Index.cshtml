@@ -1,0 +1,12 @@
+﻿@using ANA.Site.Models.ViewModels
+
+@model HomePageViewModel
+
+<main class="ana-page-content" id="content">
+
+    @Html.PropertyFor(x => x.CurrentPage.HeaderContentArea, new { HasContainer = false, HasChildrenContainer = false })
+    @Html.PropertyFor(x => x.CurrentPage.HeroBannerContentArea, new { HasContainer = false, HasChildrenContainer = false })
+    @Html.PropertyFor(x => x.CurrentPage.MainBodyContentArea, new { HasContainer = false, HasChildrenContainer = false })
+    @Html.PropertyFor(x => x.CurrentPage.FooterContentArea, new { HasContainer = false, HasChildrenContainer = false })
+
+</main>

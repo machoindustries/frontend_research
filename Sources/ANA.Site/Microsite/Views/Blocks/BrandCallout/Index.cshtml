@@ -1,0 +1,25 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.BrandCallout.BrandCalloutBlock
+
+<div class="grid-x ana-featured-content">
+    <div class="ana-featured-content__image-wrapper @(Model.AlignCalloutRight ? "large-offset-5 medium-offset-5" : "large-offset-2 medium-offset-2") large-5 medium-8 cell">
+        @if (Model.Image != null)
+        {
+            var coverImage = Model.Image.Get<ImageFile>();
+            <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="ana-featured-content__image" />
+        }
+    </div>
+    <div class="ana-featured-content__card large-6 @(Model.AlignCalloutRight ? "medium-offset-2" : "medium-offset-4") medium-7 cell anim-waypoint">
+        @*<h5 class="ana-featured-content__category">category</h5>*@
+        <h2 class="ana-featured-content__title">@Html.PropertyFor(m => m.Heading)</h2>
+        <p class="ana-featured-content__lead-in">
+            @Html.PropertyFor(m => m.Description)
+        </p>
+        <a id="@Model.ReadMoreLinkTrackId" href="@Model.ReadMoreLink.GetSafeFriendlyUrl()" class="ana-featured-content__button"><span>@(string.IsNullOrEmpty(Model.CTALabel) ? "Learn More" : Model.CTALabel)</span></a>
+    </div>
+</div>

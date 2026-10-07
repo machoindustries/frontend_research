@@ -1,0 +1,53 @@
+﻿@using ANA.Site.Business.Extensions
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+@using Geta.Optimizely.Extensions
+@model ANA.Site.Models.Blocks.CtaBlock
+
+<article class="c-cta-block">
+    <div class="c-cta-block__inner">
+
+        @if (!ContentReference.IsNullOrEmpty(Model.Image))
+        {
+            var image = Model.Image.GetContent() as ImageFile;
+            var url = Model.Image.GetFriendlyUrl();
+            url = url + (url.Contains("?") ? "&" : "?") + "width=400";
+
+            <img src="@url" alt="@image.AltText" class="c-cta-block__image" />
+        }
+        else if (!string.IsNullOrEmpty(Model.Icon))
+        {
+            <div class="c-cta-block__icon-wrap">
+                <span class="icon--icon-@(Model.Icon)"></span>
+            </div>
+        }
+        
+        <h3 class="c-cta-block__heading@(ContentReference.IsNullOrEmpty(Model.Image) && !string.IsNullOrEmpty(Model.Icon) ? " c-cta-block__heading--icon" : "")" @Html.EditAttributes(x => x.Heading)>
+            @using (ANA.Site.Business.Helpers.HtmlHelpers.BeginConditionalLink(Html,Model.HeadingLink != null, new HtmlString(Model.HeadingLink != null ? Model.HeadingLink.GetFriendlyUrl() : ""), cssClass: "c-cta-block__heading-link"))
+            {
+                @Model.Heading
+            }
+        </h3>
+        
+        @if (Model.Date != null)
+        {
+            <div class="c-cta-block__date" @Html.EditAttributes(x => x.Date)>
+                <time>@Model.Date.Value.Date.ToAnaFormatString()</time>
+            </div>
+        }
+        
+        @if (!string.IsNullOrWhiteSpace(Model.Authors))
+        {
+            <div class="c-cta-block__authors">@Model.Authors</div>
+        }
+
+        @if (Model.Content != null && !Model.Content.IsEmpty || ContentHelper.PageIsInEditMode())
+        {
+            <div class="c-cta-block__content e-richtext">
+                @Html.PropertyFor(m => m.Content)
+            </div>
+        }
+    </div>
+
+</article>

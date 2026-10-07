@@ -1,0 +1,18 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCCTABanner
+
+<section class="cta-banner mt-4 @Model.GetCssClass()" style="@Model.GetInlineStyle()">
+    @Html.PropertyFor(i => i.Image, new { @class = "bkgr-img" })
+    <div class="overlay-content">
+        <div class="logo">
+            <img src="/assets/img/logos/project-first-line-logo-color-no-shield.svg" alt="Project FirstLine Logo" />
+            <img src="/assets/img/logos/project-first-line-logo-color-no-shield.svg" alt="Project FirstLine Logo" />
+        </div>
+        @Html.PropertyFor(i => i.Text)
+        @if (Model.Buttons.HasContent())
+        {
+            @await Html.PartialAsync("~/Views/CDC/Partials/_CDCButtonList.cshtml", Model.Buttons)
+        }
+    </div>
+</section>

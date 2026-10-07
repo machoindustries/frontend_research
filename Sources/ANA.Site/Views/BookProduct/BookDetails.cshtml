@@ -1,0 +1,51 @@
+﻿@using ANA.Site.Models.Commerce.Variants
+@model IEnumerable<ANA.Site.Models.ViewModels.VariantsViewModel> 
+
+@if(Model != null && Model.Any())
+{
+    <div class="e-product-detail__sidebar grid__item one-whole large--three-twelfths">
+        @foreach (var variant in Model)
+        {
+            <div class="e-book-stat-summary grid">
+                <div class="e-book-stat-summary__heading grid__item one-whole">@variant.VariantType</div>
+                <div class="grid__item one-whole">
+                    <dl class="grid">
+                        @{
+                            string isbn;
+                            string pub;
+                            string pages;
+
+                            if (variant.Variant is EBookVariant bookVariant)
+                            {
+                                isbn = bookVariant.Isbn;
+                                pub = bookVariant.PublishNumber;
+                                pages = bookVariant.Pages;
+                            }
+                            else
+                            {
+                                isbn = ((BookVariant) variant.Variant).Isbn;
+                                pub = ((BookVariant) variant.Variant).PublishNumber;
+                                pages = ((BookVariant) variant.Variant).Pages;
+                            }
+                        }
+
+                        @if(!string.IsNullOrEmpty(isbn)) {
+                            <dt class="e-book-stat-summary__label grid__item three-twelfths small--two-twelfths">ISBN:</dt>
+                            <dd class="e-book-stat-summary__value grid__item nine-twelfths small--ten-twelfths">@isbn</dd>
+                        }
+                        @if (!string.IsNullOrEmpty(pub))
+                        {
+                            <dt class="e-book-stat-summary__label grid__item three-twelfths small--two-twelfths">PUB:</dt>
+                            <dd class="e-book-stat-summary__value grid__item nine-twelfths small--ten-twelfths">@pub</dd>
+                        }
+                        @if (!string.IsNullOrEmpty(pages))
+                        {
+                            <dt class="e-book-stat-summary__label grid__item three-twelfths small--two-twelfths">Pages:</dt>
+                            <dd class="e-book-stat-summary__value grid__item nine-twelfths small--ten-twelfths">@pages pages</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,53 @@
+@model ANA.Site.Models.ViewModels.CSNA.CSNADashboardPageViewModel
+@{
+    Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/powerbi-client@2.23.1/dist/powerbi.js"></script>
+
+<div id="reportContainer" style="height:800px;width:100%;"></div>
+<div id="reportError" role="alert" style="display:none;color:#b00020;margin-top:1rem;"></div>
+
+<script>
+    (async function loadReport() {
+        const errorEl = document.getElementById("reportError");
+        const reportContainer = document.getElementById("reportContainer");
+
+        const params = new URLSearchParams({
+            reportId: @Html.Raw(Json.Serialize(Model.ReportId)),
+            workspaceId: @Html.Raw(Json.Serialize(Model.WorkspaceId))
+        });
+
+        const embedConfigUrl = @Html.Raw(Json.Serialize(Model.EmbedConfigUrl));
+
+        try {
+            const response = await fetch(`${embedConfigUrl}?${params.toString()}`, {
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                throw new Error(`Embed config request failed: ${response.status}`);
+            }
+
+            const config = await response.json();
+
+            powerbi.embed(reportContainer, {
+                type: "report",
+                id: config.reportId,
+                embedUrl: config.embedUrl,
+                accessToken: config.embedToken,
+                tokenType: window["powerbi-client"].models.TokenType.Embed,
+                settings: {
+                    panes: {
+                        filters: { visible: false },
+                        pageNavigation: { visible: true }
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Power BI embed failed", err);
+            errorEl.textContent = "We couldn't load the dashboard. Please try again later.";
+            errorEl.style.display = "block";
+        }
+    })();
+</script>

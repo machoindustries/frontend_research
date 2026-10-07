@@ -1,0 +1,31 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Models.ViewModels
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+@using ANA.Site.HNHN.Models.Blocks
+@using ANA.Site.HNHN.Business
+@model ANA.Site.HNHN.Models.Blocks.Callouts.CTACallout
+
+@{
+    var btnViewData = (ViewData["BtnClass"] ?? "").ToString();
+    var btnClass = (!string.IsNullOrWhiteSpace(btnViewData) ? btnViewData : "btn-primary btn-hnhn");
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+
+<div class="card-block ">
+    <div class="card-block__image">
+        <img src="@_UrlResolver.GetUrl(Model.Image)" alt="" class="img-full" />
+    </div>
+    <footer class="card-block__footer">
+        <h4 class="card-block__heading">@Html.PropertyFor(m => m.Title)</h4>
+        <p class="card-block__text">@Html.PropertyFor(m => m.Summary)</p>
+        @*<img src="@_UrlResolver.GetUrl(Model.ForegroundImage)" alt="" class="img-responsive" />*@
+        @if (Model.CallToAction != null)
+        {
+            var ctalink = Model.CallToAction.GetContent<CallToActionBlock>();
+            <a href="@ctalink.Link" class="btn @btnClass">@ctalink.Text</a>
+        }
+
+    </footer>
+</div>

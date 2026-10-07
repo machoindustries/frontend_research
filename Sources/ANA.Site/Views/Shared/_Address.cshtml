@@ -1,0 +1,45 @@
+﻿@* the model does not exits, Upgrade
+    
+@model ANA.Site.Models.AddressModel
+
+<address>
+    <p>
+        @{
+            string[] addressValues = null;
+            System.Text.RegularExpressions.Regex email = EPiServer.Framework.Validator.EmailRegex;
+
+            switch (Model.CountryCode)
+            {
+                case "AUS":
+                case "CAN":
+                case "USA":
+                    addressValues = new string[] { Model.Organization, Model.FirstName + " " + Model.LastName, Model.Email, Model.Address1, Model.Address2, Model.City + " " + Model.ZipCode, Model.CountryRegion.Region, Model.Country };
+                    break;
+
+                case "GBR":
+                    addressValues = new string[] { Model.Organization, Model.FirstName + " " + Model.LastName, Model.Email, Model.Address1, Model.Address2, Model.City, Model.CountryRegion.Region, Model.ZipCode, Model.Country };
+                    break;
+
+                default:
+                    addressValues = new string[] { Model.Organization, Model.FirstName + " " + Model.LastName, Model.Email, Model.Address1, Model.Address2, Model.ZipCode + " " + Model.City, Model.CountryRegion.Region, Model.Country };
+                    break;
+            }
+
+            foreach (string value in addressValues)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (email.IsMatch(value))
+                    {
+                        <a href="mailto:@value">@value</a><br />
+                    }
+                    else
+                    {
+                        <span>@value</span><br />
+                    }
+                }
+            }
+        }
+
+    </p>
+</address> *@

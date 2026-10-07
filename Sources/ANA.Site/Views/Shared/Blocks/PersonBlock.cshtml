@@ -1,0 +1,113 @@
+﻿@using ANA.Site
+@using EPiServer.Editor
+@using ANA.Site.Business.Extensions
+
+@model ANA.Site.Models.Blocks.PersonBlock
+
+@{
+    var displayOption = DisplayOptionHelper.GetDisplayOption();
+    var tag = (Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string) ?? string.Empty;
+
+    var gridClass = tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator)
+        ? ANA.Site.Global.StringConstants.GridClass8ColRight
+        : ANA.Site.Global.StringConstants.GridClass8ColCentre;
+
+    if (gridClass == ANA.Site.Global.StringConstants.GridClass8ColRight && displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall)
+    {
+        gridClass = "grid__item one-whole large--three-twelfths";
+    }
+
+    var gridImageClass = displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall
+        ? "grid__item one-quarter medium--two-eighths large--one-third" : "grid__item one-quarter medium--two-eighths";
+
+    var gridDetailClass = displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall
+        ? "grid__item three-quarters medium--six-eighths large--two-thirds" : "grid__item three-quarters medium--six-eighths";
+
+    var gridSummaryClass = displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall
+        ? "grid__item one-whole medium--six-eighths large--one-whole" : "grid__item one-whole medium--six-eighths";
+
+    var gridDescriptionClass = displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall
+        ? "grid__item one-whole medium--six-eighths large--two-thirds" : "grid__item one-whole medium--six-eighths";
+
+    var hasBio = Model.Biography != null && !Model.Biography.IsEmpty;
+
+    var classes = new List<string>
+{
+"c-person",
+displayOption == ANA.Site.Global.DisplayOptions.PersonBlockSmall ? "c-person--small" : "c-person--large"
+};
+
+    if (string.IsNullOrWhiteSpace(Model.Introduction))
+    {
+        classes.Add("c-person--no-summary");
+    }
+
+    if (hasBio)
+    {
+        classes.Add("c-person--modal");
+    }
+}
+
+<div class="grid-constraint">
+    <div class="grid">
+        <div class="grid__item @gridClass" data-modal-class="grid__item one-whole large--eight-twelfths push--large--two-twelfths">
+            <article class="@string.Join(" ", classes)" @(hasBio ? Html.Raw(" data-require=\"./src/views/person-view\"") : Html.Raw(""))>
+                <div class="c-person__wrapper">
+
+                    <div class="grid">
+
+                        <div class="c-person__image-wrap @gridImageClass" data-modal-class="grid__item one-quarter large--two-eighths">
+                            <div class="c-person__image" data-person-image @Html.Raw(Model.BackgroundImageStyleAttribute)></div>
+                        </div>
+
+                        <div class="@gridDetailClass" data-modal-class="grid__item three-quarters large--six-eighths">
+
+                            <div class="c-person__details">
+
+                                <h2 class="c-person__name" data-person-name="@Model.Name">@Html.PropertyFor(m => m.Name)</h2>
+                                @if (!string.IsNullOrWhiteSpace(Model.Qualifications) || ContentHelper.PageIsInEditMode())
+                                {
+                                    <p class="c-person__detail">@Html.PropertyFor(m => m.Qualifications)</p>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.JobTitle) || ContentHelper.PageIsInEditMode())
+                                {
+                                    <p class="c-person__detail">@Html.PropertyFor(m => m.JobTitle)</p>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    <p class="c-person__detail">
+                                        <a href="mailto:@(Model.Email)">@Model.Email</a>
+                                    </p>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.ContactNumber))
+                                {
+                                    <p class="c-person__detail">
+                                        <a href="tel:@(Model.ContactNumber)">@Model.ContactNumber</a>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Introduction) || ContentHelper.PageIsInEditMode())
+                        {
+                            <div class="c-person__summary @gridSummaryClass">
+                                <div class="e-richtext">
+                                    <p>@Html.PropertyFor(m => m.Introduction)</p>
+                                </div>
+                            </div>
+                        }
+                        @if (hasBio || ContentHelper.PageIsInEditMode())
+                        {
+                            <div class="c-person__description @gridDescriptionClass" data-modal-class="grid__item one-whole large--six-eighths">
+                                <div class="e-richtext">
+                                    @Html.PropertyFor(m => m.Biography)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>

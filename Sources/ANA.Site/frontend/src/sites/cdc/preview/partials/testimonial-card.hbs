@@ -1,0 +1,18 @@
+<!-- BE if the component has an image, the image container needs the class has-image -->
+<article class="testimonial-card">
+    <div class="content-container">
+        {{#if imgsrc}}
+        <div class="img-container  {{hasimg}}">
+            <img src="{{imgsrc}}" alt="{{imgalt}}">
+        </div>
+        {{/if}}
+        <div class="quote-container">
+            <img class="quotation-marks" src="./assets/img/quotes.png" alt="image of quotation marks">
+            <div>{{quote}}</div>
+        </div>
+        {{#if name}}
+        <div class="name"><span>- </span>{{name}}</div>
+        <div class="organization">{{organization}}</div> 
+        {{/if}}
+    </div>
+</article>

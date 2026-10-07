@@ -1,0 +1,76 @@
+﻿@using ANA.Site.Business.Extensions
+@using Geta.Optimizely.Extensions;
+@using EPiServer
+@using ANA.Site.Business.State
+@using ANA.Site.Models.Commerce.Products
+@using ANA.Site.Models.CustomerAccountModels
+@model ANA.Site.Models.ViewModels.ProductPartialViewModel
+    
+@{
+    var cert = Model.Product as CertificationProduct;
+    
+    Model.Classes.Add("c-product-detail--certification");
+
+    if (ViewData.ContainsKey("Carousel") && (bool) ViewData["Carousel"])
+    {
+        Model.Classes.Add("c-product-detail--carousel");
+    }
+
+    var firstVariant = Model.VariantsModel.OrderBy(x => x.DiscountedPrice).FirstOrDefault();
+
+    var gtmPrice = string.Empty;
+
+    var placeprice = firstVariant.PlacedPrice.ToString();
+
+    if (firstVariant != null)
+    {
+        gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? firstVariant.DiscountedPrice.ToString() : firstVariant.PlacedPrice.ToString();
+
+        if (UserState.CurrentProfile.IsMember())
+        {
+            gtmPrice = firstVariant.DiscountedMemberPrice != null && (firstVariant.DiscountedPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m) ? firstVariant.DiscountedMemberPrice.ToString() : firstVariant.MemberPrice.ToString();
+        }
+    }
+
+    var productGroup = Model.Product.ProductGroupBlock;
+}
+
+<div class="c-product-listing--cert">
+    <div class="c-product-listing--cert__header" @Html.Raw(productGroup != null ? $"style=\"background-color: {productGroup.Colour}\"" : string.Empty)>
+        <p>@if (productGroup != null){@productGroup.Name}</p>
+    </div>
+
+    <div class="c-product-listing--cert__description">
+        <div class="c-product-listing--cert__description__banner">
+            <p>
+                <a href="@Model.Product.ContentLink.GetFriendlyUrl()" class="d-product-detail__info-link" data-product-detail-link>
+                    @Model.Product.Heading
+                </a>
+            </p>
+
+            @if (cert?.TeaserText != null)
+            {
+                @Html.Raw(ANA.Site.Business.Helpers.StringHelper.FormatLineBreaks(cert.TeaserText.ToHtmlString()))
+            }
+            else
+            {
+                @Html.Raw(ANA.Site.Business.Helpers.StringHelper.FormatLineBreaks(Model.Product.IntroText.ToHtmlString()).TruncateAtWord(100))
+            }
+        </div>
+        <div class="c-product-listing--cert__description__footer">
+            <span>@Html.Raw($"List price&nbsp;${(cert.PriceDisplayRegular > 0 ? cert.PriceDisplayRegular.ToString("0.00") : "")}")</span>
+            <span>@Html.Raw($"ANA Member Price:&nbsp;${(cert.PriceDisplayMember > 0 ? cert.PriceDisplayMember.ToString("0.00") : "")}")</span>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.BannerText))
+    {
+        <div class="c-product-listing--cert__ribbon">
+            <span class="c-product-listing--cert__ribbon__intro">PRESENTED</span><br />
+            <span class="c-product-listing--cert__ribbon__presenter"><span class="c-product-listing--cert__ribbon__presenter__smalltext">BY</span> @Html.Raw(Model.BannerText?.ToUpper())</span>
+        </div>
+    }
+    @if (Model.Product.ContentLink.GetFriendlyUrl() != "")
+    {
+        @:<a class="c-product-detail__info-link--nursing-cert" data-product-detail-links href="@Model.Product.ContentLink.GetFriendlyUrl()"></a>
+    }
+</div>

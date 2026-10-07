@@ -1,0 +1,35 @@
+.button-hollow-blue {
+    background-color: transparent;
+    height: 3.125rem;
+    color: $media-content-social-card-font;
+    border-color: $media-content-social-card-font;
+    padding: .5rem;
+    font-weight: 600;
+    letter-spacing: .5;
+    line-height: 1.5rem;
+
+    &:hover {
+        background-color: $media-content-social-card-link-background;
+        color: white;
+        border-color: transparent;
+    }
+}
+
+.button-hollow-blue > a {
+    color: $media-content-social-card-font;
+    font-weight: 600;
+    letter-spacing: .5;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+    white-space: nowrap;
+    
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:visited {
+        text-decoration: none;
+        color: $media-content-social-card-font;
+    }
+}

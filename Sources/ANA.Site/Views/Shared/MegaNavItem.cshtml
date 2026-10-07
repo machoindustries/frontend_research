@@ -1,0 +1,27 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.LinkListBlock
+
+@{
+    var hasChildren = Model.Links != null && Model.Links.Any();
+    var url = Model.HeadingLink != null ? Model.HeadingLink.GetFriendlyUrl() : "";
+
+    var primaryHeading = "";
+
+    if (ViewData["megaNavPrimaryHeading"] != null)
+    {
+        primaryHeading = ViewData["megaNavPrimaryHeading"].ToString();
+    }
+}
+
+<div class="e-nav-primary__item @(hasChildren ? " e-nav-primary__item--has-children" : "")"
+     data-primary-nav-item
+     data-nav-level="2">
+
+    <a class="e-nav-primary__link e-nav-primary__link--arrow"
+       href="@url" data-primary-nav-trigger data-primary-nav-link data-gtm-event-action="@primaryHeading" data-gtm-event-label="@Model.Heading" target="@Model.TargetFrame">
+            @Model.Heading
+    </a>
+    
+    @Html.PropertyFor(p => p.Links, "MegaNavLinkItemCollection", new { megaNavPrimaryHeading = primaryHeading, megaNavParentHeading = Model.Heading })
+
+</div>

@@ -1,0 +1,18 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCCardNavigation
+
+@if (Model.EnableTopDivider)
+{
+    <div class="hr cell small-12 mt-1 mb-2"></div>
+}
+<section id="card-nav">
+    <div class="card-nav__container mt-2 ph-16">
+        <div class="grid-x grid-padding-x align-justify">
+            @if (Model.Cards.HasContent())
+            {
+                @await Html.PartialAsync("~/Views/CDC/Partials/_CDCCardNavigationCards.cshtml", Model.Cards)
+            }
+        </div>
+    </div>
+</section>

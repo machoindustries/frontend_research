@@ -1,0 +1,45 @@
+﻿@using ANA.Site.Business.Helpers
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Blocks.VideoBlock
+
+@{
+    var videoId = Model.VideoUrl == null ? "0" : Model.VideoUrl.ToString().Replace("https://www.youtube.com/watch?v=", string.Empty).Replace("https://youtu.be/", string.Empty).Split('&').FirstOrDefault().Split('?').FirstOrDefault();
+    var youtubeImageFormat = "https://img.youtube.com/vi/{0}/maxresdefault.jpg";
+    var previewImage = Model.PreviewImage == null ? string.Format(youtubeImageFormat, videoId) : Model.PreviewImage.GetCroppedImageUrl(480, 270);
+    var responsiveImageString = string.Empty;
+    var att = "data-responsive-background-";
+    if (Model.PreviewImage != null)
+    {
+        responsiveImageString = $"{att}image {att}xsmall=\"{Model.PreviewImage.GetCroppedImageUrl(480, 270)}\" {att}small=\"{Model.PreviewImage.GetCroppedImageUrl(768, 432)}\" {att}medium=\"{Model.PreviewImage.GetCroppedImageUrl(1024, 576)}\" {att}large=\"{Model.PreviewImage.GetCroppedImageUrl(1280, 720)}\" {att}xlarge=\"{Model.PreviewImage.GetCroppedImageUrl(1680, 945)}\"";
+    }
+
+}
+
+<section class="c-media-block" data-require="./src/views/video-view">
+    
+    <div class="grid grid--full">
+        
+        <div class="grid__item one-whole">
+
+            <a href="@Model.VideoUrl" style="background-image: url('@previewImage');" class="c-media-block__link" title="Play video @Model.CaptionTitle" data-video-link @responsiveImageString>
+                <span class="c-media-block__play-icon" data-video-play-icon></span>
+            </a>
+
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.CaptionTitle))
+        {
+            <div class="grid-constraint">
+                <div class="grid">
+                    <div class="c-media-block__caption grid__item one-whole large--one-quarter">
+                        <div class="c-media-block__caption-content">
+                            <h2 class="c-media-block__heading">@Model.CaptionTitle</h2>
+                            <p class="c-media-block__description">@Model.Caption</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</section>

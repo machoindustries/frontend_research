@@ -1,0 +1,30 @@
+﻿@using ANA.Site.Models.CDC.Pages
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@if (Model.Layout.CDCHomePage == null) { return; }
+
+<div class="reveal modal-container" id="modal-registration" role="contentinfo" data-module-dynamic="modal">
+    <div class="component-content course-registration">
+        <div class="course-registration_header grid-x justify-center">
+            <div class="hero-text-container">
+                @*<div class="text-1"><span class="ana-logo-t">ANA</span><span class="enterprise-logo-t">Enterprise</span></div>
+                <div class="text-2">@Html.PropertyFor(i => i.Layout.CDCHomePage.FormTitle)</div>
+                <img class="heartbeat" src="/assets/img/heartbeat.svg" alt="heartbeat" />*@
+                <div class="logo">
+                  <img src="/assets/img/logos/project-first-line-logo-color-no-shield.svg" alt="Project FirstLine Logo" />
+                </div>
+            </div>
+
+            <p class="small-10 mb-3">
+                @Html.PropertyFor(i => i.Layout.CDCHomePage.FormText)
+            </p>
+        </div>
+        <div class="course-registration_form">
+            @Html.Raw(Model.Layout.CDCHomePage.FormScript)
+        </div>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>

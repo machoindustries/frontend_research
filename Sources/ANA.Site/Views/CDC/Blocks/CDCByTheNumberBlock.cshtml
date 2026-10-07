@@ -1,0 +1,41 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCByTheNumberBlock
+
+<div class="@Model.GetCssClass()" data-module-core="by-the-number">
+    <div class="grid-x grid-margin-x ana-by-the-numbers ana-full-bleed ana-inverted" style="">
+        @{
+            OneStatBlock(Model.FirstTopText, Model.FirstNumber, Model.FirstNumberEffect, Model.FirstBottomText);
+            OneStatBlock(Model.SecondTopText, Model.SecondNumber, Model.SecondNumberEffect, Model.SecondBottomText);
+            OneStatBlock(Model.ThirdTopText, Model.ThirdNumber, Model.ThirdNumberEffect, Model.ThirdBottomText);
+        }
+    </div>
+</div>
+
+@functions {
+void OneStatBlock(string topText, int number, CountingEffect effect, string bottomText)
+{
+    if (!string.IsNullOrEmpty(topText) || number > 0 || !string.IsNullOrEmpty(bottomText))
+    {
+        <div class="ana-by-the-numbers--block" data-module-core="by-the-number">
+            @if (!string.IsNullOrEmpty(topText))
+            {
+                <div class="ana-by-the-numbers--first-text">
+                    @topText
+                </div>
+            }
+            @if (number > 0)
+            {
+                <div class="ana-by-the-numbers--second-num visible" data-number="@number"
+                     data-effect="@effect.ToString()">
+                    @string.Format("{0:#,0}", number)
+                </div>
+
+            }
+            @if (!string.IsNullOrEmpty(bottomText))
+            {
+                <div class="ana-by-the-numbers--third-text">@bottomText</div>
+            }
+        </div>
+    }
+}
+}

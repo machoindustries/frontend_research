@@ -1,0 +1,6 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubImageBlockViewModel
+
+<div>
+    <img src="@Html.PropertyFor(m => m.ImageUrl)" alt="@Html.PropertyFor(m => m.CurrentBlock.AltText)" title="@Html.PropertyFor(m => m.CurrentBlock.AltText)"/>
+</div>

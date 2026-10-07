@@ -1,0 +1,26 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@model QuestionnairePageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<QuestionnairePageViewModel>
+
+<section class="bg-cream section--squiggle section--questionnaire">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+				@Html.PropertyFor(x => x.CurrentPage.ScriptTitle)
+				@Html.PropertyFor(x => x.CurrentPage.Subtext)
+				@Html.PropertyFor(x => x.CurrentPage.SkipQuestionnaire)
+				<div class="questionnaire__progress"></div>
+			</div>
+		</div>
+	</div>
+	<form class="questionnaire" id="questionnaire__form" data-redirect="@Model.ThankYouPageUrl" data-page-id="@Model.CurrentPage.ContentLink.ID">
+		@Html.PropertyFor(x => x.CurrentPage.Questions)
+	</form>	
+	@if (!string.IsNullOrEmpty(Model.CurrentPage.SubmitFormWarning))
+	{
+		<p class="questionnaire__form--submit-warning mt-4 d-none">
+			@Model.CurrentPage.SubmitFormWarning
+		</p>
+	}
+</section>
+<script src="/assets/hnhn/js/questionnaire.js"></script>

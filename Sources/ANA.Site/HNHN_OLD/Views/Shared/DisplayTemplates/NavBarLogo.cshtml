@@ -1,0 +1,33 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using ANA.Site.HNHN.Models.Blocks
+
+@model ANA.Site.HNHN.Models.Blocks.SponsorLink
+
+@{
+    string cssClass = "";
+    if (ContentHelper.PageIsInEditMode())
+    {
+        cssClass = "navBar-edit";
+    }
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <style type="text/css">
+        .navBar-edit {
+            float: none;
+            line-height: 30px;
+        }
+    </style>
+}
+
+<a class="navbar-brand @cssClass" href="@Url.ContentUrl(Model.LinkURL)">
+@if(ContentHelper.PageIsInEditMode() && ContentReference.IsNullOrEmpty(Model.WhiteLogo) && ContentReference.IsNullOrEmpty(Model.ColorLogo))
+    {
+        @:Nav bar logo
+    }
+    <img src="@Url.ContentUrl(Model.WhiteLogo)" class="img-responsive navbar-brand__normal" alt="HNHN Logo">
+    <img src="@Url.ContentUrl(Model.ColorLogo)" class="img-responsive navbar-brand__inverted" alt="HNHN Logo">
+</a>

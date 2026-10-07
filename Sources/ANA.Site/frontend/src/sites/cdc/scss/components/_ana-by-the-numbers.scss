@@ -1,0 +1,81 @@
+.ana-by-the-numbers {
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  // border-color: #000;
+  padding-top: rem-calc(50);
+  height: 100%;
+
+  &.ana-inverted, .ana-inverted & {
+    border-color: #fff;
+  }
+
+  &--block {
+    display: flex;
+    padding: 1rem rem-calc(6);
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+    margin: 0 rem-calc(7) rem-calc(50) rem-calc(7);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-style: solid;
+    border-width: 4px;
+    border-color: $font-orange;
+    width: 100%;
+
+    @media screen and (min-width: $large) {
+      width: 30%;
+    }
+
+    & > div {
+      text-align: center;
+      margin-bottom: rem-calc(6);
+      @include ana-montserrat;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    -moz-border-image: -moz-linear-gradient(left, $logo-red 0%, $logo-blue 100%);
+    -webkit-border-image: -webkit-linear-gradient(left, $logo-red 0%, $logo-blue 100%);
+    border-image: linear-gradient(to right, $logo-red 0%, $logo-blue 100%);
+    border-image-slice: 1;
+  }
+
+  &--first-num, &--second-num {
+    font-size: rem-calc(40);
+    color: #ee5229;
+    font-weight: 900;
+    font-size: rem-calc(60px);
+    padding-top: 1rem;
+  }
+
+  &--first-text {
+    font-family: 'MontserratLight' !important;
+    font-size: rem-calc(24);
+    font-weight: 200 !important;
+    margin-top: -2rem;
+  }
+
+  &--second-text {
+    font-size: rem-calc(26);
+    line-height: rem-calc(34);
+    color: #003b5d;
+    font-weight: 200 !important;
+    font-family: 'MontserratLight' !important;
+    padding-top: 1rem;
+    padding-bottom: 4rem;
+  }
+
+  &--third-text {
+    font-size: rem-calc(26);
+    line-height: rem-calc(34);
+    color: #003b5d;
+    font-weight: 600 !important;
+    font-family: 'MontserratLight' !important;
+    padding-top: 1rem;
+    padding-bottom: 4rem;
+  }
+
+
+}

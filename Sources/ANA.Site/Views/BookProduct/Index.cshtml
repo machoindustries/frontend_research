@@ -1,0 +1,278 @@
+﻿@using ANA.Site.Models.Blocks
+@using ANA.Site.Models.ViewModels
+@using ANA.Site.Business.Helpers
+@using EPiServer
+@using EPiServer.Editor
+@using ANA.Site.Business.Extensions;
+@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@using ANA.Site.Business.CustomPromotion;
+@using Geta.Optimizely.Extensions
+
+@model ProductViewModel<ANA.Site.Models.Commerce.Products.BookProduct>
+
+@{
+    Layout = "~/Views/Shared/Layouts/_ProductLayout.cshtml";
+
+    var book = Model.VariantsModel.FirstOrDefault(x => x.Code.Equals(Model.Code)) ?? Model.VariantsModel.FirstOrDefault() ?? new VariantsViewModel();
+
+    var hasSponsor = !string.IsNullOrEmpty(Model.CurrentPage.SponsorHeading) || !string.IsNullOrEmpty(Model.CurrentPage.SponsorIntroText);
+
+    var firstVariant = Model.VariantsModel.FirstOrDefault();
+
+    var gtmPrice = string.Empty;
+
+    if (firstVariant != null)
+    {
+        gtmPrice = firstVariant.DiscountedPrice != null && firstVariant.DiscountedPrice.Value.Amount > 0.0m ? firstVariant.DiscountedPrice.ToString() : firstVariant.PlacedPrice.ToString();
+
+        if (UserState.CurrentProfile.IsMember())
+        {
+            gtmPrice = firstVariant.DiscountedMemberPrice != null && (firstVariant.DiscountedPrice != null && firstVariant.DiscountedMemberPrice.Value.Amount > 0.0m) ? firstVariant.DiscountedMemberPrice.ToString() : firstVariant.MemberPrice.ToString();
+        }
+    }
+
+    var ctaitemmodel = CustomPromotionUtility.GetVaraintsViewModelForPromoItems(Model.Code, Model.VariantsModel);
+}
+@section ProductDetail
+{
+
+    <div class="c-product-page-detail grid"
+         data-require="./src/views/product-detail-view"
+         data-product=""
+         data-product-item_name="@(firstVariant?.DisplayName ?? string.Empty)"
+         data-product-item_id="@(firstVariant?.Code ?? string.Empty)"
+         data-product-price="@gtmPrice"
+         data-product-item_brand="@Model.BannerText"
+         data-product-item_category="@Model.CurrentPage.GetOriginalType().Name.Replace("Product", string.Empty)"
+         data-product-item_variant="@(firstVariant?.Code ?? string.Empty)">
+        <div class="grid__item one-whole medium--eight-twelfths push--medium--four-twelfths">
+            <div class="grid">
+                <h1 class="grid__item one-whole c-product-page-detail__title">
+                    @Html.PropertyFor(x => x.CurrentPage.Heading)
+                </h1>
+                <div class="grid__item one-whole c-product-page-detail__section">
+                    <div class="grid">
+                        <div class="grid__item one-whole large--one-half">
+                            @{
+                                await Html.RenderPartialAsync("BookPrice", book);
+                            }
+                        </div>
+                        <div class="grid__item one-whole large--one-half">
+                            @if (hasSponsor)
+                            {
+                                { await Html.RenderPartialAsync("_ProductAffiliate", new ProductAffiliateViewModel
+                                    {
+                                        SponsorImageUrl = Model.CurrentPage.SponsorImageUrl,
+                                        Heading = Model.CurrentPage.Heading,
+                                        SponsorHeading = Model.CurrentPage.SponsorHeading,
+                                        SponsorUrl = Model.CurrentPage.SponsorUrl,
+                                        SponsorIntroText = Model.CurrentPage.SponsorIntroText
+                                    });
+                                }
+                            }
+                            @if (!Model.CurrentPage.CEExpiry.Equals(DateTime.MinValue))
+                            {
+                                <span class="c-product-page-detail__event-detail"><strong>Course & ANCC CNE Credit Expiration:</strong> @Model.CurrentPage.CEExpiry.ToString("MM/dd/yyyy")</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="grid__item one-whole medium--one-half pull--medium--one-half c-product-page-detail__media">
+                    <figure class="c-product-page-detail__image-wrapper">
+                        <img src="@(book.ImageUrl + "?width=150")" class="c-product-page-detail__image" alt="@book.DisplayName" />
+                        @if (!string.IsNullOrEmpty(Model.BannerText))
+                        {
+                            <div class="c-product-detail__entity-banner c-product-detail__entity-banner--@Model.BannerText.ToLower()">
+                                <span class="c-product-detail__entity-banner-pretext">Presented by</span>
+                                <span class="c-product-detail__entity-banner-text">@Model.BannerText</span>
+                            </div>
+                        }
+                    </figure>
+                </div>
+                @if (Model.CurrentPage.IntroText != null && Model.CurrentPage.IntroText.Fragments.Count > 0 || ContentHelper.PageIsInEditMode())
+                {
+                    <div class="grid__item one-whole c-product-page-detail__section">
+                        <div class="c-product-page-detail__description">
+                            <div class="e-richtext">
+                                @Html.PropertyFor(x => x.CurrentPage.IntroText)
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="grid__item one-whole">
+                    @{
+                        await Html.RenderPartialAsync("BookCart", Model, new ViewDataDictionary(ViewData)
+                               {
+                           new KeyValuePair<string, object>("GridDropdownClass", "grid__item one-whole large--one-half"),
+                           new KeyValuePair<string, object>("GridQuantityAddToCartClass", "grid__item one-whole large--one-half")
+                       }); }
+                </div>
+            </div>
+        </div>
+
+        @{
+            var settings = ANA.Site.Business.Helpers.SettingsHelper.GetSettings();
+            ContentArea contentModel = null;
+
+
+            switch (Model.BannerText)
+            {
+                case "Ana":
+                    contentModel = settings?.AnaBooksPromos;
+                    break;
+                case "Ancc":
+                    contentModel = settings?.AnccBooksPromos;
+                    break;
+
+
+            }
+
+        }
+        @if (contentModel?.FilteredItems != null && contentModel.FilteredItems.Any())
+        {
+
+            var myBooksPromos = contentModel.FilteredItems.Select(x => x.LoadContent() as PromoAlertBlock);
+
+            foreach (var item in myBooksPromos)
+            {
+                { await Html.RenderPartialAsync("_PromoAlertBlock", item); }
+            }
+        }
+    </div>
+    <div>
+        @{
+            await Html.RenderPartialAsync("_CTAProductList", ctaitemmodel);
+        }
+    </div>
+}
+
+
+@section Adverts
+            {
+    @Html.PropertyFor(x => x.CurrentPage.Adverts, new { CssClass = "content-area" })
+}
+@section Tabs
+    {
+    <div class="c-tab-control@(Model.CurrentPage.ShowLicensingTab ? "" : " c-tab-control--one-tab")">
+        <div class="c-tab-control__section" data-require="./src/views/tab-control-view" data-collapse-panel="false">
+            <h2 class="e-tab-toggle@(Model.CurrentPage.ShowLicensingTab ? "" : " e-tab-toggle--full")" data-tab-control-toggle>
+                <span class="e-tab-toggle__text">@Html.Translate("/BookPage/Detail")</span>
+            </h2>
+            <div class="c-tab-control__content" data-tab-control-content>
+                <div class="e-product-detail grid">
+                    @{
+                        await Html.RenderPartialAsync("BookDetails", Model.VariantsModel);
+                    }
+                    @if (Model.CurrentPage.Information != null && !Model.CurrentPage.Information.IsEmpty || ContentHelper.PageIsInEditMode())
+                    {
+                        <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row">
+                            <div class="e-richtext">
+                                @Html.PropertyFor(x => x.CurrentPage.Information)
+                            </div>
+                        </div>
+                    }
+                    @if (Model.CurrentPage.SampleChapterPdf != null || Model.CurrentPage.TableofContentsPdf != null)
+                    {
+                        <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row e-product-detail__preview">
+                            @if (Model.CurrentPage.SampleChapterPdf != null)
+                            {
+                                <a class="e-product-detail__preview-link" href="@Model.CurrentPage.SampleChapterPdf.GetFriendlyUrl()">Sample chapter</a>
+                            }
+                            @if (Model.CurrentPage.TableofContentsPdf != null)
+                            {
+                                <a class="e-product-detail__preview-link" href="@Model.CurrentPage.TableofContentsPdf.GetFriendlyUrl()">Table of contents</a>
+                            }
+                        </div>
+                    }
+                    @if (Model.CurrentPage.Video.VideoUrl != null)
+                    {
+                        <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row e-product-detail__row--border">
+                            @Html.PropertyFor(x => x.CurrentPage.Video)
+                        </div>
+                    }
+                    <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row e-product-detail__row--border">
+                        @{
+                            await Html.RenderPartialAsync("BookCart", Model, new ViewDataDictionary(ViewData)
+                                                   {
+                               new KeyValuePair<string, object>("ModifierClass", "c-add-to-cart--single-line-at-medium")
+                           });
+                        }
+                    </div>
+                    <div class="content-area content-area--last-child-no-margin">
+                        @if (Model.CurrentPage.Authors?.FilteredItems != null && Model.CurrentPage.Authors.FilteredItems.Any())
+                        {
+                            foreach (var author in Model.CurrentPage.Authors.FilteredItems.Select(x => x.LoadContent() as PersonBlock))
+                            {
+                                if (author != null)
+                                {
+                                    {
+                                        await Html.RenderPartialAsync("Blocks/PersonBlockAbout", new PersonBlock
+                                        {
+                                            Name = author.Name,
+                                            JobTitle = author.JobTitle,
+                                            Qualifications = author.Qualifications,
+                                            Biography = author.Biography,
+                                            BackgroundImage = author.BackgroundImage
+                                        }, new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("additionalClass", "block") });
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                @Html.PropertyFor(x => x.CurrentPage.ProductDetailBlocks, new
+           {
+               CssClass = "content-area content-area--last-child-no-margin b-vst--small grid",
+               Tag = ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator +
+                            ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator
+           })
+            </div>
+        </div>
+        @if (Model.CurrentPage.ShowLicensingTab)
+        {
+            <div class="c-tab-control__section" data-require="./src/views/tab-control-view" data-collapse-panel="true">
+                <h2 class="e-tab-toggle" data-tab-control-toggle>
+                    <span class="e-tab-toggle__text">@Html.Translate("/BookPage/Tab")</span>
+                </h2>
+                <div class="c-tab-control__content" data-tab-control-content>
+                    <div class="e-product-detail grid">
+                        @if (Model.CurrentPage.LicensingDetails != null &&
+                            !Model.CurrentPage.LicensingDetails.IsEmpty
+                            && Model.CurrentPage.LicensingDetails.ToHtmlString().Length > 0 || ContentHelper.PageIsInEditMode())
+                        {
+                            <div class="grid__item one-whole large--two-thirds pad--large--one-third e-product-detail__row">
+                                <div class="e-richtext">
+                                    @Html.PropertyFor(x => x.CurrentPage.LicensingDetails)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @Html.PropertyFor(x => x.CurrentPage.LicensingBlocks, new
+               {
+                   CssClass = "content-area content-area--last-child-no-margin b-vst--small grid",
+                   Tag = ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator +
+                                  ANA.Site.Global.ContentAreaTags.Grid + ANA.Site.Global.StringConstants.TagSeparator
+               })
+                </div>
+            </div>
+        }
+    </div>
+}
+@section ContentArea
+{
+    @Html.PropertyFor(x => x.CurrentPage.Blocks, new { CssClass = "content-area", Tag = "Product" })
+
+    @{
+        await Html.RenderPartialAsync("_RelatedProducts", new RelatedProductsViewModel
+        {
+            Heading = Html.Translate("/BookPage/Related").ToString(),
+            RelatedProducts = Model.RelatedProducts.Select(p => new ProductPartialViewModel
+            {
+                Product = p.Product,
+                VariantsModel = new List<VariantsViewModel> { p },
+                BannerText = p.Product.EntityBanner
+            }).ToList()
+        });
+    }
+}

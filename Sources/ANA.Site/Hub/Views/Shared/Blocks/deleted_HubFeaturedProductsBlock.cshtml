@@ -1,0 +1,58 @@
+@* @model ANA.Site.Hub.Models.Blocks.HubFeaturedProductsBlock
+@using EPiServer.ServiceLocation;
+@using EPiServer;
+@using ANA.Site.Models.Commerce.Products;
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+
+<div class="like-container slider-block-items">
+        <div class="like-wrapper">
+            <div class="title-wrapper">
+                <div class="title-line"></div>
+                <h3 class="like-title c-container-block__heading">
+                    @Html.PropertyFor(s => s.Title)
+                </h3>
+            </div>
+            <div class="items-wrapper c-container-block__content">
+
+                @{
+                    var contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
+                    foreach (var contentItem in Model.FeaturedProducts.Items)
+                    {
+                        var item = contentLoader.Get<AnaProductBase>(contentItem.ContentLink);
+                        if (item != null)
+                        {
+                            var cert = item as CertificationProduct;
+
+                            var productGroup = item.ProductGroupBlock;
+
+                            <a href="@item.ContentLink.GetFriendlyUrl()" class="featured-container grid__item">
+                                <div class="featured-item">
+                                    <div class="title-container">
+                                        <p class="title">@if (productGroup != null){@productGroup.Name}</p>
+                                        <div class="ribbon">
+                                            <p class="ribbon-text">Presented by <span>ANCC</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="content-container">
+                                        <div class="content-wrapper">
+                                            <p class="content-text">
+                                                @item.Heading
+                                            </p>
+                                        </div>
+                                        <div class="bottom-container">
+                                            <p class="bottom-text">@Html.Raw($"Price From:&nbsp;${(cert.PriceDisplayRegular > 0 ? cert.PriceDisplayRegular.ToString("0.00") : "")}")</p>
+                                            <p class="bottom-text">@Html.Raw($"ANA Member Price:&nbsp;${(cert.PriceDisplayMember > 0 ? cert.PriceDisplayMember.ToString("0.00") : "")}")</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                }
+            </div>
+            <div class="indicators-wrapper"></div>
+        </div>
+    </div>
+
+ *@

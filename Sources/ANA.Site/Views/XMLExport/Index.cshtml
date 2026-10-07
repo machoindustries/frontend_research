@@ -1,0 +1,26 @@
+﻿@model EPiServer.Core.PageData
+
+@{
+    Layout = string.Empty;
+}
+
+@*@using (Html.BeginForm("ImportExcel", "ArticleContentImport", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
+@using (Html.BeginForm("ExportXMLData", "XMLExport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <tr>
+            <td>Select Content Page ID</td>
+            <td>
+                <input type="text" id="ContentID" name="ContentID" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" id="Submit" name="Submit"
+                       value="Submit" />
+            </td>
+        </tr>
+
+    </table>
+}

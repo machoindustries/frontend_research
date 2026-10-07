@@ -1,0 +1,1 @@
+import"./base-component.js";import{t as o}from"../../chunks/confirm-enrollment-component-DV-A8A8n.js";export{o as default};

@@ -1,0 +1,12 @@
+﻿@using ANA.Site.Models.OJIN.Blocks
+@using ANA.Site.Models.Blocks
+@using Geta.Optimizely.Extensions;
+@model OJINAdBlock
+
+<div class="col-lg-3 ojin-advContainer">
+    <div class="ojin-advBlock">
+        <a href="@Model.BannerLink">
+            <img src="@Url.ContentUrl(Model.BannerImage)" class="lazyload" />
+        </a>
+    </div>
+</div>

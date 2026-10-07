@@ -1,0 +1,130 @@
+﻿@model ANA.Site.Models.ViewModels.EnrollmentLightboxViewModel
+
+<div data-lightbox-src="enrollmentedit">
+    <h5 class="c-enrollment__e-form__validation-errors" data-lightbox-personify-verbiage></h5>
+    <h5 class="c-enrollment__e-form__validation-errors" data-lightbox-validation-issues-verbiage></h5>
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.Id, new { data_id = "" })
+
+        <label for="@Html.IdFor(m => m.EmailId)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/EmailAddress")</span>
+            @Html.TextBoxFor(m => m.EmailId, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/EmailAddress"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_email = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.EmailId)"></div>
+        <div class="c-enrollment__e-form__validation-errors" data-email-exists-verbiage></div>
+        <div class="c-enrollment__e-form__validation-errors" data-ana-account-not-exists-verbiage="">
+            <div class="e-richtext">
+                @Html.Translate("/MyAccount/Enrollment/NoMatchingRecordFound") @Html.Translate("/MyAccount/Enrollment/DoubleCheckSingle") @Html.Raw(ViewBag.NONANAAccountAlertWithFAQLink)
+
+            </div>
+        </div>
+        <div class="c-enrollment__e-form__past_enrolled_notification" data-course-enrolled-in-past-verbiage></div>
+
+        <label for="@Html.IdFor(m => m.FirstName)" class="e-form__label e-form__label--text col-lg-6" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/FirstName")</span>
+            @Html.TextBoxFor(m => m.FirstName, null, new { @class = "e-form__input e-form__input--text", disabled = "disabled", title = Html.Translate("/MyAccount/Enrollment/Form/Label/FirstName"), data_formfield_text = "", data_validate = "", data_first_name = "" })
+        </label>
+        <h5 class="c-enrollment__e-form__validation-errors" style="display:none;" data-first-name-verbiage></h5>
+
+        <label for="@Html.IdFor(m => m.LastName)" class="e-form__label e-form__label--text col-lg-6" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/LastName")</span>
+            @Html.TextBoxFor(m => m.LastName, null, new { @class = "e-form__input e-form__input--text ", disabled = "disabled", title = Html.Translate("/MyAccount/Enrollment/Form/Label/LastName"), data_formfield_text = "", data_validate = "", data_last_name = "" })
+        </label>
+        <h5 class="c-enrollment__e-form__validation-errors" style="display:none;" data-last-name-verbiage></h5>
+
+        <label for="@Html.IdFor(m => m.Addressline1)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/AddressLine1")</span>
+            @Html.TextBoxFor(m => m.Addressline1, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/AddressLine1"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_address_line1 = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Addressline1)"></div>
+
+        <label for="@Html.IdFor(m => m.Addressline2)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/AddressLine2")</span>
+            @Html.TextBoxFor(m => m.Addressline2, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/AddressLine2"), data_formfield_text = "", data_address_line2 = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.City)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/City")</span>
+            @Html.TextBoxFor(m => m.City, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/City"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_city = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.City)"></div>
+
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-label-state>
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.StateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/Enrollment/Form/Label/State"), data_formfield_text = "", data_select_state = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--select" data-formfield="" data-label-can-state style="display:none;">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/Shared/Address/Form/Label/State")</span>
+            @Html.DropDownListFor(m => m.State, (List<SelectListItem>)ViewBag.CanStateList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/Shared/Address/Form/Label/State"), data_formfield_text = "", data_select_can_state = "" })
+        </label>
+
+        <label for="@Html.IdFor(m => m.State)" class="e-form__label e-form__label--text" data-formfield="" data-label-int-state style="display:none;">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/State")</span>
+            @Html.TextBoxFor(m => m.State, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/State"), data_formfield_text = "", data_input_int_state = "" })
+        </label>
+        <h5 class="c-enrollment__e-form__validation-errors" data-state-verbiage></h5>
+
+        <label for="@Html.IdFor(m => m.Zipcode)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/ZipCode")</span>
+            @Html.TextBoxFor(m => m.Zipcode, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/MyAccount/Enrollment/Form/Label/ZipCode"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_zipcode = "" })
+        </label>
+        <h5 class="c-enrollment__e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Zipcode)"></h5>
+
+        <label for="@Html.IdFor(m => m.Country)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/MyAccount/Enrollment/Form/Label/Country")</span>
+            @Html.DropDownListFor(m => m.Country, (List<SelectListItem>)ViewBag.CountryList, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/MyAccount/Enrollment/Form/Label/Country"), data_validate = "", data_validate_required = "", data_country = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Country)"></div>
+
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/Enrollment/Form/Label/Save")" data-save-enrollment>
+
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/MyAccount/Enrollment/Form/Label/Submit")" data-submit-enrollment>
+
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+</div>
+
+<div data-lightbox-src="enrollmentconfirmdelete">
+    <h3 data-lightbox-heading>Confirm removal</h3>
+    <p data-lightbox-text></p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button c-enrollment__lightboxconfirm" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button c-enrollment__lightboxconfirm" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>
+
+<div data-lightbox-src="enrollmentconfirmoverwrite">
+    <h3>
+        Matching Records Found
+    </h3>
+    <p>
+        Some records already exist in the recipient list.<br />
+        Click "Yes" to override them and add other unique records.<br />
+        Click "No" to skip them and add only unique records.
+    </p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-enrollmentoverwrite-yes>Yes</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-enrollmentoverwrite-no>No</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button c-enrollment__cancelbtn" data-cancel-remove data-modal-close>Cancel</a>
+</div>
+
+<div data-lightbox-src="enrollmentspreviouslyenrolled">
+    <h3 data-lightbox-heading></h3>
+    <p data-lightbox-text></p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-previously-enrolled-enrollment-delete>Delete</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-previously-enrolled-enrollment-continue>Continue</a>
+</div>
+
+<div data-lightbox-src="unregisteredenrollments">
+    <h3 data-lightbox-heading></h3>
+    <p data-lightbox-text></p>
+    <p>@Html.Translate("/MyAccount/Enrollment/DoubleCheckMultiple") @Html.Raw(ViewBag.NONANAAccountAlertWithFAQLink)</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-unregistered-enrollments-export>Export to CSV</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button c-enrollment__cancelbtn" data-unregistered-enrollment-ok data-cancel-remove data-modal-close>Ok</a>
+</div>
+
+<div data-lightbox-src="enrollmentpopup">
+    <h3 data-lightbox-heading></h3>
+    <p data-lightbox-text></p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-modal-close>OK</a>
+</div>

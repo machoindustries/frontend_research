@@ -1,0 +1,74 @@
+<div class="grid-container">
+    <header class="small-12 cell">
+        <h1>Widgets</h1>
+      </header>
+
+      <h2>landing hero</h2>
+      {{> landing-hero}}
+      <h2>quote block</h2>
+      {{> quote-block quote-block}}
+      <h2>intro block</h2>
+      {{> on-the-go-banner-no-gradient on-the-go-banner}}
+            
+      <h2>PFL3-66 Carousel</h2>
+      {{> card-carousel data=card-carousel}}
+      <h1 class="small-12">news card</h1>
+      {{> 4-across-news-cards firstline-news}}      
+    
+      <h2>4-across Insights</h2>
+      {{> heading-and-subheading insights}}
+      {{> 4-across-insights insights}}
+
+      <h2>Sub Nav</h2>
+      {{> internal-navbar-buttons}}
+      {{> two-four-across data=testimonials}}
+      <h2>cta mask</h2>
+      {{> cta-mask}}
+      <h2>announcement banner</h2>
+      {{> announcement-banner announcement-banner}}
+      
+
+      
+      <h2 class="small-12">News Article Cards</h2>
+      {{> 3-across-cards data=news-articles}}
+      
+      <h2>intro header with button</h2>
+      {{> intro-header-with-button data=card-carousel}}
+
+
+      <h2>Testimonial Cards</h2>
+      {{> two-four-across data=testimonials}}
+      
+      <h2>Latest Block</h2>
+      {{> image-text-social-link-block data=image-text-social-link}}
+
+      <h1 class="small-12">Alternating Text Blocks</h1>
+      {{> alternating-text-block alternating-text-block}}
+      {{> alternating-text-block-mirror alternating-text-block}}
+
+      <div class="grid-x">
+    
+       
+        <header class="small-12 cell">
+          <h1>Resources/Training</h1>
+        <h1 class="small-12">PFL3-87 --- Featured Resources Across Cards ---</h1>
+        {{> 3-across-card-padded data=featured-resources}}
+        <h1>PFL3-75</h1>
+        {{> faq data=faq-dummy-data}}
+        <header class="small-12 cell">
+          <h1>Resources</h1>
+        </header>
+        <div class="small-12 cell grid-x">
+          <div class="cell small-12 large-3">
+            {{> filter-resources}}
+          </div>
+          <div class="cell small-12 large-9">
+            {{> filter-count-results}}
+            {{> 3-across-cards data=card-carousel}}
+            {{> resource-pagination}}
+          </div>
+        </div>
+      </div>
+</div> 
+<h2>disclaimer</h2>
+{{> disclaimer disclaimer}}

@@ -1,0 +1,181 @@
+﻿@model ANA.Site.Business.Admin.ContentDetailsModel
+@using EPiServer.Framework.Web.Resources
+@using EPiServer.Shell.Navigation
+@using EPiServer.Shell.Navigation.Internal
+@using ANA.Site.Business.Datalayer
+@{
+    Layout = null;
+    int usageID = Model.UsageDetails == null ? 0 : Model.UsageDetails.Id;
+    string UseWhen = Model.UsageDetails == null ? string.Empty : Model.UsageDetails.UseWhen;
+    string DoNotUseWhen = Model.UsageDetails == null ? string.Empty : Model.UsageDetails.DonotUseWhen;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Content Details Report</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="~/assets/css/system.css" type="text/css" rel="stylesheet">
+    <link href="~/assets/css/ToolButton.css" type="text/css" rel="stylesheet">
+    <!-- Shell -->
+    @ClientResources.RenderResources("ShellCore")
+    <!-- Light Theme -->
+    @ClientResources.RenderResources("ShellCoreLightTheme")
+    <style>
+        a.ex1:link, a.ex1:visited {
+            color: cornflowerblue;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a.ex1:hover, a.ex1:active {
+            color: blue;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    @Html.Raw(Html.CreatePlatformNavigationMenu())
+    <br /><br /><br /><br /><br />
+                            <div @Html.Raw(Html.ApplyFullscreenPlatformNavigation())>
+                                <center>
+                                    <h1>@Model.Name Details</h1>
+                                    <a class="ex1" href="/InventoryReport"><< Back</a>
+                                </center>
+
+
+                                <div style="align-content:center;color:orangered;padding:15px">
+                                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                                    {
+                                        @Model.ErrorMessage
+                                    }
+                                </div>
+                                <table width="100%">
+                                    <tr>
+                                        <td>
+                                            <table width="80%" style="border: 1px solid black;border-collapse: collapse;">
+                                                <tr><td colspan="4"> <h1>Content Details</h1></td></tr>
+                                                <tr><td colspan="4">@Html.Raw(Model.IconPath)</td></tr>
+                                                <tr><td><b>Content Name: </b></td><td>@Model.Name</td><td><b>Group: </b></td><td>@Model.GroupName</td></tr>
+                                                <tr><td><b>Description: </b></td><td>@Model.Description</td><td><b>Available On: </b></td><td>@Model.IncludeContentTypes</td></tr>
+                                                <tr><td><b>GUID: </b></td><td>@Model.GUID</td><td><b>Excluded On: </b></td><td>@Model.ExcludeContentTypes</td></tr>
+                                                <tr><td colspan="2"><a class='ex1' href="/ContentReferences?Id=@Model.ContentID&ContentName=@Model.Name">References</a></td><td><b>Available In Edit Mode: </b></td><td>@Model.AvailableInEditMode</td></tr>
+                                            </table>
+                                            <br />
+                                            <table width="80%" style="border: 1px solid black;border-collapse: collapse;">
+                                                <tr>
+                                                    <td>
+                                                        <h1>Content Usage</h1>
+                                                        @if (Model.EditMode == true)
+                                                        {
+                                                            using (Html.BeginForm("SaveUsage", "ContentDetails", FormMethod.Post))
+                                                            {
+                                                                <input type="hidden" id="Id" name="Id" value=@usageID>
+                                                                <input type="hidden" id="ContentID" name="ContentID" value=@Model.ContentID>
+                                                                <div>
+                                                                    <table style='border: 0px; border-collapse: collapse;'>
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <b>
+                                                                                    Use When
+                                                                                </b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                @Html.TextArea("UseWhen", UseWhen, new { cols = 150, @rows = 10 })
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <b>
+                                                                                    Do Not Use For
+                                                                                </b>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                @Html.TextArea("DoNotUseWhen", DoNotUseWhen, new { cols = 150, @rows = 10 })
+                                                                            </td>
+                                                                            <td>
+                                                                                <input type="submit" value="Save" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <br />
+                                                                    <br />
+                                                                </div>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>
+                                                                <table style='border: 0px; border-collapse: collapse;'>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <b>
+                                                                                Use When
+                                                                            </b>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            @Html.DisplayFor(model => model.UsageDetails.UseWhen)
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <b>
+                                                                                Do Not Use For
+                                                                            </b>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            @Html.DisplayFor(model => model.UsageDetails.DonotUseWhen)
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.ActionLink("Edit", "AddEditUsage", new {Id = Model.ContentID },new { @class = "ex1" })
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <br />
+                                                                <br />
+                                                            </div>
+                                                        }
+                                                        @using (Html.BeginForm("UploadFile", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                        {
+                                                            @Html.Hidden("ImageCount", Model.UsageImages.Count)
+                                                            @Html.Hidden("Id", Model.ContentID)
+                                                            <input type="file" name="file">
+                                                            <input type="submit" value="Upload Now" />
+                                                        }
+                                                        <br />
+                                                        @foreach (ANAContentUsageImages img in Model.UsageImages)
+                                                        {
+                                                            <img src="@img.UsageImage" style="width:50%;height:50%" />
+                                                            @Html.ActionLink("Remove", "DeleteUsageImage", new { Id = img.Id, ContentID = Model.ContentID, imageName = img.UsageImage })
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <br />
+                                            <table width="80%" style="border: 1px solid black;border-collapse: collapse;">
+                                                <tr>
+                                                    <td>
+                                                        <h1>Content Properties</h1>
+                                                        <div id="propertyDetails">
+                                                            @Html.Raw(Model.PropertyDetailsHTMLString)
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+</body>
+</html>

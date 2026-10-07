@@ -1,0 +1,139 @@
+﻿@using ANA.Site.Business.State
+@using ANA.Site.Models.CustomerAccountModels
+@using Global = ANA.Site.Global
+@model ANA.Site.Models.ViewModels.ProductViewModel<ANA.Site.Models.Commerce.Products.BookProduct>
+
+@{
+    var modifierClass = "";
+    var gridDropdownClass = "medium--one-half";
+    var gridQuantityAddToCartClass = "medium--one-half";
+    var isProductBulkPurchase = false;
+    var isVariantBulkPurchase = false;
+    if (ViewData.ContainsKey("ModifierClass"))
+    {
+        modifierClass = ViewData["ModifierClass"] as string;
+    }
+
+    if (ViewData.ContainsKey("GridDropdownClass"))
+    {
+        gridDropdownClass = ViewData["GridDropdownClass"] as string;
+    }
+
+    if (ViewData.ContainsKey("GridQuantityAddToCartClass"))
+    {
+        gridQuantityAddToCartClass = ViewData["GridQuantityAddToCartClass"] as string;
+    }
+}
+
+<div class="c-add-to-cart@(string.IsNullOrWhiteSpace(modifierClass) ? "" : " " + modifierClass)" data-require="./src/views/add-to-cart-view">
+
+    @using (Html.BeginForm("AddToCart",
+        "Cart",
+        FormMethod.Post,
+        new
+        {
+            @class = "grid",
+            data_ajax_form = "",
+            data_add_to_cart_form = ""
+        }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="grid__item @gridDropdownClass">
+            <label class="e-form__label e-form__label--select c-add-to-cart__form-label--select" for="@Html.IdFor(m => m.Code)">
+                <span class="e-form__label-text">@Html.Translate("/BookPage/SelectFormat")</span>
+
+                <select class="e-form__input e-form__input--select c-add-to-cart__form-input--select c-product-detail__controls-select" name="@Html.NameFor(m => m.Code)" id="@Html.IdFor(m => m.Code)" data-add-to-cart-variant>
+
+                    @foreach (var dropdownItem in Model.AddToCartDropdown)
+                    {
+                        var variant = Model.VariantsModel.Where(x => x.Code == dropdownItem.Code).FirstOrDefault();
+                        if (variant.VariantType == ANA.Site.Global.StringConstants.Paperback)
+                            {
+                                if (((ANA.Site.Models.Commerce.Variants.BookVariant)variant.Variant).IsBulkPurchase == true)
+                                {
+                                    isVariantBulkPurchase = true;
+                                    isProductBulkPurchase = true;
+                                }
+                                    else
+                                    {
+                                        isVariantBulkPurchase = false;
+                                    }
+                                }
+                                if (variant.VariantType == ANA.Site.Global.StringConstants.Ebook)
+                                {
+                                    if (((ANA.Site.Models.Commerce.Variants.EBookVariant)variant.Variant).IsBulkPurchase == true)
+                                    {
+                                        isVariantBulkPurchase = true;
+                                        isProductBulkPurchase = true;
+                                    }
+                                    else
+                                    {
+                                        isVariantBulkPurchase = false;
+                                    }
+                                }
+                            
+                        
+                        <option value="@dropdownItem.Code"
+                                data-variant-price="@dropdownItem.Price.Replace("$", "")"
+                                data-variant-bulk-purchase="@isVariantBulkPurchase"
+                                data-variant-format="@dropdownItem.Format">
+                            @dropdownItem.Text
+                        </option>
+
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div class="grid__item @gridQuantityAddToCartClass">
+
+            <div class="c-add-to-cart__quantity">
+                <label for="@Html.IdFor(m => m.Quantity)" class="e-form__label c-add-to-cart__form-label">
+                    <span class="e-form__label-text c-add-to-cart__form-label-text">@Html.Translate("/BookPage/Quantity")</span>
+                    @Html.TextBoxFor(m => m.Quantity, new
+                        {
+                            type = "number",
+                            min = "1",
+                            @class = "e-form__input e-form__input--text c-add-to-cart__form-input--text",
+                            data_quantity_textbox = "true"
+                        })
+                </label>
+            </div>
+
+            <div class="c-add-to-cart__add">
+                <button class="e-button e-button--button e-button--blue e-button c-add-to-cart__button" data-add-to-cart data-tracked-cta>
+                    @Html.Translate("/BookPage/Add")
+                </button>
+                @if (isProductBulkPurchase)
+                {
+                    <a href="@Url.Action("GoToEnrollment", "Cart")" data-go-to-bulkpurchase-link></a>
+                    <a class="e-button e-button--button e-button--blue e-button c-enrollment__bulkbutton" title=" @Html.Translate("/productpartial/BulkPurchaseOnlyForRegisteredUsers")" data-go-to-bulkpurchase>
+                        @Html.Translate("/BookPage/BulkPurchase")
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="grid__item one-whole">
+            @if (isProductBulkPurchase)
+            {
+                <p class="c-add-to-cart__description">
+                    @Html.Translate("/BookPage/BulkPurchaseQueryOne") <br /> <a href="mailto:@Html.Translate("/BookPage/EmailCustomerCare")">@Html.Translate("/BookPage/EmailCustomerCare")</a> @Html.Translate("/BookPage/BulkPurchaseQueryTwo")
+                </p>
+
+            }
+            else
+            {
+                <p class="c-add-to-cart__description">
+                    @Html.Translate("/BookPage/PurchaseQuery") <a href="mailto:@Html.Translate("/BookPage/EmailPublications")">@Html.Translate("/BookPage/EmailPublications")</a>
+                </p>
+                <p class="c-add-to-cart__description">
+                    @Html.Translate("/BookPage/PurchaseTwentyQueryOne") <a href="mailto:@Html.Translate("/BookPage/EmailPublications")">@Html.Translate("/BookPage/EmailPublications")</a> @Html.Translate("/BookPage/PurchaseTwentyQueryTwo")
+                </p>
+            }
+
+        </div>
+    }
+
+</div>

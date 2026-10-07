@@ -1,0 +1,34 @@
+﻿@using Geta.Optimizely.Extensions;
+@using ANA.Site.Models.CDC.Blocks
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@{ Layout = null; }
+
+@if (Model.Layout.CDCHomePage == null) 
+{
+    return;
+}
+
+@{
+    CDCDisclaimer disclaimer = null;
+    IContent content = Model.Layout.CDCHomePage.GlobalDisclaimer.GetContent();
+
+    if (content != null && content is CDCDisclaimer)
+    {
+        disclaimer = (content as CDCDisclaimer);
+    }
+
+    string buttonText = "View Disclaimer";
+}
+
+@if (disclaimer != null) 
+{
+    <section class="disclaimer cell small-12 no-mt">
+        <div class="disclaimer__text c-footer__content">
+            <div id="disclaimer-small-content">@Html.Raw(disclaimer.GetShortContent())</div>
+            <div id="disclaimer-big-content" class="hide">@Html.Raw(disclaimer.Content)</div>
+            <div id="disclaimer-btn" class="read-more">Read More</div>
+        </div>
+        <button class="disclaimer__button" type="button">@buttonText</button>
+    </section>
+}

@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "~/Views/Shared/Layouts/_CDC.cshtml";
+}
+@model ANA.Site.Models.ViewModels.IPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@await Html.PartialAsync("~/Views/CDC/Partials/_CDCContentLandingHeroHack.cshtml", Model)
+@await Html.PartialAsync("~/Views/CDC/Partials/_CDCAnnouncementBanner.cshtml", Model)
+@await Html.PartialAsync("~/Views/CDC/Partials/_CDCNavigationHack.cshtml", Model)
+@RenderBody()

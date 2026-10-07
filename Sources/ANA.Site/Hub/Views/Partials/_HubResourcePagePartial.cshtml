@@ -1,0 +1,23 @@
+﻿@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Hub.Models.Pages.ViewModels.HubResourcePageViewModel
+
+<a href="@Url.ContentUrl(Model.CurrentPage.ContentLink)" class="item">
+    <div class="item-container">
+
+        <img src="@Model.FeaturedThumbnailImageUrl" alt="@Model.FeaturedThumbnailImageAlt" class="item-picture"/>
+        @if (Model.CurrentPage.ReadWatchListenTime != null)
+        {
+            if (!string.IsNullOrWhiteSpace(Model.CurrentPage.ReadWatchListenTime.ToString()))
+            {
+            <div class="item-label"> @Html.PropertyFor(m => m.CurrentPage.ReadWatchListenTime)</div>
+            }
+        }
+
+        <div class="item-info-wrapper">
+            <h4 class="item-title">@Model.CurrentPage.Title</h4>
+            <p class="item-text">
+                @Model.MediaType <span>@Model.FormattedPublishedDate</span>
+            </p>
+        </div>
+    </div>
+</a>

@@ -1,0 +1,43 @@
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Blocks
+
+@model CDCThreeAcrossNewsArticlesViewModel
+
+@if (Model != null && Model.Articles != null && Model.Articles.Any())
+{
+    var style = Model.ThreeAcrossNewsArticles.BackgroundColor == CDCThreeAcrossNewsArticles.ThreeAcrossResourceCardBackgroundColor.Teal
+        ? "teal-background"
+        : "light-blue-background";
+
+    <section class="grid-x grid-margin-x cell small-12 large-9 three-across-cards news-articles @style @Model.GetCssClass()">
+        @{
+            await RenderArticles();
+            RenderHiddenSpacerCards(Model.Articles.Count() % 3);
+        }
+    </section>
+}
+
+@functions{
+    private void RenderHiddenSpacerCards(int remainder)
+    {
+        if (remainder == 1)
+        {
+            <article class="spacer-1 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.1</article>
+            <article class="spacer-2 no-mobile-spacer card small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 1.2</article>
+        }
+        else if (remainder == 2)
+        {
+            <article class="spacer-1 card  small-12 medium-6 large-4 grid-x white-space media-content-social-links">Hidden Remainder 2</article>
+        }
+    }
+
+    private async Task RenderArticles()
+    {
+        foreach (var article in Model.Articles)
+        {
+            await Html.PartialAsync("~/Views/CDC/Partials/_CDCTaxonomyCard.cshtml", article);
+        }
+    }
+
+}
+

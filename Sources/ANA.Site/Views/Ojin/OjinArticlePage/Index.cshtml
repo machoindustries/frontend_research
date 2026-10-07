@@ -1,0 +1,26 @@
+﻿
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Models.ViewModels.PageViewModel<ANA.Site.Models.Pages.OJIN.OjinArticlePage>
+@{
+	Layout = "~/Views/Shared/Layouts/_Base.cshtml";
+}
+
+<link href="/assets/Ojin/style_ojin.css" rel="stylesheet" type="text/css" />
+<link href="/assets/Ojin/ojin-bfoverride.css" rel="stylesheet" type="text/css" />
+
+
+<div id="container">
+	<div id="pageBody">
+		<div id="top">
+			<div id="topLeft"></div>
+			<div id="topright">
+				<div class="row">
+					<h1 class="TitleLeft">@Html.PropertyFor(m => m.CurrentPage.Heading)</h1>
+				</div>
+				<div id="abstractSec">
+					@Html.PropertyFor(m => m.CurrentPage.IntroText)
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

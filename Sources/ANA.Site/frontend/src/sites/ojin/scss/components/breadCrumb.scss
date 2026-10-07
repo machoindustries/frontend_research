@@ -1,0 +1,32 @@
+.ojin-breadcrumb {
+    display: none;    
+}
+
+@media (min-width: $breakpoint-min-1200) {
+    .ojin-breadcrumb {
+        display: block;
+    
+        .breadcrumb {
+            background: $white;
+            font-size: 12px;
+            font-weight: 300;
+            color: $ojin-lightGray2;
+            padding: 10px 0 0;
+    
+            a {
+                font-weight: 600;
+                color: $ojin-lightGray2;
+                text-decoration: none;
+            }
+        }
+    
+        .breadcrumb-item+.breadcrumb-item::before {
+            content: ">";
+            font-weight: 600;
+            color: $ojin-lightGray2;
+            font-size: 1.6rem;
+            font-family: $MontserratFont;
+            line-height: 1.4;
+        }
+    }    
+}

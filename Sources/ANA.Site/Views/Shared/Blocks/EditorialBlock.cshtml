@@ -1,0 +1,58 @@
+﻿@using ANA.Site
+@using EPiServer.Editor
+
+@model ANA.Site.Models.Blocks.EditorialBlock
+
+@{
+    var tag = Html.ViewData[ANA.Site.Global.StringConstants.Tag] as string ?? string.Empty;
+    
+    var isProduct = tag == "Product";
+
+    var gridClass = tag.Contains(ANA.Site.Global.ContentAreaTags.LeftHandNav + ANA.Site.Global.StringConstants.TagSeparator)
+        ? " " + ANA.Site.Global.StringConstants.GridClass8ColRight
+        : "" + ANA.Site.Global.StringConstants.GridClass8ColCentre;
+}
+
+@if (isProduct)
+{
+    <section class="grid-constraint">
+        <div class="grid grid--right">
+            <div class="grid__item @gridClass">
+            
+                @if (!string.IsNullOrEmpty(Model.Heading) || ContentHelper.PageIsInEditMode())
+                {
+                    <h2 @Html.EditAttributes(x => x.Heading)>
+                        @Model.Heading
+                    </h2>
+                }
+
+                <div class="e-richtext">
+                    @Html.PropertyFor(m => m.Content)
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+}
+else {
+    <section class="grid-constraint">
+        <div class="grid">
+            <div class="grid__item @gridClass">
+            
+                @if (!string.IsNullOrEmpty(Model.Heading) || ContentHelper.PageIsInEditMode())
+                {
+                    <h2 @Html.EditAttributes(x => x.Heading)>
+                        @Model.Heading
+                    </h2>
+                }
+
+                <div class="e-richtext">
+                    @Html.PropertyFor(m => m.Content)
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+}

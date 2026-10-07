@@ -1,0 +1,91 @@
+﻿@using ANA_HNHN.Business.EditorDescriptors
+@using ANA_HNHN.Controllers
+@using ANA_HNHN.Models.Constants
+@using ANA_HNHN.Models.ViewModels
+@using ANA_HNHN.Models.Enums
+@using System.Linq
+@model ChallengeListingPageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<ChallengeListingPageViewModel>
+@{
+    ViewData["criteria"] = Model.Criteria;
+    var searchActionUrl = UrlResolver.Current.GetUrl(Model.CurrentPage);
+}
+<link href="/assets/hnhn/css/search.css" rel="stylesheet" />
+@if (Model.CurrentPage != null && Model.CurrentPage.AdditionalCakeLayer != null)
+{
+    @Html.PropertyFor(x => x.CurrentPage.AdditionalCakeLayer);
+}
+<input type="hidden" id="searchActionUrl" name="name" value="@searchActionUrl" />
+<section class="search">
+    <div id="loader"></div>
+    <div class="container">
+        <h2>@Model.CurrentPage.Title</h2>
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-5">
+                <div class="search__search-box">
+                    <input type="text" class="form-control m-0" id="searchField" value="@Model.Criteria.Query" placeholder="@Html.Translate("/common/search")" />
+                    <button type="button" id="searchButtonSearchPage" class="search__search-icon" aria-label="Search Button">
+                        <img src="/assets/hnhn/img/search_icon.svg" alt="Search Icon " />
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-7 d-lg-flex gap-4 align-items-center justify-content-start justify-content-lg-end">
+                <span style="display:none" id="totalResultsCount">@Model.TotalHits</span>
+                <span class="search__select">
+                    @Html.Translate("/common/showing") <span id="showingFrom">@Model.ShowingFrom</span> @Html.Translate("/common/to") <span id="showingTo">@Model.ShowingTo</span>
+                    @Html.Translate("/common/of") <span id="ChallengetotalResultsCount">@Model.TotalHits</span>
+                    @Html.Translate("/common/pagesize")
+                    @Html.DropDownList(
+                             "ps",
+                             IntegerConstants.PageSizesBySix
+                             .Select(x => new SelectListItem(
+                             x.ToString(),
+                             x.ToString(),
+                             x.Equals(Model.Pagination.PageSize))),
+                             new { id = "resultsPerPageSelect", @class = "mb-0" })
+                </span>
+                <span class="search__select">
+                    @Html.Translate("/common/sortby"):
+                    @Html.DropDownList(
+                             "o",
+                             Enum.GetValues<SortType>()
+                             .Select(x => new SelectListItem(
+                             LocalizationService.Current.GetString($"/property/enum/SortType/{x}"),
+                             x.ToString().ToLower(),
+                             Model.Criteria.Order.HasValue ? x.Equals(Model.Criteria.Order) : x.Equals(Model.CurrentPage.DefaultSortOrder))),
+                             new { @class = "sort-by mb-0", id = "sortGlobalPage" })
+                </span>
+            </div>
+        </div>
+        <div class="row search__filters__data">
+            <div class="col-lg-3 search__filters">
+                <div class="search__filters--wrap">
+                    <partial name="Facets" model="Model.Facets" view-data="ViewData" />
+                    <partial name="ChallengeTimeFrame" model="Model.Criteria" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-secondary d-block d-lg-none search__btn-filter">Filters</button>
+
+            <div class="col-lg-9">
+                <div id="search__grid">
+                    <partial name="ChallengeListingResults" model="Model.Hits" view-data="ViewData" />
+                    @if (Model.Hits.Count() <= 0)
+                    {
+                        <div id="noResultsMessage">
+                            @Html.Raw(Model.CurrentPage.NoResultsText)
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div style="display: none" id="noResultsMessage">
+                            @Html.Raw(Model.CurrentPage.NoResultsText)
+                        </div>
+                    }
+                    <partial name="HNHNPagination" model="Model.Pagination" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="/assets/hnhn/js/search.js"></script>

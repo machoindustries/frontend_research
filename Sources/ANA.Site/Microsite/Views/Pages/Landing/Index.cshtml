@@ -1,0 +1,7 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Landing
+@using EPiServer.Web.Mvc.Html
+@model ANA.Site.Microsite.Models.DefaultMicrositePageViewModel<LandingPage>
+@{
+    Layout = "~/Microsite/Views/Shared/Layouts/_LandingRoot.cshtml";
+}
+@Html.PropertyFor(m => m.CurrentPage.ContentArea, new { HasContainer = false, HasItemContainer = false })

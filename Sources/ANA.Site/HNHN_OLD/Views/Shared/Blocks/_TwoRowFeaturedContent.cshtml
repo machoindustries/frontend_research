@@ -1,0 +1,56 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.FeaturedContentSectionBlock
+
+@{ 
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+<!-- Become a sponsor -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                <h2 class="heading wow fadeInLeftFast">@Html.PropertyFor(m => m.Heading)</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 parallax-adjacent-section wow">
+                <div class="wow fadeInLeft">
+                    @Html.PropertyFor(m => m.Content)
+                </div>
+                <div class="btn-groups" @Html.EditAttributes(m => m.CallToActionButtons)>
+                    <div class="btns-wrap">
+                        @Html.DisplayFor(m => m.CallToActionButtons)
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5 parallax-wrapper col-sm-offset-1 wow fadeInRight">
+
+                @if (Model.ForegroundImage != null || Model.BackgroundImage != null || ContentHelper.PageIsInEditMode())
+                {
+                    <div class="helium-parallax">
+                        <div class="parallax parallax-1">
+                            <img src="@_UrlResolver.GetUrl(Model.ForegroundImage)" alt="" class="img-responsive" />
+                        </div>
+                        <div class="parallax parallax-2">
+                            <img src="@_UrlResolver.GetUrl(Model.BackgroundImage)" alt="" class="img-responsive" />
+                        </div>
+                    </div>
+                }
+
+                @*<div class="helium-parallax">
+                        <div class="parallax parallax-1">
+                            <img src="images/sponsor-pg-thumbnail-image-1.jpg" class="img-responsive" alt="Lorem ipsum.">
+                        </div>
+                        <div class="parallax parallax-2">
+                            <img src="images/sponsor-pg-thumbnail-image-2.jpg" class="img-responsive" alt="Lorem ipsum.">
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</section>

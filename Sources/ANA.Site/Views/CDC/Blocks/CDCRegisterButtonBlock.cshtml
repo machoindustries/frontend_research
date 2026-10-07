@@ -1,0 +1,10 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@model CDCRegisterButtonBlock
+
+<a class="button-cta cell shrink mt-1" href="#" data-open="modal-registration" aria-controls="modal-registration" aria-haspopup="true" tabindex="0">
+    <div class="cta">
+        <div class="label">
+            @Html.PropertyFor(i => i.RegisterText)
+        </div>
+    </div>
+</a>

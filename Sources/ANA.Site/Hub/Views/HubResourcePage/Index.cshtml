@@ -1,0 +1,131 @@
+﻿@using EPiServer.ServiceLocation
+@using EPiServer.Web.Mvc.Html
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@model ANA.Site.Hub.Models.Pages.ViewModels.HubResourcePageViewModel
+@{
+    Layout = "~/Hub/Views/Shared/Layouts/_HubRoot.cshtml";
+    var context = ServiceLocator.Current.GetInstance<IHttpContextAccessor>();
+
+}
+@if (Model != null && Model.CurrentPage != null)
+{
+    if (Model.CurrentPage.HeroImage != null && !string.IsNullOrWhiteSpace(Model.HeroImageUrl))
+    {
+        <div class="blog-landscape-container">
+            <img src="@Model.HeroImageUrl" alt="@Model.CurrentPage.HeroImageAltText" class="landscape-image">
+        </div>
+    }
+    <div class="blog-content-container">
+        <div class="blog-content-wrapper">
+            @if (Model.CurrentPage.DisplaySticky && Model.InThisPostList != null && Model.InThisPostList.Count > 0)
+            {
+                <aside class="content-links-container">
+                    <h3 class="links-title">@Model.CurrentPage.Sticky</h3>
+                    <ul class="links-list tocLinks">
+                        @for (var i = 0; i < Model.InThisPostList.Count; i++)
+                        {
+                            if (!string.IsNullOrWhiteSpace(Model.InThisPostList[i].Id))
+                            {
+                                var cssClass = i == 0 ? "link active" : "link";
+                                <li class="links-item">
+                                    <a href="#@Model.InThisPostList[i].Id" class="@cssClass">@Html.Raw(Model.InThisPostList[i].Title)</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                </aside>
+            }
+            <div class="info-wrapper">
+                <div class="blog-content">
+
+                    <div class="top-buttons-wrapper">
+                        @if (Model.BackButtonUrl != null && !string.IsNullOrWhiteSpace(Model.BackButtonUrl))
+                        {
+                            <a href="@Model.BackButtonUrl" class="top-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                                </svg>
+                                <span class="top-button-text">@Model.BackButtonTitle</span>
+                            </a>
+                        }
+                        <div class="sharethis-inline-share-buttons" data-url="@if (context.HttpContext?.Request.GetDisplayUrl() != null)
+                        {
+                            @context.HttpContext?.Request.GetDisplayUrl()
+                        }" data-title="@Model.CurrentPage.Name"></div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.Title))
+                    {
+                        <h1 class="blog-title-main blog-title animate-text">
+                            @Model.CurrentPage.Title
+                        </h1>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.CurrentPage.Subtitle))
+                    {
+                        <h2 class="text-title blog-text">
+                            @Model.CurrentPage.Subtitle
+                        </h2>
+                    }
+                    <p class="read-info blog-text">
+
+                        @{
+                            var finalTextItems = new List<string>();
+
+                            var readTime = Model.CurrentPage.ReadWatchListenTime;
+                            if (!string.IsNullOrEmpty(readTime)) { finalTextItems.Add(readTime); }
+                            var date = Model.FormattedPublishedDate;
+                            if (!string.IsNullOrEmpty(date)) { finalTextItems.Add(date); }
+                            var author = Model.AuthorName;
+                            var qualification = Model.AuthorQualifications;
+                            if (!string.IsNullOrWhiteSpace(author) && !string.IsNullOrWhiteSpace(qualification)) { finalTextItems.Add($"{author}, {qualification}"); }
+                            else {
+                                if(!string.IsNullOrEmpty(author)) { finalTextItems.Add(author); }
+                            }
+
+                            var finalText = string.Join("<text> • </text>", finalTextItems);
+
+                            @Html.Raw(finalText)
+                        }
+
+                    </p>
+                    @if (Model.CurrentPage.MainBody != null)
+                    {
+                        @Html.PropertyFor(m => m.CurrentPage.MainBody)
+                    }
+
+                    @if (Model.CurrentPage.BottomContentArea != null && Model.CurrentPage.BottomContentArea.FilteredItems.Any())
+                    {
+                        @Html.PropertyFor(m => m.CurrentPage.BottomContentArea)
+                    }
+                </div>
+                <div class="related-container">
+                    @if (Model.RelatedResourceUrls != null && Model.RelatedResourceUrls?.Count() > 0)
+                    {
+                        <h3 class="related-title">@Model.CurrentPage.RelatedResourcesTitle</h3>
+                        if (!string.IsNullOrWhiteSpace(Model.RelatedResourceImage))
+                        {
+                            <img src="@Model.RelatedResourceImage" alt="@Model.RelatedResourceImageAlt" class="related-image" />
+                        }
+                        <div class="links-wrapper">
+                            @foreach (var resource in Model.RelatedResourceUrls)
+                            {
+                                if (!string.IsNullOrWhiteSpace(resource.Url) && !string.IsNullOrWhiteSpace(resource.Title))
+                                {
+                                    <a href="@resource.Url" class="related-link">@resource.Title </a>
+                                }
+                            }
+                        </div>
+                    }
+
+                    @if (Model.CurrentPage.DynamicAdBlock != null)
+                    {
+                        <div class="advertisement-block">
+                            @Html.PropertyFor(m => m.CurrentPage.DynamicAdBlock)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

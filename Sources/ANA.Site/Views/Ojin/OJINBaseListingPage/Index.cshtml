@@ -1,0 +1,134 @@
+﻿@using ANA.Site
+@using ANA.Site.Business.Helpers
+@using ANA.Site.Models.Media
+@using EPiServer.Editor
+@using Geta.Optimizely.Extensions;
+@using EPiServer.Web.Mvc.Html
+@using System.Configuration;
+@model ANA.Site.Models.ViewModels.Ojin.OJINPageViewModel<ANA.Site.Models.OJIN.Pages.OJINBaseListingPage>
+
+@*Dependent files = OJINListingPageVNList.cshtml*@
+
+@{
+    Layout = "~/Views/Shared/Layouts/_OJINBase1.cshtml";
+}
+
+@{
+    var TableOfContentPageID = Model.Layout.TableOfContentPageID;
+    var tableOfContentPageID = 0;
+    if (@TableOfContentPageID > 0)
+    {
+        tableOfContentPageID = Convert.ToInt32(TableOfContentPageID);
+    }
+
+    var TopicsPageID = Model.Layout.TopicsPageID;
+    var topicsPageID = 0;
+    if (@TopicsPageID > 0)
+    {
+        topicsPageID = Convert.ToInt32(TopicsPageID);
+    }
+
+    var LettersToTheEditorPageID = Model.Layout.LettersToTheEditorPageID;
+    var lettersToTheEditorPageID = 0;
+    if (@LettersToTheEditorPageID > 0)
+    {
+        lettersToTheEditorPageID = Convert.ToInt32(LettersToTheEditorPageID);
+    }
+
+    var ColumnsPageID = Model.Layout.ColumnsPageID;
+    var columnsPageID = 0;
+    if (@ColumnsPageID > 0)
+    {
+        columnsPageID = Convert.ToInt32(ColumnsPageID);
+    }
+
+}
+
+@{
+    var cpContentID1 = Model.CurrentPage.ContentLink.ID;
+}
+
+@*<div>*@
+@if (Model.CurrentPage.Title != null || Model.CurrentPage.IntroText != null)
+{
+    <section class="ojin-introText pb-4">
+        <div class="row">
+            <div class="col-lg-9">
+                <h1>@Html.PropertyFor(m => m.CurrentPage.Title)</h1>
+                <p>@Html.PropertyFor(m => m.CurrentPage.IntroText)</p>
+                @*<p>@Model.RelatedListingPage</p>*@
+            </div>
+            @if (Model.RelatedListingPage == null && cpContentID1 == columnsPageID && Model.RightRail != null)
+            {
+                <div class="col-lg-3 ojin-advContainer">
+                    @{ await Html.RenderPartialAsync("Blocks/OJINTopicCategoryListingPageRightRail", Model.RightRail); }
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@if (Model.RelatedListingPage != null && Model.RelatedListingPage.Any())
+{
+    var cpContentID = Model.CurrentPage.ContentLink.ID;
+    <div>
+        @*any call for CDP will be handled separately as it require some validations.*@
+        @if (Model.RelatedListingPage.Count > 0 && cpContentID == tableOfContentPageID)
+        {
+            <div>
+                @{ await Html.RenderPartialAsync("OJINListingPageTableOfContent", Model); }
+            </div>
+        }
+        @if (Model.RelatedListingPage.Count > 0 && cpContentID == topicsPageID)
+        {
+            <div>
+                @{ await Html.RenderPartialAsync("OJINListingPageTopics", Model); }
+            </div>
+        }
+
+        @*<ul>*@ @*@if (Model.RelatedListingPage.Count > 0)
+            {
+                if (@Html.PropertyFor(m => m.CurrentPage.Name).ToString() != "Table of Contents")
+                {
+                    foreach (var contentdetails in Model.RelatedListingPage.Where(x => x.LPPageType != "FolderPage" && x.LPName != "Table of Contents" ))
+                    {
+                        <li class="grid-item">
+                            <div class="ojin-volume__number"><span><a href="@contentdetails.PageUrl"> @contentdetails.LPTitle </a></span>  @contentdetails.LPTitle</div>
+                        </li>
+
+                    }
+                }
+
+            }*@ @*</ul>*@
+
+    </div>
+
+
+    <div>
+        @*any call for CDP will be handled separately as it require some validations.*@
+        @if (Model.RelatedListingPage.Count > 0 && cpContentID != lettersToTheEditorPageID)
+        {
+            <div>
+                @{ await Html.RenderPartialAsync("OJINListingPageVNList", Model); }
+            </div>
+        }
+    </div>
+    <div>
+        @if (Model.RelatedListingPage.Count > 0 && cpContentID == lettersToTheEditorPageID)
+        {
+            <div>
+                @{ await Html.RenderPartialAsync("OJINListingPageLettersToTheEditor", Model); }
+            </div>
+        }
+    </div> 
+}
+
+@*</div>*@
+<div>
+    @if (Model.CurrentPage.CakeLayerAdditionalInformation != null && Model.CurrentPage.CakeLayerAdditionalInformation.Count > 0)
+    {
+        <div>
+            @{ await Html.RenderPartialAsync("OJINListingPageAdditionalInformation", Model); }
+        </div>
+    }
+</div>

@@ -1,0 +1,111 @@
+@using ANA.Site.Models.Blocks
+@using Geta.Net.Extensions
+@using EPiServer
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.OJIN.OJINInterfaces.IOJINCommonProperties>
+@*@model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>*@
+
+
+
+<footer class="ojin-footer">
+    <div class="container">
+        <div class="ojin-footer__linksContainer d-md-flex">
+            <div class="ojin-footer__linkCol">
+                <div class="ojin-footer__colTitle">Resources</div>
+                <ul>
+                    @if (Model.Layout.FooterBottomLinksCol1.Any())
+                    {
+                        foreach (var link in Model.Layout.FooterBottomLinksCol1)
+                        {
+
+                            <li><a href="@(new Url(link.Href).GetFriendlyUrl())">@link.Text</a></li>
+
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="ojin-footer__linkCol">
+                <div class="ojin-footer__colTitle">About Us</div>
+                <ul>
+                    @if (Model.Layout.FooterBottomLinksCol2.Any())
+                    {
+                        foreach (var link in Model.Layout.FooterBottomLinksCol2)
+                        {
+
+                            <li><a href="@(new Url(link.Href).GetFriendlyUrl())">@link.Text</a></li>
+
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="ojin-footer__linkCol">
+                <div class="ojin-footer__colTitle">Connect</div>
+                <ul>
+                    @if (Model.Layout.FacebookUrl != null)
+                    {
+                        <li class="ojin-footer__socialLinks">
+                            <a href="@Url.ContentUrl(Model.Layout.FacebookUrl)">
+                                <img src="/assets/Ojin/img/facebook.svg" alt="" class="lazyload" />
+                                <span>Facebook</span>
+                            </a>
+                        </li>
+                    }
+                    @if (Model.Layout.LinkedInUrl != null)
+                    {
+                        <li class="ojin-footer__socialLinks">
+                            <a href="@Url.ContentUrl(Model.Layout.LinkedInUrl)">
+                                <img src="/assets/Ojin/img/linkedin.svg" alt="" class="lazyload" />
+                                <span>LinkedIn</span>
+                            </a>
+                        </li>
+                    }
+                    @if (Model.Layout.TwitterUrl != null)
+                    {
+                        <li class="ojin-footer__socialLinks">
+                            <a href="@Url.ContentUrl(Model.Layout.TwitterUrl)">
+                                <img src="/assets/Ojin/img/twitter.svg" alt="" class="lazyload" />
+                                <span>X</span>
+                            </a>
+                        </li>
+                    }
+                    @if (Model.Layout.YouTubeUrl != null)
+                    {
+                        <li class="ojin-footer__socialLinks">
+                            <a href="@Url.ContentUrl(Model.Layout.YouTubeUrl)">
+                                <img src="/assets/Ojin/img/youtube.svg" alt="" class="lazyload" />
+                                <span>YouTube</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Layout.Copyright))
+        {
+            <div class="ojin-footer__copyright">
+                <p>
+                    @Model.Layout.Copyright
+                </p>
+                <ul>
+                    @if (!string.IsNullOrEmpty(Model.Layout.FooterContact))
+                    {
+                        <li><a href="tel:@Model.Layout.FooterContact">@Model.Layout.FooterContact</a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Layout.FooterCopyrightLink))
+                    {
+                        <li><a href="@Model.Layout.FooterCopyrightLink.">@Model.Layout.FooterCopyright</a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Layout.FooterPrivacyLink))
+                    {
+                        <li><a href="@Model.Layout.FooterPrivacyLink">@Model.Layout.FooterPrivacyLabel</a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Layout.FooterPrivacyChoicesLink))
+                    {
+                        <li><a href="#" onclick="window.DG_BANNER_API.showConsentBanner();">@Model.Layout.FooterPrivacyChoicesLink<img width="30" height="17" src="/globalassets/icons/privacyoptions.svg" style="display:inline-block; vertical-align:middle; margin-left:.25rem; margin-bottom:.2rem;"></a></li>
+                    }
+                </ul>
+            </div>
+        }
+
+    </div>
+</footer>

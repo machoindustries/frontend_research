@@ -1,0 +1,55 @@
+:root {
+    --orange-base-light: #FD560D;
+    --orange-base: #CF4520;
+    --cream-base: #F8F6EB;
+    --gray-base-light: #E4E4E4;
+    --disabled: #D1D1D1;
+    --gray-base-dark: #464045;
+    --blue-base-lightest: #E4F4FC;
+    --blue-base-light: #019ADE;
+    --blue-base: #0178AE;
+    --blue-base-dark: #132978;
+    --blue-base-darkest: #083A5B;
+    --green-base: #35D89F;
+    --yellow-base: #FDE670;
+    --pink-base: #FFE6F9;
+    --white-base: #FFFFFF;
+    --text-small: 0.875rem;
+    --text-small-line-height: 1.25rem;
+    --color-transition: color .3s;
+    --transition-speed: .3s;
+    --image-transition: translateY(-.5rem);
+}
+
+a.btn.btn-primary {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.6875rem 1.25rem;
+    border-radius: .5rem;
+    border-width: 2px;
+    margin: 0;
+    background-color: var(--orange-base);
+    border-color: var(--orange-base);
+}
+
+a.btn.btn-secondary {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.6875rem 1.25rem;
+    border-radius: .5rem;
+    border-width: 2px;
+    margin: 0;
+    color: var(--orange-base);
+    background-color: #FFF;
+    border-color: var(--orange-base);
+}
+
+p.lead {
+    color: var(--blue-base);
+    font-weight: 500;
+    line-height: 1.75;
+}

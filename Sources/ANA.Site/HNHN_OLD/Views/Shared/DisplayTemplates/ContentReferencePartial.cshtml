@@ -1,0 +1,12 @@
+﻿@using ANA.Site.HNHN_OLD.Helpers
+@using EPiServer.Core
+@using ANA.Site.HNHN.Helpers
+@using EPiServer.Web.Mvc.Html
+
+@model ContentReference
+
+@*This partial view makes it simple to display blocks stored in ContentReference objects using their defined partial. 
+    By default, a ContentReference would render a text link instead.*@
+@if (!ContentReference.IsNullOrEmpty(Model)) {
+	Html.RenderContent(Model);
+}

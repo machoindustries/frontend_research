@@ -1,0 +1,23 @@
+﻿@using EPiServer.Forms.Core
+@using EPiServer.Forms.EditView
+@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site.Business.Extensions
+
+@model PredefinedHiddenElementBlock
+
+@{
+    var isViewModeInvisibleElement = Model is IViewModeInvisibleElement;
+    var extraCSSClass = isViewModeInvisibleElement ? ConstantsFormsUI.CSS_InvisibleElement : string.Empty;
+    var formElement = Model.FormElement; 
+}
+
+@if (ContentHelper.PageIsInEditMode())
+{
+    <span class="@Model.GetGridCssClass() Form__Element FormHidden @extraCSSClass">@Model.EditViewFriendlyTitle</span>
+}
+else
+{
+    <input name="@formElement.ElementName" id="@formElement.Guid" type="hidden"
+        value="@Model.GetDefaultValue()"
+        class="Form__Element FormHidden FormHideInSummarized" @Html.Raw(Model.AttributesString) />
+}

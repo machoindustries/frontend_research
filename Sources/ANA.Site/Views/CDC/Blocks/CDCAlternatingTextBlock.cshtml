@@ -1,0 +1,23 @@
+﻿@using ANA.Site.Models.CDC.Blocks
+@using Geta.Optimizely.Extensions;
+@model CDCAlternatingTextBlock
+
+@{ 
+    var url = Model.Link == null ? null : Model.Link.GetFriendlyUrl();
+}
+
+<div class="alternating-promo @Model.GetCssClass()">
+    <div class="grid-x">
+        <div class="image-container cell small-12 large-6">
+            <a href="@url" target="@Model.TargetFrame">@Html.PropertyFor(i => i.Image)</a>
+        </div>
+        <div class="text-container cell small-12 large-6">
+            <h3 class="title">
+                <a href="@url" target="@Model.TargetFrame" class="title-link">@Html.PropertyFor(i => i.Title)</a>
+            </h3>
+            <div class="copy">
+                @Html.PropertyFor(i => i.Text)
+            </div>
+        </div>
+    </div>
+</div>

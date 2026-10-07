@@ -1,0 +1,39 @@
+﻿@using Geta.Optimizely.Extensions;
+@model ANA.Site.Models.Media.ImageFile
+
+@{
+    var imageUrl = Model.ContentLink.GetFriendlyUrl();
+    var qsChar = imageUrl.Contains("?") ? "&" : "?";
+}
+<section class="c-media-block">
+    
+    <div class="grid grid--full">
+
+        <div class="grid__item one-whole">
+            <figure class="c-media-block__figure">
+                <picture>
+                    <source srcset="@($"{imageUrl}{qsChar}width=1680")" media="(min-width: 1280px)">
+                    <source srcset="@($"{imageUrl}{qsChar}width=1280")" media="(min-width: 1024px)">
+                    <source srcset="@($"{imageUrl}{qsChar}width=1024")" media="(min-width: 720px)">
+                    <source srcset="@($"{imageUrl}{qsChar}width=720")" media="(min-width: 480px)">
+                    <img src="@($"{imageUrl}{qsChar}width=480")" alt="@(Model.AltText ?? Model.CaptionTitle ?? Model.Caption)" class="c-media-block__image" />
+                </picture>
+            </figure>
+        </div>
+        
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.CaptionTitle))
+    {
+        <div class="grid-constraint">
+            <div class="grid">
+                <div class="c-media-block__caption grid__item one-whole large--one-quarter">
+                    <div class="c-media-block__caption-content">
+                        <h2 class="c-media-block__heading">@Model.CaptionTitle</h2>
+                        <p class="c-media-block__description">@Model.Caption</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>

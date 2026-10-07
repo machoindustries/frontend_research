@@ -1,0 +1,22 @@
+<div class="internal-nav-container cell small-12 grid-x mt-2 mb-1">
+  <div class="title-bar no-js ml-1" data-responsive-toggle="internal-nav-menu">
+    <button class="hamburger menu-icon hide-for-xlarge" type="button" data-toggle>
+      <span class="sr-only">Open internal navigation</span>
+    </button>
+  </div>
+
+  <div class="internal-nav xlarge-12" id="internal-nav-menu" style="display:none;">
+    <div class="grid-x">
+      {{#each cdc-nav.sub-nav}}
+      <div class="cell shrink"><a href="{{url}}">{{title}}</a></div>
+      {{/each}}
+      <div class="cell grow"></div>
+      <div class="cell shrink">
+        <a id="nav-email" class="nav-arrow-link" href="">
+          <img src="./assets/img/email-arrow.svg" alt="right pointing arrow">
+          Email Us
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

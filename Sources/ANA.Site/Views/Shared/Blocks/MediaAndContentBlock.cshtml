@@ -1,0 +1,147 @@
+﻿@using ANA.Site.Models.Blocks
+@model MediaAndContentBlock
+
+@if (Model.ContentTile != null)
+{    
+    @switch (Model.ChooseLayout)
+    {
+        case ANA.Site.Business.Enums.LayoutOptions.Layout1:
+            {
+                <section class="ana-block ana-block--8a7e995a-5032-4d03-a050-b234201372fa padded-t">
+                    <!-- Begin block specific content here -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <!--
+                                    - Block BG color classes and text color classes should be applied to this element
+                                    - Please use this hero-texture.webp as the default image, it should only be
+                                        customized in special cases.
+                                    - The CTA Link is optional
+                                    - The Image Citation is optional
+                                -->
+                                <div class="ana-well ana-hero-inner has-background-image has-overlay" style="--ana-block-background-image: url('/src/assets/hero-texture.webp');">
+
+                                    <div class="ana-hero-content">
+                                        <div class="row align-items-center">
+                                            <div class="col-12 col-lg-5 order-2 order-lg-1 p-5">
+                                                <h1 class="fw-bold lh-1 mb-3">@Html.PropertyFor(m => m.ContentTile.Heading)</h1>
+
+                                                <p>@Html.PropertyFor(m => m.ContentTile.Description)</p>
+
+                                                @if (Model.ContentTile.CtaMicroBlock != null)
+                                                {
+                                                    <a href="@Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.LinkItem)" class="btn btn-primary">
+                                                        @Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.Text)
+                                                    </a>    
+                                                }                                                
+                                            </div>
+                                            <div class="col-12 col-lg-7 order-1 order-lg-2 position-relative mb-5 mb-lg-0">
+
+                                                <!--
+                                                    - Add the has-citation class if a citation exists. Allows postioning of the toggle
+                                                    - The primary hero image url should be printed here
+                                                -->
+                                                <div class="ana-block-accent-1 has-background-image has-citation" style="--ana-block-background-image: url('/src/assets/hero-donate.webp');">
+
+                                                    <!-- Print the image citation within the data-bs-content attribute -->
+                                                    <div class="ana-citation">
+                                                        <button class="ana-citation--toggle" data-bs-toggle="popover" data-bs-content="FG Trade/E+ via Getty Images" aria-label="Image citation" data-bs-original-title="Image citation"></button>
+                                                    </div>
+                                                    <!-- Alt Text for Background Image -->
+                                                    <span class="visually-hidden" role="img" aria-label="Nurse taking blood pressure of a patient at home"></span>
+                                                </div>
+                                                <div class="ana-block-accent-2" data-speed="0.85" style="translate: none; rotate: none; scale: none; transform: translate(-32px, -56px);"></div>
+                                                <div class="ana-block-accent-3 ana-logo" data-speed="0.95" style="translate: none; rotate: none; scale: none; transform: translate(48px, 0px);">
+                                                    <svg width="60" viewBox="0 0 100 234" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M67.4 222.8H65.2V222.1H70.3V222.8H68.1V228.3H67.3V222.8H67.4ZM71.4 222.1H72.4L73.5 224.6L74.1 226.3L74.7 224.6L75.7 222.1H76.7V228.3H76V223.1L74.3 227.4H73.6L71.9 223.1V225.1V228.4H71.2V222.2L71.4 222.1Z" fill="currentColor"></path>
+                                                        <path d="M82.6 66.2C53.2 33.4 47.9 11 47 1.90001C46.9 0.400014 44.9 -0.199973 44 1.10003C37.1 11.3 22.7 41 54.5 80.5C69.3 98.9 75.7 116.3 77.8 130.8C77.8 131.3 77.2 131.4 77 131C74.1 123.9 68.6 117.1 58.8 111.9C57.4 111 56 110.1 54.5 109.2C29.4 94.5 26.4 74.5 26.3 66.3C26.3 65.1 24.8 64.6 24 65.5C14.2 77.8 -19.7 126.6 17.2 167.9C46.6 200.7 51.9 223.1 52.8 232.2C52.9 233.7 54.9 234.3 55.8 233C62.7 222.8 77.1 193.1 45.3 153.6C30.5 135.1 24.1 117.7 21.9 103.1C21.9 102.6 22.5 102.5 22.7 102.9C25.6 110 31.1 116.9 40.7 122.4C42.1 123.3 43.5 124.2 45 125.1C70.1 139.8 73.2 159.6 73.4 167.8C73.4 169 74.9 169.5 75.7 168.6C85.5 156.3 119.5 107.5 82.5 66.2H82.6Z" fill="currentColor"></path>
+                                                    </svg>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End block specific content here -->
+                </section>
+            }
+            break;
+        case ANA.Site.Business.Enums.LayoutOptions.Layout2:
+            {
+                <section class="ana-block ana-block--324bd12e-eb7e-49f5-8e6f-122896f79339 padded-y">
+                    <!-- Begin block specific content here -->
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-lg-5">
+                                <div class="ana-well bg-navy has-background-image has-citation" style="aspect-ratio: 1.2;--ana-block-background-image: url('/src/assets/photo-change-matters.webp')">
+                                    <div class="ana-citation">
+                                        <button class="ana-citation--toggle" data-bs-toggle="popover" data-bs-content="wagnerokasaki/E+ via Getty Images" aria-label="Image citation" data-bs-original-title="Image citation"></button>
+                                    </div>
+                                    <!-- Alt Text for Background Image -->
+                                    <span class="visually-hidden" role="img" aria-label="Portrait of female doctor or nurse in medical scrubs"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-7 mt-3 mt-lg-0">
+                                <div class="ps-0 ps-lg-4">
+                                    <h2>@Html.PropertyFor(m => m.ContentTile.Heading)</h2>
+                                    <p>@Html.PropertyFor(m => m.ContentTile.Description)</p>
+
+                                    @if (Model.ContentTile.CtaMicroBlock != null)
+                                    {
+                                        <a href="@Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.LinkItem)" class="btn btn-outline-secondary">
+                                            @Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.Text)
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End block specific content here -->
+                </section>
+            }
+            break;
+        case ANA.Site.Business.Enums.LayoutOptions.Layout3:
+            {
+                <section class="ana-block ana-block--9a357b9f-236e-4159-b1e4-d75a75cb573a padded-b has-accent-style-3">
+                    <!-- Begin block specific content here -->
+                    <div class="container">
+
+                        <!-- Title is optional -->
+                        <!-- <div class="ana-well-header bg-navy padding-lg">
+                            <h2 class="mb-0 text-white text-center">Frequently Asked Questions</h2>
+                        </div> -->
+                        <div class="ana-well horizontal padding-none">
+                            <div class="ana-well-header has-background-image has-citation citation-position-right" style="--ana-block-background-image: url('/src/assets/photo-direct-donation.webp')">
+                                <div class="ana-citation">
+                                    <button class="ana-citation--toggle" data-bs-toggle="popover" data-bs-content="Maskot/Maskot via Getty Images" aria-label="Image citation" data-bs-original-title="Image citation"></button>
+                                </div>
+                                <!-- Alt Text for Background Image -->
+                                <span class="visually-hidden" role="img" aria-label="Happy female physician with arm around colleague outside hospital"></span>
+                            </div>
+                            <div class="ana-well-content padding-lg">
+                                <div>
+                                    <h2>@Html.PropertyFor(m => m.ContentTile.Heading)</h2>
+                                    <p>@Html.PropertyFor(m => m.ContentTile.Description)</p>
+
+                                    @if (Model.ContentTile.CtaMicroBlock != null)
+                                    {
+                                        <a href="@Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.LinkItem)" class="btn btn-primary">
+                                            @Html.PropertyFor(m => m.ContentTile.CtaMicroBlock.Text)
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ana-block-accent-1" data-speed="0.85" style="translate: none; rotate: none; scale: none; transform: translate3d(-80px, 54.4914px, 0px);"></div>
+                        <div class="ana-block-accent-2" data-speed="0.75" style="translate: none; rotate: none; scale: none; transform: translate3d(64px, -118.516px, 0px);"></div>
+                    </div>
+                    <!-- End block specific content here -->
+                </section>
+            }
+            break;
+    }
+}

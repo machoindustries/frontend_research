@@ -1,0 +1,40 @@
+﻿@model EPiServer.Core.PageData
+
+@{
+    Layout = string.Empty;
+}
+
+@*@using (Html.BeginForm("ImportExcel", "ArticleContentImport", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
+@using (Html.BeginForm("ImportJSONCDData", "ArticleContentImport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<table>
+    <tr>
+        <td>JSON file</td>
+        <td>
+            <input type="file" id="FileUpload1"
+                   name="FileUpload1" />
+        </td>
+    </tr>
+    <tr>
+        <td>Choose TOC Parent Folder ID:</td>
+        <td>
+            <input type="text" id="ParentFolderIDFromText" name="ParentFolderIDFromText" />
+        </td>
+    </tr>
+    <tr>
+        <td>Choose Author Block Parent Folder ID:</td>
+        <td>
+            <input type="text" id="ParentFolderIDFromTextForABlock" name="ParentFolderIDFromTextForABlock" />
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type="submit" id="Submit" name="Submit"
+                   value="Submit" />
+        </td>
+    </tr>
+
+</table>
+}
+

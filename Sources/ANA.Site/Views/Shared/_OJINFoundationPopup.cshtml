@@ -1,0 +1,39 @@
+﻿@* @model ANA.Site.Models.ViewModels.Ojin.IOJINPageViewModel<ANA.Site.Business.Interfaces.ICommonProperties>
+
+@{
+    var store = EPiServer.Data.Dynamic.TypeExtensions.GetOrCreateStore(
+        typeof(ANA.Site.Models.Dds.FoundationPopupDds));
+
+    var cache = EPiServer.ServiceLocation.ServiceLocator.Current
+        .GetInstance<EPiServer.Framework.Cache.IObjectInstanceCache>();
+
+    var excludes = cache.Get("excludes") as
+        System.Collections.Generic.List<ANA.Site.Models.Dds.FoundationPopupDds>;
+
+    if (excludes == null)
+    {
+        excludes = store.LoadAll<ANA.Site.Models.Dds.FoundationPopupDds>().ToList();
+
+        cache.Insert("excludes",
+            excludes,
+            EPiServer.Framework.Cache.CacheEvictionPolicy.Empty);
+    }
+
+    var foundationExcludes = string.Join("|", excludes.Select(e => e.Keyword).ToArray());
+
+    @Html.HiddenFor(k => foundationExcludes);
+}
+
+<div class="c-foundation-popup" data-foundation-popup data-require="./src/views/foundation-popup-view">
+    <h4>You are now leaving the American Nurses Foundation</h4>
+    <p>The American Nurses Foundation is a separate charitable organization under Section 501(c)(3) of the Internal Revenue Code. The Foundation does not engage in political campaign activities or communications.</p>
+    <p>The Foundation expressly disclaims any political views or communications published on or accessible from this website.</p>
+    <a href="" class="e-button e-button--anchor e-button--blue e-button c-foundation-popup__button" data-foundation-popup-continue>
+        Continue
+    </a>
+    <a href="" class="e-button e-button--anchor e-button--blue e-button c-foundation-popup__button" data-modal-close>
+        Cancel
+    </a>
+</div>
+
+ *@

@@ -1,0 +1,39 @@
+﻿@model ANA.Site.Models.ViewModels.ProfessionalPreceptorshipLightBox
+
+<div data-lightbox-src="preceptorshipedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.ProfessionalDevPrecepsId, new { data_pd_preceptorship_input_id = "" })
+        <label for="@Html.IdFor(m => m.Sponsor)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Preceptorship/Sponsor")</span>
+            @Html.TextBoxFor(m => m.Sponsor, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Preceptorship/Sponsor"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_preceptorship_input_sponsor = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Sponsor)"></div>
+        <label for="@Html.IdFor(m => m.StudentType)" class="e-form__label e-form__label--select" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Preceptorship/StudentType")</span>
+            @Html.DropDownListFor(m => m.StudentType, Model.StudentTypes, new { @class = "e-form__input e-form__input--select", title = Html.Translate("/ProfessionalDevelopment/Preceptorship/StudentType"), data_validate = "", data_validate_required = "", data_pd_preceptorship_input_student_type = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.StudentType)"></div>
+        <label for="@Html.IdFor(m => m.Date)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Preceptorship/LbEndDate")</span>
+            @Html.TextBoxFor(m => m.Date, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Preceptorship/LbEndDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Preceptorship/LbEndDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_preceptorship_input_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Date)"></div>
+        <label for="@Html.IdFor(m => m.HoursCompleted)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Preceptorship/HoursCompleted")</span>
+            @Html.TextBoxFor(m => m.HoursCompleted, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Preceptorship/HoursCompleted"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(?!0\\d)\\d{0,9}(\\.\\d{1,2})?$", data_validate_message = "Invalid contact hours entered- please enter numerical data up to two decimal places(e.g., 0.5, 1.0, 2, 2.25)", data_pd_preceptorship_input_hours_completed = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.HoursCompleted)"></div>
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/ProfessionalDevelopment/Preceptorship/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>
+
+<div data-lightbox-src="preceptorshipconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you would like to remove this entry?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>

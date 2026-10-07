@@ -1,0 +1,20 @@
+<p>{{filter-title}}</p>
+<div class="checkbox">
+  {{#each filter}}
+    <label class="checkbox-container">
+      {{filter}}
+      <input type="checkbox" {{checked}}>
+      <span class="checkmark"></span>
+    </label>
+  {{/each}}
+</div>
+
+<div>
+  <div class="grid-container full">
+    <div class="grid-x align-justified">
+      <div class="small-12 btn-blue">
+        <button id="showFilters" type="button">Show More Filters</button>
+      </div>
+    </div>
+  </div>
+</div>

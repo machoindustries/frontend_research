@@ -1,0 +1,20 @@
+﻿@using EPiServer.Core
+@using EPiServer.Editor
+@using EPiServer.Web.Mvc.Html
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.Infographics.HealthyNationSubItemBlock
+
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+    var paddingClass = (Model.Icon == null ? "model__list__name--padding" : "");
+}
+
+<li>
+    <div class="model__list__name @paddingClass">@Html.PropertyFor(m => m.Text)</div>
+    @if (Model.Icon != null || ContentHelper.PageIsInEditMode())
+    {
+        <span class="model__icon"><img src="@_UrlResolver.GetUrl(Model.Icon)" alt="" /></span>
+    }
+</li>

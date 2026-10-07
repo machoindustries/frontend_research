@@ -1,0 +1,17 @@
+---
+jump:
+  -
+    title: "General Topics"
+    url: "#general-topics"
+  -
+    title: "PPE"
+    url: "#ppe"
+  -
+    title: "Disaster Preparedness"
+    url: "#disaster-preparedness"
+  -
+    title: "Vaccine"
+    url: "#vacine"
+  -
+    title: "Healthcare Acquired Infections"
+    url: "$healthcare-acquired-infections"

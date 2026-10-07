@@ -1,0 +1,19 @@
+﻿@using ANA.Site.Models.ViewModels
+
+@model CheckoutViewModel
+
+<div class="c-checkout__section">
+    <h2 class="c-checkout__section-title">@Html.Translate("/CartCheckout/Shipping/Heading")</h2>
+    <div class="e-shipping-methods" data-require="./src/views/shipping-methods-view" data-restricted-shipping-message="@Html.Translate("/CartCheckout/Shipping/RestrictedMessage")" data-address-not-selected-shipping-message="@Html.Translate("/CartCheckout/Shipping/AddressNotSelected")" data-free-shipping-message="@Html.Translate("/CartCheckout/Shipping/FreeShippingMessage")" data-bulk-purchase-shipping-message="@Html.Translate("/CartCheckout/Shipping/BulkPurchaseShippingMessage")">
+        <span class="e-shipping-methods__text">@Html.Translate("/CartCheckout/Shipping/ChooseMethod")</span>
+        <div class="e-shipping-methods__options grid" data-shipping-method-container>
+            @if (Model.Shipment.ShippingMethods.Count == 0)
+            {
+                <div class="e-shipping-methods__item e-shipping-methods__item--message grid__item one-whole">
+                    @Html.Translate("/CartCheckout/Shipping/AddressNotSelected")
+                </div>
+            }
+        </div>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="csm"></div>
+    </div>
+</div>

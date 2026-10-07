@@ -1,0 +1,167 @@
+.media-content-social-links {
+    max-width: 26rem;
+    flex-grow: 1 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #EAEAEA ;
+    margin: .5rem;
+    width: 100%;
+    text-decoration: none;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    @media screen and (min-width: $medium) {
+        // max-width: 49%;
+    }
+
+    @media screen and (min-width: $large) {
+        // max-width: 32%;
+    }
+
+        &:hover {
+            h4 {
+                text-decoration: underline;
+            }
+
+            .card-img-overlay {
+                animation: fadeA .4s ease-in-out 0s 1 normal;
+                animation-fill-mode: forwards;
+                @keyframes fadeA {
+                    from {opacity: 0;}
+                    to {opacity: .5;}
+                }
+                cursor: pointer;
+            }
+        }
+
+        .img-content-container {
+            padding: 0.625rem;
+
+            .card-img-container {
+                width: 100%;
+                height: 0;
+                padding-top: 70%;
+                position: relative;
+
+                .card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0
+                }
+
+                .card-img-overlay {
+                    background-color: #FAAA51;
+                    opacity: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0;
+                    z-index: 5;
+                }
+
+                .card-icon-container {
+                    position: absolute;
+                    bottom: 0;
+                    width: 40px;
+                    height: 40px;
+                    opacity: .75;
+                    z-index: 5;
+                    background-color: $media-content-social-card-link-background-full;
+                    cursor: pointer;
+                    padding: 10px;
+                    border: none;
+                    transition: opacity 0.4s ease-in-out;
+    
+                    .card-link-icon {
+                        width: 100%;
+                        height: 100%;
+                    }
+    
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+
+                &:hover {
+                    .card-icon-container {
+                        opacity: 1;
+                        transition: opacity 0.5s ease-in-out;
+                    } 
+                }
+            }
+            
+            .card-content {
+                background-color: $media-content-social-card-background;
+                padding: 1rem 0rem 1.5rem 0rem;
+                cursor: pointer;
+            
+                a {
+                    text-decoration: none;
+                }
+
+                h4 {
+                    color: $media-content-social-card-font;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    line-height: 1.25rem;
+                    margin-top: 0rem;
+                    cursor: pointer;
+                }
+
+                p {
+                    max-height: 6.875rem;
+                    -webkit-line-clamp: 5;
+                    overflow: hidden;
+                    text-overflow: ellipsis; 
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    white-space: normal;
+                    color: $media-content-social-card-small-text;
+                    font-size: 0.75rem;
+                    line-height: 1.0625rem;
+                    margin-bottom: 0;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .card-topics {
+            background-color: $font-dark-blue2;
+            padding: 0.75rem;
+            width: 100%;
+            color: white;
+            font-size: 12px;
+            line-height: 20px;
+            position: relative;
+            height: 90px;
+
+            .card-ANA{
+                font-weight: bold;
+            }
+
+            .share-icon {
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+                cursor: pointer;
+                padding: .25rem;
+                width: 25px;
+                height: 25px;
+
+                &:hover path {
+                    fill: $media-content-social-card-link-background
+                }
+
+                path {
+                    fill: white;
+                }
+            }
+        }
+}
+

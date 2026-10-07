@@ -1,0 +1,232 @@
+﻿@using ANA_HNHN.Models.Media
+@using Brightfind.Helper
+@using EPiServer.ServiceLocation
+@model ANA_HNHN.Models.Blocks.ContentCollectionBlock
+@{
+    var backgroundColor = Model.BackgroundColor;
+    @if(backgroundColor == "blue")
+    {
+        backgroundColor = "light-blue";
+    }
+}
+
+@if (Model != null)
+{
+    switch (Model.View)
+    {
+        case "CardCollection":
+            <section class="card-collection card-collection--blocks bg-@backgroundColor">
+                <div class="container">
+                    <div class="row">
+                        @if (!string.IsNullOrEmpty(Model.Heading))
+                        {
+                            <div class="col text-center mb-5">
+                                <h2>@Model.Heading</h2>
+                            </div>
+                        }
+                        <div class="card-collection__cards">
+                            @if (Model.Collection != null)
+                            {
+                                foreach (var item in Model.Collection.Items)
+                                {
+                                    if (item != null)
+                                    {
+                                        var contentItem = item.LoadContent();
+                                        var contentBlock = contentItem as ANA_HNHN.Models.Blocks.ContentBlock;
+                                        var backgroundImage = MediaHelper.GetUrl(contentBlock.DesktopImages);
+                                        var mobileImageUrl = MediaHelper.GetUrl(contentBlock.MobileImages);
+                                        var altText = MediaHelper.GetImageAltText(contentBlock?.DesktopImages);
+                                        var mobileAltText = MediaHelper.GetImageAltText(contentBlock?.MobileImages);
+                                        var hasBackgroundImage = !string.IsNullOrEmpty(backgroundImage);
+                                        var hasMobileImage = !string.IsNullOrEmpty(mobileImageUrl);
+                                        <div class="card">
+                                            @if (!String.IsNullOrEmpty(mobileImageUrl))
+                                            {
+                                                <img loading="lazy" class="card-collection__image desktop-image" src="@backgroundImage" alt="@altText">
+                                                <img loading="lazy" class="card-collection__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+                                            }
+                                            else
+                                            {
+                                                <img loading="lazy" class="card-collection__image" src="@backgroundImage" alt="@altText">
+                                            }
+                                            @if (!string.IsNullOrEmpty(contentBlock.Heading))
+                                            {
+                                                <h4>@contentBlock.Heading</h4>
+                                            }
+                                            @Html.Raw(contentBlock.Description)
+                                            @if (contentBlock.Button != null && contentBlock.Button.ButtonText != null && contentBlock.Button.ButtonLink != null)
+                                            {
+                                                <p class="mt-auto"><a href="@contentBlock.Button.ButtonLink" target="@contentBlock.Button.ButtonTarget">@contentBlock.Button.ButtonText</a></p>
+                                            }
+                                        </div>
+                                    }
+
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+            break;
+
+        case "CardCollectionLinkedTitle":
+            <section class="card-collection card-collection--icons bg-@backgroundColor">
+                <div class="container">
+                    <div class="row">
+                        @if (!string.IsNullOrEmpty(Model.Heading))
+                        {
+                            <div class="col text-center mb-5">
+                                <h2>@Model.Heading</h2>
+                            </div>
+                        }
+                        <div class="card-collection__cards">
+                            @if (Model.Collection != null)
+                            {
+                                foreach (var item in Model.Collection.Items)
+                                {
+                                    if (item != null)
+                                    {
+                                        var contentItem = item.LoadContent();
+                                        var contentBlock = contentItem as ANA_HNHN.Models.Blocks.ContentBlock;
+                                        var backgroundImage = MediaHelper.GetUrl(contentBlock.DesktopImages);
+                                        var altText = MediaHelper.GetImageAltText(contentBlock?.DesktopImages);
+                                        var mobileImageUrl = MediaHelper.GetUrl(contentBlock.MobileImages);
+                                        var mobileAltText = MediaHelper.GetImageAltText(contentBlock?.MobileImages);
+                                        var hasBackgroundImage = !string.IsNullOrEmpty(backgroundImage);
+                                        var hasMobileImage = !string.IsNullOrEmpty(mobileImageUrl);
+
+                                        <div class="card">
+                                            <a href="@Url.ContentUrl(contentBlock.Button?.ButtonLink)" target="@contentBlock.Button?.ButtonTarget" class="alt--darkest">
+                                                @if (!String.IsNullOrEmpty(mobileImageUrl))
+                                                {
+                                                    <img loading="lazy" class="card-collection__image desktop-image" src="@backgroundImage" alt="@altText">
+                                                    <img loading="lazy" class="card-collection__image mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+                                                }
+                                                else
+                                                {
+                                                    <img loading="lazy" class="card-collection__image" src="@backgroundImage" alt="@altText">
+                                                }
+                                                @if (!string.IsNullOrEmpty(contentBlock.Heading))
+                                                {
+                                                    <h4>@contentBlock.Heading</h4>
+                                                }
+                                            </a>
+                                            @Html.Raw(contentBlock.Description)
+                                        </div>
+                                    }
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            break;
+
+        case "QuoteCarousel":
+            <section class="bg-@backgroundColor quote-carousel-section section--md-gap">
+                @if (!string.IsNullOrEmpty(Model.Heading))
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h2 class="mb-4">@Model.Heading</h2>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="container p-0">
+                    <div class="row m-0">
+                        <div class="col-12 p-0">
+                            <div class="quote-carousel-wrap">
+                                <div class="quotes" aria-hidden="true"></div>
+                                <div class="swiper quote-carousel" navigation="true">
+                                    <div class="swiper-wrapper">
+                                        @if (Model.Collection != null)
+                                        {
+                                            foreach (var item in Model.Collection.Items)
+                                            {
+                                                if (item != null)
+                                                {
+                                                    var contentItem = item.LoadContent();
+                                                    var contentBlock = contentItem as ANA_HNHN.Models.Blocks.ContentBlock;
+                                                    <div class="swiper-slide">
+                                                        @if (!string.IsNullOrEmpty(contentBlock.Heading))
+                                                        {
+                                                            <h3>@contentBlock.Heading</h3>
+                                                        }
+                                                        @Html.Raw(contentBlock.Description)
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                    <div class="swiper-pagination" aria-hidden="true"></div>
+                                    <div class="swiper-button-prev" aria-hidden="true"></div>
+                                    <div class="swiper-button-next" aria-hidden="true"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            break;
+
+        case "ContentCarousel":
+            <section class="bg-@backgroundColor">
+                <div class="container p-0">
+                    <div class="row">
+                        <div class="col-12">
+                            @if (!string.IsNullOrEmpty(Model.Heading))
+                            {
+                                <h2 class="mb-4 text-center">@Model.Heading</h2>
+                            }
+                            <div class="swiper info-carousel">
+                                <div class="swiper-wrapper">
+                                    @if (Model.Collection != null)
+                                    {
+                                        foreach (var item in Model.Collection.Items)
+                                        {
+                                            if (item != null)
+                                            {
+                                                var contentItem = item.LoadContent();
+                                                var contentBlock = contentItem as ANA_HNHN.Models.Blocks.ContentBlock;
+                                                var backgroundImage = MediaHelper.GetUrl(contentBlock.DesktopImages);
+                                                var altText = MediaHelper.GetImageAltText(contentBlock?.DesktopImages);
+                                                var mobileImageUrl = MediaHelper.GetUrl(contentBlock.MobileImages);
+                                                var mobileAltText = MediaHelper.GetImageAltText(contentBlock?.MobileImages);
+                                                var hasBackgroundImage = !string.IsNullOrEmpty(backgroundImage);
+                                                var hasMobileImage = !string.IsNullOrEmpty(mobileImageUrl);
+                                                <div class="swiper-slide">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-5 pe-auto pe-md-5">
+                                                            @if (!String.IsNullOrEmpty(mobileImageUrl))
+                                                            {
+                                                                <img loading="lazy" class="desktop-image" src="@backgroundImage" alt="@altText">
+                                                                <img loading="lazy" class="mobile-image" src="@mobileImageUrl" alt="@mobileAltText" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img loading="lazy" src="@backgroundImage" alt="@altText">
+                                                            }
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            @Html.Raw(contentBlock.Description)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    }
+                                </div>
+                                <div class="swiper-pagination" aria-hidden="true"></div>
+                                <div class="swiper-button-prev" aria-hidden="true"></div>
+                                <div class="swiper-button-next" aria-hidden="true"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            break;
+    }
+}

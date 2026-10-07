@@ -1,0 +1,39 @@
+﻿@model ANA.Site.Models.ViewModels.ProfessionalServiceLightboxViewModel
+
+<div data-lightbox-src="professionalserviceedit">
+    <h3 data-lightbox-heading></h3>
+    <form class="e-form" data-require="./src/views/form-view" data-ajax-form>
+        @Html.HiddenFor(m => m.ProfessionalDevProServicesId, new { data_pd_service_input_id = "" })
+        <label for="@Html.IdFor(m => m.Organization)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Services/Organization")</span>
+            @Html.TextBoxFor(m => m.Organization, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Services/Organization"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_service_input_organization = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.Organization)"></div>
+        <label for="@Html.IdFor(m => m.TypeOfService)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Services/ServiceType")</span>
+            @Html.TextBoxFor(m => m.TypeOfService, null, new { @class = "e-form__input e-form__input--text", title = Html.Translate("/ProfessionalDevelopment/Services/ServiceType"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_pd_service_input_service_type = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.TypeOfService)"></div>
+        <label for="@Html.IdFor(m => m.StartDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Services/LbStartDate")</span>
+            @Html.TextBoxFor(m => m.StartDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Services/StartDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Services/StartDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_service_input_start_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.StartDate)"></div>
+        <label for="@Html.IdFor(m => m.EndDate)" class="e-form__label e-form__label--text" data-formfield="">
+            <span class="e-form__label-text" data-fake-placeholder="">@Html.Translate("/ProfessionalDevelopment/Services/LbEndDate")</span>
+            @Html.TextBoxFor(m => m.EndDate, null, new { @class = "e-form__input e-form__input--text adddate", title = Html.Translate("/ProfessionalDevelopment/Services/EndDate"), data_formfield_text = "", data_validate = "", data_validate_required = "", data_validate_regex = "^(0[1-9]|1[0-2])-(0[1-9]|1\\d|2\\d|3[01])-(19|20|21)\\d{2}$", data_validate_realdate = "true", data_validate_message = @Html.Translate("/ProfessionalDevelopment/Services/EndDate") + " " + @Html.Translate("/Global/DateFormat/ValidationErrorMessage"), data_pd_service_input_end_date = "" })
+        </label>
+        <div class="e-form__validation-errors" data-validation-error="" data-validation-for="@Html.NameFor(m => m.EndDate)"></div>
+        <input class="e-button e-button--submit e-button--blue e-form__submit" type="submit" value="@Html.Translate("/ProfessionalDevelopment/Services/Submit")" data-submit-license>
+    </form>
+    <div class="e-form__error" data-error-text style="color:#cf4520;"></div>
+	 <script src="~/Scripts/js/adddate.js"></script>
+</div>
+
+<div data-lightbox-src="professionalserviceconfirmdelete">
+    <h3>Confirm removal</h3>
+    <p>Are you sure you would like to remove this entry?</p>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-confirm-remove>Confirm</a>
+    <a href="#" class="e-button e-button--anchor e-button--blue e-button" data-cancel-remove data-modal-close>Cancel</a>
+    <p class="e-form__error" data-delete-error style="display:none"></p>
+</div>

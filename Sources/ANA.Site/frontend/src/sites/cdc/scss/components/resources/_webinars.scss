@@ -1,0 +1,97 @@
+.resource-section {
+  scroll-margin-top: rem-calc(59px);
+  @media screen and (min-width: $large) {
+    scroll-margin-top: 11rem;
+  }
+}
+
+.resource-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  @media screen and (max-width: $large) {
+    justify-content: space-between;
+  }
+  div {
+    h6 {
+      margin-bottom: 1.125rem;
+    }
+    p {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+    .video-link {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+    .video-img {
+      img {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+    }
+    .action-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      filter: invert(100%);
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 3px;
+      transition: background ease-in-out 0.25s;
+    }
+
+    .video-link:hover .action-icon {
+      background: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.new {
+  background-color: #27a9e1;
+  color: $white;
+  text-decoration: none;
+  padding: 0.8rem 2rem 0.8rem 2rem;
+  position: absolute;
+  top: -1rem;
+  left: -1rem;
+  z-index: 1;
+}
+
+.popular {
+  background-color: #398058;
+  color: $white;
+  text-decoration: none;
+  padding: 0.8rem 2rem 0.8rem 2rem;
+  position: absolute;
+  top: -1rem;
+  left: -1rem;
+  z-index: 1;
+}
+
+.cta-all-resources {
+  width: 100%;
+  margin-bottom: 3rem;
+  margin-top: 1rem;
+}
+
+.webinar-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  @media screen and (min-width: $medium) {
+    width: 225px;
+    min-width: calc(25%); // To ensure at most 4 column in a row
+    max-width: calc(50%); // To ensure at least 2 column in a row
+    padding-right: 2rem;
+  }
+}
+
+.webinar-caption {
+  margin-top: 8rem;
+  margin-bottom: 4rem;
+}

@@ -1,0 +1,25 @@
+.open-modal{
+    padding: 2em;
+    background: transparent;
+    border: 0;
+    outline: none;
+
+
+    &__video{
+        width: 100%;
+        height: 225px;
+        border: 0;
+
+        @media(min-width: 640px){
+            height: 300px;
+        }
+    }
+
+    .close-button {
+        position: absolute;
+        color: $font-dark-blue2;
+        display: block;
+        outline: none;
+        padding: 0 6px;
+      }
+}

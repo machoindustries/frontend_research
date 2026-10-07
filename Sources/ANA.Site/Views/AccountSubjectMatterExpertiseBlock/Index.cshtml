@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Subject Matter Expertise";
+}
+@* jQuery 1.11.1 used to be pulled in here because _Base.cshtml did not
+   load jQuery until the end of <body>. It now loads in <head>, so this
+   block shares the site-wide 3.7.1 (backlog item 31). *@
+<link href="~/Styles/MyAccount_PI.css" rel="stylesheet" />
+<script type="text/javascript">
+    var selectedvalue = 0;
+    var catexselect = 0;
+    var cateyselect = 0;
+    var spixselect = 0;
+    var spiyselect = 0;
+    var caspxselect = 0;
+    var caspyselect = 0;
+    var EmpHeader = '';
+    var PageHeader = '';
+    var smedefaultvalues = '';
+    var SMEvalues = [];
+    var DSMEvalue = [];
+    document.addEventListener("DOMContentLoaded", function (event) {
+        $(document).ready(function () {
+
+            $(document).ajaxStart(function () {
+                $('#wait').show();
+            });
+            $(document).ajaxComplete(function () {
+                $('#wait').hide();
+            });
+            BindData();
+
+
+        });
+    });
+
+    function BindData() {
+         
+        $.ajax(
+            {
+                url: "/AccountSubjectMatterExpertiseBlock/GetSME",
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                type: "POST",
+                success: function (data, status, xhr) {
+                    var obj = JSON.parse(data.Result);
+                    $('#sme').empty();
+                    var table = $('<div clas="sme_width" ID="SME"></div>');
+
+                    for (var i = 0; i < obj.PositionDescription.PositionDescr.length; i++) {
+
+                        table.append("<td class='sme_tablewidth'>"
+                            + "<div id=chklistitem>" + "<input type='checkbox' class = 'Checkbox-style' name='chklistitem' value='" + obj.PositionDescription.PositionDescr[i]["Subcode"] + "' id='chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + "' />&nbsp;&nbsp; <label for=chllist" + obj.PositionDescription.PositionDescr[i]["Subcode"] + ">" + obj.PositionDescription.PositionDescr[i]["Description"] + "</div>"
+                            + "</td>");
+                    }
+                  
+
+                    $('#sme').html(table);
+                    $("input:checkbox").change(function () {
+                        var ischecked = $(this).is(':checked');
+                        if (!ischecked) {
+                            if (isExist(smedefaultvalues.PositionDescription.PositionDescr, $(this).val())) {
+                                DSMEvalue.push($(this).val());
+                            }
+
+                        }
+                        else if (ischecked) {
+                            for (var idel = 0; idel < DSMEvalue.length; idel++) {
+                                if (DSMEvalue[idel] == $(this).val()) {
+                                    DSMEvalue.splice(idel, 1);
+                                }
+                            }
+
+                            SMEvalues.push($(this).val());
+
+                        }
+                    });
+
+
+                    var objcheck = JSON.parse(data.PCheck);
+                    smedefaultvalues = objcheck;
+                    $('.form_save').show();
+                   
+                    $('#wait').hide();
+                    if (typeof objcheck.PositionDescription.PositionDescr != "undefined")
+                    {
+                        for (var check = 0; check < objcheck.PositionDescription.PositionDescr.length; check++) {
+                            var subcode = objcheck.PositionDescription.PositionDescr[check].DemographicSubcode
+
+                            $("input[name='" + "chklistitem" + "'][value='" + subcode + "']").prop('checked', true);
+                        }
+                    }
+                    function isExist(arr, str) {
+                        for (var i = 0; i < arr.length; i++) {
+                            if (arr[i].DemographicSubcode === str) {
+
+
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+
+                }
+            });
+
+       
+    }
+    function SaveFormData() {
+         
+            
+            callProxy("/AccountSubjectMatterExpertiseBlock/DeleteSME", DSMEvalue);
+
+            callProxy("/AccountSubjectMatterExpertiseBlock/SaveSME", SMEvalues);
+                
+            
+            window.location = "/my-account/address-book/";
+
+        
+    }
+
+    //Ajax call: pass the URL and data that should be posted.
+    //Dt: 12/28/2017
+    function callProxy(url, value) {
+        $.ajax(
+            {
+                url: url,
+                contentType: 'application/json; charset=utf-8',
+                datatype: 'json',
+                data: JSON.stringify(value),
+                type: "POST",
+                success: function (data, status, xhr) {
+
+                }
+            });
+    }
+     
+
+</script>
+ 
+<div id="wait"  class="e-spinner e-spinner" data-loading-spinner="">
+    <svg class="e-spinner__spinner" width="96px" height="96px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" style="background: none;">
+        <circle cx="50" cy="50" fill="none" stroke="#009cde" stroke-width="5" r="32" stroke-dasharray="150.79644737231007 52.26548245743669" transform="rotate(354.079 50.0002 50.0002)">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+        </circle>
+    </svg>
+</div>
+
+
+<div class="c-account__section1" style="height:auto">
+    <h4 class="sub_title">My Subject Matter Expertise</h4>
+    <div class="checkbox1">
+        <p><strong><span class="color">Check all that apply:</span></strong></p>
+    </div>
+    <div class="checkbox">
+        <div id="sme">
+        </div>
+    </div>
+    <div class="form_save" style="display:none;">
+        <br />
+        <input class="e-button e-button--submit e-button--blue e-form__submit" onclick="SaveFormData()"
+               type="submit" id="Savecontinue" value="Save" data-submit-address="">
+
+    </div>
+
+</div>

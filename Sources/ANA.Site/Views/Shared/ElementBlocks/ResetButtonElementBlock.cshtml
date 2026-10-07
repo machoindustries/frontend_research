@@ -1,0 +1,14 @@
+﻿@using EPiServer.Forms.Implementation.Elements
+@using ANA.Site.Business.Extensions
+@model ResetButtonElementBlock
+
+@{
+    var formElement = Model.FormElement;
+    var buttonText = Model.Label;
+}
+
+
+
+        <input type="reset" form="@Model.FormElement.Form.FormGuid"
+               class="e-button e-button--submit e-button--orange e-form__submit" @Html.Raw(Model.AttributesString)
+               value="@buttonText">

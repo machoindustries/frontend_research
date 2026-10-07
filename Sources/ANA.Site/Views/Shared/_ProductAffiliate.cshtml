@@ -1,0 +1,20 @@
+﻿@using ANA.Site.Business.Helpers
+@model ANA.Site.Models.ViewModels.ProductAffiliateViewModel
+
+<div class="e-affiliate @(Model.SponsorLogoWide ? "e-affiliate--stacked" : "") c-product-page-detail__affiliate">
+    @if (!string.IsNullOrEmpty(Model.SponsorImageUrl))
+    {
+        <img src="@(Model.SponsorImageUrl + "?" + (Model.SponsorLogoWide ? "height" : "width") + "=50")" alt="@Model.Heading" class="e-affiliate__thumbnail" />
+    }
+    <p class="e-affiliate__text">
+        <span class="e-affiliate__title">@Model.SponsorHeading</span>
+        @using (Html.BeginConditionalLink(!string.IsNullOrEmpty(Model.SponsorUrl) && Model.SponsorUrl != "#", new HtmlString(Model.SponsorUrl), Model.SponsorIntroText, "e-affiliate__link", null, "_blank"))
+        {
+            <span class="e-affiliate__link-text">@Model.SponsorIntroText</span> 
+            if (!string.IsNullOrEmpty(Model.SponsorUrl) && Model.SponsorUrl != "#")
+            {
+                <span class="icon--icon-external-link"></span>
+            }
+        }
+    </p>
+</div>

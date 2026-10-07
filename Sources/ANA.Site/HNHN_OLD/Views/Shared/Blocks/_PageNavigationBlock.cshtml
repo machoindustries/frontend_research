@@ -1,0 +1,24 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@model ANA.Site.HNHN.Models.ViewModels.PageNavigationViewModel
+
+@if (!Model.ListChildren && !string.IsNullOrWhiteSpace(Model.Url))
+{
+    <h5><a href="@Model.Url">@Model.LinkText</a></h5>
+}
+else
+{
+    <h5>@Model.LinkText</h5>
+    if (Model.ChildPages != null && Model.ChildPages.Any())
+    {
+        <ul class="@Model.CssClass">
+            @foreach (var subPage in Model.ChildPages)
+            {
+                <li>@Html.ContentLink(subPage.ContentLink)</li>
+            }
+            @*<li><a href="#">Partnership Levels</a></li>
+                <li><a href="#">Organizational Partner Join Form</a></li>*@
+        </ul>
+    }
+}

@@ -1,0 +1,17 @@
+.landing-hero {
+    line-height: 0;
+}
+
+@media screen and (max-width: $large) {
+    .landing-hero {
+        width: 100%;
+    
+        picture {
+            width: 100%;
+    
+            img {
+                width: 100%;
+            }
+        }
+    }
+}

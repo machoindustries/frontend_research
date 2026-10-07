@@ -1,0 +1,33 @@
+﻿@using ANA.Site.Microsite.Models.Pages.Blog
+@using ANA.Site.Microsite.Models.Blocks.Media
+@using ANA.Site.Models.Media
+@using ANA.Site.Microsite.Extensions
+@using EPiServer.Web.Mvc.Html
+@using Geta.Optimizely.Extensions;
+@model ANA.Site.Microsite.Models.Blocks.Blog.BlogListViewModel
+
+@if (!string.IsNullOrEmpty(Model.CurrentContent.Heading))
+{
+    <h2 class="section-header anim-waypoint">
+        @Html.PropertyFor(i => i.CurrentContent.Heading)
+    </h2>
+}
+<div class="grid-x related-content cell grid-margin-x small-offset-1 small-10">
+    @foreach (var blog in Model.BlogPages)
+    {
+        <div class="medium-4 cell related-content__card">
+            @if (blog.CoverImage != null)
+            {
+                var coverImage = blog.CoverImage.Get<ImageFile>();
+                <img src="@coverImage.ContentLink.GetFriendlyUrl()" alt="@coverImage.AltText" class="related-content__image" />
+            }
+            <div class="related-content__text-area">
+                <h4 class="related-content__title">@blog.Heading</h4>
+                <p class="related-content__lead-in">@blog.Description</p>
+                <a href="@blog.GetFriendlyUrl()" class="medium-4 cell related-content__button">
+                    Read More
+                </a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,94 @@
+.image-social-links {
+    max-width: 26rem;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    .container {
+        height: 0;
+        padding-bottom: 109%;
+        position: relative;
+
+        .background-img {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .asset-icon {
+            height: 36px;
+            width: 36px;
+            background-color: #009CDE;
+            z-index: 2;
+            padding: .5rem;
+            border-radius: 50%;
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            cursor: pointer;
+
+            img {
+                height: 100%;
+                width: 100%;
+            }
+        }
+
+        .title-container {
+            z-index: 5;
+            min-height: 33%;
+            background-color: rgba(18, 62, 103, 0.75);
+            width: 100%;
+            padding-bottom: 1.75rem;
+            bottom: 0;
+            position: absolute;
+
+            a {
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .title {
+                font-size: 1rem;
+                font-weight: 600;
+                letter-spacing: .5px;
+                line-height: 1.25rem;
+                color: white;
+                padding: 1rem;
+            }
+            .addthis_toolbox {
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                bottom: 10px;
+                right: 15px;
+                cursor: pointer;
+
+                a {
+                    background-color: transparent;
+
+                    svg {
+                        fill: $white;
+                    }
+                }
+            }
+
+            // svg {
+            //     width: 20px;
+            //     height: 20px;
+            //     position: absolute;
+            //     bottom: 15px;
+            //     right: 15px;
+            //     cursor: pointer;
+            // }
+        }
+    }
+}
+
+.insights {
+    margin-left: auto;
+    margin-right: auto;
+}

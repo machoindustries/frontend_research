@@ -1,0 +1,36 @@
+﻿@using ANA.Site.Hub.Models.Pages
+@model ANA.Site.Hub.Models.Blocks.ViewModels.HubFeaturedResourceBannerBlockViewModel
+
+<div class="popular-container" style="margin-top: @(Model.TopBottomSpacing)px;margin-bottom: @(Model.TopBottomSpacing)px;">
+    <div class="popular-wrapper slider-block-items">
+        <h2 class="popular-title">@Model.Title</h2>
+        <div class="c-container-block__content items-wrapper">
+            @foreach (var item in Model.HubFeaturedResourceBannerItems)
+            {
+                <a href="@item.ContentUrl" class="grid__item">
+                    <div class="image-wrapper">
+
+                        <img src="@item.FeaturedImageUrl" alt="@item.ImageAlt" title="@item.ImageAlt" class="image" />
+
+                        @if (!string.IsNullOrEmpty(item.ReadWatchListenTime))
+                        {
+                            var readTime = $"{item.ReadWatchListenTime}";
+                            <div class="image-label">@readTime</div>
+                        }
+                    </div>
+                    <div class="item-info-wrapper">
+                        <h4 class="item-title">
+                            @item.Title
+                        </h4>
+                        <p class="item-text">@item.MediaCategoryType</p>
+                        <p class="item-date">@item.Date</p>
+                    </div>
+                </a>
+            }
+        </div>
+        <div class="indicators-wrapper"></div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,88 @@
+.ojin-articleHeadline {
+    margin: auto;
+    max-width: 88%;
+
+    h1 {
+        padding-bottom: 20px;
+        font-size: 2rem;
+        line-height: 1.45;
+    }
+
+    ul {
+        li {
+            display: block;
+            padding: 0 3px ;
+            position: relative;
+
+            a {
+                text-decoration: underline;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .ojin-authorBio__item {
+                display: none;
+                position: absolute;
+                top: 25px;
+                left: 0;
+                width: 100%;
+                max-width: 400px;
+                min-width: 325px;
+                text-align: left;
+                background: $white;
+                padding: 25px;
+                border: 1px solid $ojin-lightGray2;
+                z-index: 2;
+
+                p {
+                    line-height: 1.25;
+                }
+
+                ul {
+                    
+                    li {
+                        list-style: disc;
+                        display: list-item;
+                        margin-left: 20px;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@media (min-width: $breakpoint-min-992) {
+
+    .ojin-articleHeadline {
+        max-width: 92%;
+        text-align: center;
+        padding: 0 0 30px;
+
+        h1 {
+            font-size: 4rem;
+            padding-bottom: 40px;
+            line-height: 1.2;
+        }
+
+        ul {
+            max-width: 85%;
+            margin: auto;
+
+            li {
+                display: inline-block;
+            }
+        }
+    }
+
+}
+
+@media (min-width: $breakpoint-min-1400) {
+    .ojin-articleHeadline {
+        ul {
+            max-width: 100%;
+        }
+    }
+}

@@ -1,0 +1,50 @@
+---
+news:
+  -
+    color-theme: ''
+    heading: 'Latest CDC News'
+    headline: 'Interim Guidance for Managing Healthcare Personnel with SARS-CoV-2 Infection'
+    date: 'Jan, 21, 2022'
+    img: 'https://picsum.photos/200/200?grayscale'
+    alt: 'alt text'
+    content: 'A symptom-based strategy for determining when HCP with SARS-CoV-2 infection could return to work is preferred in most clinical situations.'
+    tags:
+      -
+        tag: 'CDC'
+      -
+        tag: 'tag2'
+      -
+        tag: 'tag3'
+    url: 'x'
+  -
+    color-theme: 'blue-theme'
+    heading: ' Long content'
+    headline: 'Interim Guidance for Managing Healthcare Personnel with SARS-CoV-2 Infection'
+    date: 'Jan, 21, 2022'
+    img: 'https://picsum.photos/200/200?grayscale'
+    alt: 'alt text'
+    content: 'A symptom-based strategy for determining when HCP with SARS-CoV-2 infection could return to work is preferred in most clinical situations. A symptom-based strategy for determining when HCP with SARS-CoV-2 infection could return to work is preferred in most clinical situations.'
+    tags:
+      -
+        tag: 'CDC'
+      -
+        tag: 'tag2'
+      -
+        tag: 'tag3'
+    url: 'x'
+  -
+    color-theme: 'teal-theme'
+    heading: 'Short content'
+    headline: 'Interim Guidance for Managing Healthcare Personnel with SARS-CoV-2 Infection'
+    date: 'Jan, 21, 2022'
+    img: 'https://picsum.photos/200/200?grayscale'
+    alt: 'alt text'
+    content: 'A symptom-based strategy'
+    tags:
+      -
+        tag: 'CDC'
+      -
+        tag: 'tag2'
+      -
+        tag: 'tag3'
+    url: 'x'

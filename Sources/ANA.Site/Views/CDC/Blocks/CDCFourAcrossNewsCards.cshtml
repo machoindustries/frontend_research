@@ -1,0 +1,68 @@
+@using ANA.Site.Models.CDC.Blocks
+@using ANA.Site.Models.CDC.Blocks.ViewModels
+@using ANA.Site.Models.CDC.Pages
+@using ANA.Site.Models.CDC.Pages.ViewModels
+@using ANA.Site.Models.Media
+@using EPiServer
+@using EPiServer.Core
+@using EPiServer.ServiceLocation
+@using EPiServer.Web.Routing
+@using Geta.Optimizely.Extensions;
+@model CDCFourAcrossNewsCardsViewModel
+
+<section class="small-12 grid-x four-across-news-cards @Model.GetCssClass()">
+    @if (!string.IsNullOrEmpty(Model.FourAcrossNewsCards.Heading))
+    {
+        <h2 class="small-12">@Model.FourAcrossNewsCards.Heading</h2>
+    }
+    @foreach (var article in Model.Articles)
+    {
+        <div class="card-container">
+            RenderNewsCard((CDCNewsPageViewModel)article)
+        </div>
+    }
+</section>
+
+@functions{
+    private void RenderNewsCard(CDCNewsPageViewModel card)
+    {
+        var cardImage = !ContentReference.IsNullOrEmpty(card.Image)
+           ? ServiceLocator.Current.GetInstance<IContentLoader>().Get<MediaData>(card.Image)
+           : null;
+
+        CDCShareButtonViewModel shareButton = new CDCShareButtonViewModel(card);
+
+        <article class="news-article-card">
+            @if (cardImage != null && cardImage is ImageFile)
+            {
+                var image = (ImageFile)cardImage;
+                <img class="card-img" src="@UrlResolver.Current.GetUrl(image.ContentLink)" alt="@image.AltText" />
+            }
+            <div class="short-content">
+                <h3>@card.Heading</h3>
+                @Html.Raw(card.GetShortSummary())
+            </div>
+            <div class="short-overlay"></div>
+
+            await @Html.PartialAsync("~/Views/CDC/Partials/_CDCShareButton.cshtml", shareButton)
+
+            <div class="reveal" id="share-resource-@card.ContentLinkID" data-reveal>
+                <div class="addthis_inline_share_toolbox_qrdc"></div>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="long-overlay"></div>
+            <div class="long-content">
+                <a href="@card.AssetUrl" target="@card.TargetFrame" onclick="dataLayer.push(@card.GoogleTags.GetAssetClickEventData());">
+                    <h3>@card.Heading</h3>
+                </a>
+                <a href="@card.AssetUrl" target="@card.TargetFrame" onclick="dataLayer.push(@card.GoogleTags.GetAssetClickEventData());">
+                    @Html.Raw(card.GetLongSummary())
+                </a>
+            </div>
+        </article>
+    }
+}
+
+

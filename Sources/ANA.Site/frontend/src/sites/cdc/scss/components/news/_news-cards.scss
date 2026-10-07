@@ -1,0 +1,16 @@
+.news-card{
+  &_title{
+    color: $midnight-blue;
+    font-size: 1.25rem;
+    line-height: 1.6rem;
+    margin-top: 0;
+
+  }
+
+  
+  &.mt-2 {
+    margin-top: 2rem;
+  }
+}
+
+

@@ -1,0 +1,35 @@
+﻿@using ANA_HNHN.Models.ViewModels
+@model SignUpPageViewModel
+@inherits ANA_HNHN.Views.AlloyPageBase<SignUpPageViewModel>
+
+<section class="sign-up section--sign-up">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-md-6 d-none d-md-flex flex-column pe-5">
+				@Html.PropertyFor(x => x.CurrentPage.ScriptTitle)
+				@Html.PropertyFor(x => x.CurrentPage.Subtext)
+			</div>
+			<div class="col-md-6">
+				<h2>
+					@Html.PropertyFor(x => x.CurrentPage.FormHeading)
+				</h2>
+				@Html.PropertyFor(x => x.CurrentPage.FormSubtext)
+				<div class="sign-up__form" data-page-id="@Model.CurrentPage.ContentLink.ID" data-redirect="@Model.RedirectPageUrl">
+					@using (Html.BeginForm())
+					{
+						<div class="sign-up__step" id="step1">
+							@Html.PropertyFor(x => x.CurrentPage.FormFields)
+						</div>
+						<div class="sign-up__step" id="step2">
+							@Html.PropertyFor(x => x.CurrentPage.FormFieldsStep2)
+							<div class="g-recaptcha" data-sitekey="@Model.ReCaptchaKey" data-callback="onRecaptchaSuccess"></div>
+							<div class="form-error d-none pt-2 text-center">Please complete the reCAPTCHA.</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="/assets/hnhn/js/sign-up.js"></script>

@@ -1,0 +1,77 @@
+﻿@using Brightfind.Helper
+@using EPiServer.ServiceLocation;
+@using EPiServer.Web.Routing;
+@using ANA_HNHN.Helpers;
+@using ANA_HNHN.Models.Pages;
+@using EPiServer.Web.Mvc.Html;
+@model ANA_HNHN.Models.Blocks.HeroBlock
+@{
+    var imageUrl = MediaHelper.GetUrl(Model.Image);
+    var mobileImageUrl = MediaHelper.GetUrl(Model.MobileImage);
+    var logoImage = MediaHelper.GetUrl(Model.Icon);
+    var isMobileImage = !String.IsNullOrEmpty(mobileImageUrl);
+    string backgroundColor = "white";
+    var altText = MediaHelper.GetImageAltText(Model.Image);
+
+    if (!String.IsNullOrEmpty(Model.BackgroundColor))
+    {
+        backgroundColor = Model.BackgroundColor;
+    }
+
+}
+@if(Model.View == "Home") {
+    <section class="hero-home hero-home--@backgroundColor section--no-gap">
+        <div class="container-fluid p-0">
+            <div class="row align-items-center m-0">
+                <div class="col-lg-6 p-0 ps-lg-0 pt-lg-4 pe-lg-5 order-2 order-lg-1">
+                    @if (isMobileImage)
+                    { 
+                        <img class="hero-home__image desktop-image" src="@imageUrl" alt="@altText" data-aos="fade-up" data-aos-once="true" />
+                        <img class="hero-home__image mobile-image" src="@mobileImageUrl" alt="@altText" data-aos="fade-left" data-aos-once="true" />
+                    }
+                    else
+                    {
+                        <img class="hero-home__image" src="@imageUrl" alt="@altText" data-aos="fade-up" data-aos-once="true" />
+                    }
+                </div>
+                <div class="col-lg-6 p-lg-0 order-1 order-lg-2 hero-home__text">
+                    <div data-aos="fade-left" data-aos-once="true">
+                        <h1>
+                            <span>@Model.ScriptTitle</span>
+                            @Html.Raw(Model.Title)
+                        </h1>
+                        @Html.PropertyFor(m => m.Subtext)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="hero-landing section--no-gap">
+        <div class="container-fluid p-0">
+            <div class="row">
+                <div class="col-lg-4 order-2 order-lg-1 hero-landing__text hero-landing__text--@backgroundColor">
+                    <div class="hero-landing__icon-wrap">
+                        <div data-aos="fade-up" data-aos-once="true">
+                            <img class="hero-landing__icon" src="@logoImage" alt="@altText">
+                            <h1>@Html.Raw(Model.Title)</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 order-1 order-lg-2 p-0">
+                    @if (isMobileImage)
+                    {
+                        <img class="hero-landing__image desktop-image" src="@imageUrl" alt="@altText" />
+                        <img class="hero-landing__image mobile-image" src="@mobileImageUrl" alt="@altText" />
+                    }
+                    else
+                    {
+                        <img class="hero-landing__image" src="@imageUrl" alt="@altText" />
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

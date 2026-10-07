@@ -1,0 +1,39 @@
+<article href="{{card-url}}" class="media-social-links small-12 medium-6 large-4">
+    <div class="card-image cell small-12"> 
+        <div class="card-img-container">
+          <img alt="{{img-alt}}" class="card-img" src="{{img-url}}">  
+          <div class="card-img-overlay"></div> 
+ 
+        {{#if video-url}}
+          <button data-open="video-modal-{{id}}" class="button card-icon-container">
+           <img class='card-link-icon' src="{{youtube-img}}" alt="icon">
+          </button>  
+          <div class="reveal open-modal" id="video-modal-{{id}}" data-reveal data-reset-on-close="true" data-animation-in="fade-in" data-animation-out="fade-out">
+            <iframe class="open-modal__video" allowfullscreen
+              src="{{video-url}}">
+            </iframe>
+            <button class="close-button close-button-custom" data-close aria-label="Close modal" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div> 
+        {{/if}}    
+ 
+         {{#if download-url}}
+         <a href="{{iconUrl}}" download data-open="video-modal-" class="card-icon-container">
+           <img class='card-link-icon' src="{{download-img}}" alt="Icon">
+         </a>  
+         {{/if}}  
+
+         {{#if external-link-url}}
+          <a href="{{external-link-url}}" class="card-icon-container">
+            <img class='card-link-icon' src="{{external-link-img}}" alt="Icon">
+          </a> 
+          {{/if}}  
+          <div class="taxonomy">
+            <div class="taxonomy-text">{{taxonomy}}</div>
+            <div class="taxonomy-overlay"></div>
+          </div>
+        </div>
+  </div>
+      <div class="card-header">{{card-header}}</div>
+</article>

@@ -1,0 +1,32 @@
+.four-across-news-cards {
+    display: flex;
+    flex-flow: row wrap;
+    
+    &.mt-2 {
+        margin-top: 2rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+        color: #CF4520;
+        margin-bottom: 0rem;
+    }
+
+    .card-container {
+        display: inline;
+        padding: 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+
+        @media(min-width: 43rem) {
+            width: 50%;
+        }
+
+        @media(min-width: 62.5rem) {
+            width: 33%;
+        }
+        @media(min-width: 82rem) {
+            width: 25%;
+        }
+    }
+}

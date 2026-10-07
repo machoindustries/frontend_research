@@ -1,0 +1,101 @@
+.on-the-go-copy {
+  h1 {
+    font-size: 3rem;
+    text-transform: capitalize;
+    padding: 1rem;
+    color: #003366;
+    font-weight: 600;
+    line-height: 1.1;
+    @media screen and (max-width: $medium) {
+      font-size: 24px;
+      padding-top: 1.5rem;
+    }
+    background-image: linear-gradient(
+      to right,
+      rgba(255, 0, 0, 0),
+      $font-orange,
+      $font-orange,
+      $font-orange,
+      $font-orange,
+      rgba(255, 0, 0, 0)
+    );
+
+    @media screen and (max-width: $medium) {
+      font-size: 2rem;
+    }
+  }
+  &_content {
+    font-size: 1.125rem;
+    line-height: 2;
+    padding: 0 1rem;
+
+    @media screen and (min-width: $large) {
+      margin-right: 1rem;
+    }
+  }
+  div {
+    .image__container {
+      overflow: hidden;
+      margin: 3.75rem 0;
+      padding: 0 10.55% 6.67% 0;
+      background-position-y: 1.75rem;
+      background-position-x: 1.75rem;
+      background-repeat: no-repeat;
+      background-size: calc(100% - 1.75rem) calc(100% - 1.75rem);
+
+      &.green {
+        background-image: linear-gradient(
+          90deg,
+          rgba(57, 128, 88, 0.25) 0%,
+          #398058 30%,
+          #398058 67%,
+          rgba(57, 128, 88, 0.25) 100%
+        );
+      }
+
+      &.magenta {
+        background-image: linear-gradient(90deg, #991a63 0%, #fafafa 100%);
+      }
+
+      &.blue {
+        background-image: linear-gradient(
+          90deg,
+          rgba(39, 169, 225, 0.26) 0%,
+          #519fed 30%,
+          rgba(81, 159, 237, 0.99) 67%,
+          rgba(81, 159, 237, 0.26) 100%
+        );
+      }
+    }
+
+    .img-main {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      padding: 55% 0 2.5rem 0;
+      z-index: 1;
+
+      img {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        object-fit: cover;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $large) {
+  .on-the-go-copy {
+    div .image__container {
+      margin-top: 1.875rem;
+      margin-bottom: 1.75rem;
+    }
+  }
+}

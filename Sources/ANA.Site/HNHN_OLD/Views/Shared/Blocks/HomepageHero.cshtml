@@ -1,0 +1,61 @@
+﻿@using EPiServer.Core
+@using EPiServer.Web.Mvc.Html
+
+@using ANA.Site.HNHN.Business
+@using ANA.Site.HNHN.Models.Blocks
+@using EPiServer.Web.Routing
+@using EPiServer.ServiceLocation
+
+@model ANA.Site.HNHN.Models.Blocks.HomepageHero
+@{
+    var _UrlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
+}
+<div class="hero__background-image ">
+    <img src="@_UrlResolver.GetUrl(Model.BackgroundImage)" alt=""  />
+    @*<img src="/static/images/hero-background-image-1.jpg" alt="Lorem ipsum dolor.">*@
+</div>
+<div class="hero__content container ">
+    <div class="row">
+        <div class="hero__content__image col-md-7 col-lg-6">
+            <img src="@_UrlResolver.GetUrl(Model.ForegroundImage)" alt="" class="img-responsive" />
+            @*<img src="/static/images/hero-nurse-image-1.png" class="img-responsive" alt="Lorem ipsum.">*@
+        </div>
+        <div class="col-md-5 col-md-push-7 col-lg-push-6 col-lg-6 hero__content__text">
+            <h1 class="hero__title ">
+                <span class="hero__higlight--lg">
+                    @Html.PropertyFor(m => m.Title) <span> @Html.PropertyFor(m => m.SubTitle)</span>
+                    @*Healthy Nurse Healthy Nation <span> Grand Challenge</span>*@
+                </span>
+            </h1>
+
+            <div class="hero__text">
+                @*3.6 million Registered Nurses Leading the Nation's Journey to Better Health*@
+                @Html.PropertyFor(m => m.Introduction)
+            </div>
+
+            <h3>
+                <div class="hero__higlight--sm">
+                    @*Join the challenge*@
+                    @Html.PropertyFor(m => m.CallToActionTitle)
+                </div>
+            </h3>
+
+
+
+
+            <div class="btn-groups" @Html.EditAttributes(m => m.CallToActionButtons)>
+
+                <div class="btns-wrap">
+                    @foreach (var cta in Model.CallToActionButtons.GetContentItems<CallToActionBlock>())
+                    {
+                        Html.RenderContentData(cta, true);
+                    }
+                    @*<a href="#" class="btn btn-primary btn-hnhn">I'm an Individual</a>
+
+                        <a href="#" class="btn btn-primary btn-hnhn">I'm representating <br> an organization</a>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
